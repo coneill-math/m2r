@@ -7,7 +7,7 @@ Author: c(person("David", "Kahle", email = "david.kahle@gmail.com", role = c("au
   person("Jeff", "Sommars", email = "sommars1@uic.edu", role = c("aut", "cph", "cre")))
 Maintainer: David Kahle <david.kahle@gmail.com>
 Description: Interface with Macaulay2 (\url{http://www.math.uiuc.edu/Macaulay2/}) local installation
-License: MIT
+License: MIT License (\url{https://opensource.org/licenses/MIT})
 LazyData: TRUE
 Imports:
     mpoly
