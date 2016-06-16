@@ -21,9 +21,9 @@ close m2rint_inout;
 m2_start_m2 <- function(port) {
 	if(is.mac() || is.unix()) {
 		system2(
-			file.path2("/usr/local/macaulay2/bin", "M2"),
-			stdout = "/Users/chris/Downloads/tempfileout.txt",
-			stderr = "/Users/chris/Downloads/tempfileerr.txt",
+			file.path2(getOption("m2_path"), "M2"),
+			stdout = NULL,
+			stderr = NULL,
 			stdin = file.write_to_temp(.g_m2code),
 			wait = FALSE)
 		Sys.sleep(1)
@@ -91,22 +91,3 @@ m2_interact <- function(line) {
 
 	return(server_resp)
 }
-
-# client <- function(){
-# 	while(TRUE){
-# 		con <- socketConnection(host="localhost", port = 6666, blocking=TRUE, server=FALSE, open="r+")
-# 		f <- file("stdin")
-# 		open(f)
-# 		print("Enter text to be upper-cased, q to quit")
-# 		sendme <- readLines(f, n=1)
-# 		if(tolower(sendme)=="q"){
-# 			break
-# 		}
-# 		write_resp <- writeLines("sendme5", con)
-# 		server_resp <- readLines(con, -1)
-# 		print(server_resp)
-# 		print(paste("Your upper cased text:  ", server_resp))
-# 		close(con)
-# 	}
-# }
-# client()
