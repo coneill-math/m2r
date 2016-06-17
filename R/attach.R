@@ -32,6 +32,7 @@
 
 .onDetach <- function(...) {
 	# TODO: kill M2
+	m2_end_interact()
 }
 
 # unix_find looks for a specific executable in a specific directory

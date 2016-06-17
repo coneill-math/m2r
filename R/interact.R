@@ -2,9 +2,10 @@
 
 
 
+.g_m2port <- 27436L
 
-.g_m2code <- "
-m2rint_inout = openInOut \"$:6666\";
+.g_m2code <- paste("
+m2rint_inout = openInOut \"$:", .g_m2port, "\";
 while true do (
 	m2rint_inline = read m2rint_inout;
 	if m2rint_inline == \"\" then break;
@@ -13,7 +14,7 @@ while true do (
 );
 
 close m2rint_inout;
-"
+", sep="")
 
 
 
@@ -46,27 +47,20 @@ m2_start_m2 <- function(port) {
 	# }
 }
 
-m2_begin_interact <- function(port = 6666) {
-	# TODO: Implement port parameter
+m2_begin_interact <- function() {
 	# TODO: kill M2 if necessary/other error stuff
 
-
 	if (!is.null(.g_m2con)) {
-		invisible(1)
+		return(invisible(1))
 	}
 
 	# start M2 server process
 	m2_start_m2(port)
 
 	# initialize client socket
-	.g_m2con <<- socketConnection(host="localhost", port = 6666, blocking=TRUE, server=FALSE, open="r+", timeout=60*60*24*7)
+	.g_m2con <<- socketConnection(host="localhost", port = .g_m2port, blocking=TRUE, server=FALSE, open="r+", timeout=60*60*24*7)
 
 	invisible(0)
-}
-
-m2_reset_interact <- function(port = 6666) {
-	m2_end_interact()
-	m2_begin_interact(port)
 }
 
 m2_end_interact <- function() {
@@ -78,9 +72,7 @@ m2_end_interact <- function() {
 }
 
 m2_interact <- function(line) {
-	if (is.null(.g_m2con)) {
-		return("m2r Error: M2 not started")
-	}
+	m2_begin_interact()
 
 	if (line == "") {
 		return("")
