@@ -4,7 +4,7 @@
 #' (\url{http://www.math.uiuc.edu/Macaulay2/})
 #'
 #' @docType package
-#' @import mpoly
+#' @import mpoly stringr
 #' @name m2r
 #' @aliases m2r package-m2r
 NULL

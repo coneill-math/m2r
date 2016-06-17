@@ -10,7 +10,8 @@ Description: Interface with Macaulay2 (\url{http://www.math.uiuc.edu/Macaulay2/}
 License: MIT License (\url{https://opensource.org/licenses/MIT})
 LazyData: TRUE
 Imports:
-    mpoly
+    mpoly,
+    stringr
 Suggests:
     knitr,
     rmarkdown
