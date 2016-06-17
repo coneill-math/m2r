@@ -11,24 +11,26 @@
 #'
 #' \dontrun{ requires Macaulay2 be installed
 #'
-#' start_m2()
-#'
-#' # compute a grobner basis of a polynomial ideal
-#' (gb <- m2("
-#'   R = QQ[a..d]
-#'   I = ideal(a^3-b^2*c, b*c^2-c*d^2, c^3)
-#'   G = gens gb I
-#' "))
-#'
-#' # parse it into an mpoly object
-#' library(stringr)
-#' gb <- str_sub(gb, 10, -3)
-#' gb <- str_replace_all(gb, "\\*", " ")
-#' mpoly::mp(str_split(gb, ", ")[[1]])
-#'
-#' stop_m2()
+#' ( p1 <- mp("t^4 - x") )
+#' ( p2 <- mp("t^3 - y") )
+#' ( p3 <- mp("t^2 - z") )
+#' ( ms <- mpolyList(p1, p2, p3) )
+#' gb(ms)
 #'
 #' }
-gb <- function(mpolyList, ring = NA, vars = vars(mpolyList)) {
-  NULL
+library(mpoly)
+gb <- function(mpolyList, ring = NA) {
+
+  # Convert mpolylist to strings strings readable by M2.
+  poly_str <- suppressMessages(paste0( lapply(mpolyList, print, stars=TRUE), collapse=", "))
+  poly_str <- str_replace_all(poly_str, "\\*\\*", "^")
+  ideal_str <- paste("I := ideal(", poly_str, ");")
+
+  vars_str <- paste0(vars(mpolyList), collapse = ",")
+  ring_str <- paste("R := QQ[", vars_str, "];")
+
+  m2_out <- m2(paste(ring_str, ideal_str, "gens gb I"))
+  m2_out <- str_sub(m2_out, 10, -3)
+  m2_out <- str_replace_all(m2_out, "\\*", " ")
+  mpoly::mp(str_split(m2_out, ", ")[[1]])
 }
