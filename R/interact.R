@@ -48,8 +48,6 @@ m2_start_m2 <- function(port) {
 }
 
 m2_begin_interact <- function() {
-	# TODO: kill M2 if necessary/other error stuff
-
 	if (!is.null(.g_m2con)) {
 		return(invisible(1))
 	}
