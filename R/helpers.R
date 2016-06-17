@@ -15,9 +15,10 @@ file.path2 <- function(...){
 	paste0(dots, collapse = sep)
 }
 
-file.write_to_temp <- function(contents) {
-	tempname <- tempfile()
 
-	writeLines(contents, tempname)
-	return(tempname)
+
+write_to_temp <- function(contents) {
+  tempname <- tempfile()
+  writeLines(contents, tempname)
+  tempname
 }

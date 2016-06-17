@@ -1,5 +1,4 @@
 .onAttach <- function(...) {
-	.g_m2con <<- NULL
 
 	# find M2 on a Mac or Linux
 	if(is.mac() || is.linux()){
@@ -30,10 +29,16 @@
 	invisible(TRUE)
 }
 
+
+
+
 .onDetach <- function(...) {
-	# TODO: kill M2
-	m2_end_interact()
+	stop_m2()
 }
+
+
+
+
 
 # unix_find looks for a specific executable in a specific directory
 # (or its children)
@@ -82,62 +87,84 @@ startup_check_for_program <- function(optionName){
 }
 
 longName <- function(optionName){
-	switch(optionName,
-		   m2_path = "M2"
-	)
+  switch(optionName,
+    m2_path = "M2"
+  )
 }
 
 execName <- function(optionName){
-	switch(optionName,
-		   m2_path = "count"
-	)
+  switch(optionName,
+    m2_path = "count"
+  )
 }
 
 setFun <- function(optionName){
-	switch(optionName,
-		   m2_path = "set_m2_path()"
-	)
+  switch(optionName,
+    m2_path = "set_m2_path()"
+  )
 }
 
 psm  <- packageStartupMessage
 psms <- function(fmt, ...) packageStartupMessage(sprintf(fmt, ...))
 
+
 setOption <- function(optionName, value){
-	eval(parse(text = sprintf('options("%s" = "%s")', optionName, value)))
+  eval(parse(text = sprintf('options("%s" = "%s")', optionName, value)))
 }
 
+
 unix_search_and_set <- function(exec, baseName, optionName){
-	# grab path and parse
-	profile_to_look_for <-
-		if(file.exists("~/.bash_profile")){
-			".bash_profile"
-		} else if(file.exists("~/.bashrc")){
-			".bashrc"
-		} else if(file.exists("~/.profile")){
-			".profile"
-		}
+  # grab path and parse
+  profile_to_look_for <-
+  	if(file.exists("~/.bash_profile")){
+      ".bash_profile"
+  	} else if(file.exists("~/.bashrc")){
+      ".bashrc"
+  	} else if(file.exists("~/.profile")){
+      ".profile"
+  	}
 
-	# PATH <- system(sprintf("source ~/%s; echo $PATH", profile_to_look_for), intern = TRUE)
-	# the above doesn't work on ubuntu, which uses the dash shell (which doesn't have source)
-	PATH <- system(sprintf("echo 'source ~/%s; echo $PATH' | /bin/bash", profile_to_look_for), intern = TRUE)
-	dirs_to_check <- stringr::str_split(PATH, ":")[[1]]
+  # PATH <- system(sprintf("source ~/%s; echo $PATH", profile_to_look_for), intern = TRUE)
+  # the above doesn't work on ubuntu, which uses the dash shell (which doesn't have source)
+  PATH <- system(sprintf("echo 'source ~/%s; echo $PATH' | /bin/bash", profile_to_look_for), intern = TRUE)
+  dirs_to_check <- stringr::str_split(PATH, ":")[[1]]
 
-	# check for main dir name
-	ndx_with_baseName_dir  <- which(stringr::str_detect(tolower(dirs_to_check), baseName))
-	baseName_path <- dirs_to_check[ndx_with_baseName_dir]
+  # check for main dir name
+  ndx_with_baseName_dir  <- which(stringr::str_detect(tolower(dirs_to_check), baseName))
+  baseName_path <- dirs_to_check[ndx_with_baseName_dir]
 
-	# seek and find
-	for(path in dirs_to_check){
-		found_path <- unix_find(exec, path)
-		if(!is.na(found_path)) break
-	}
+  # seek and find
+  for(path in dirs_to_check){
+    found_path <- unix_find(exec, path)
+    if(!is.na(found_path)) break
+  }
 
-	# break in a failure
-	if(is.na(found_path)) return()
+  # break in a failure
+  if(is.na(found_path)) return()
 
-	# set option and exit
-	setOption(optionName, dirname(found_path))
+  # set option and exit
+  setOption(optionName, dirname(found_path))
 
-	# invisibly return path
-	invisible(dirname(found_path))
+  # invisibly return path
+  invisible(dirname(found_path))
+}
+
+
+
+
+
+whereis_is_accessible <- function() unname(Sys.which("whereis")) != ""
+
+win_find <- function(s){
+  wexe <- unname(Sys.which("whereis"))
+  x <- system(paste(wexe, s), intern = TRUE)
+  str_sub(x, nchar(s)+2)
+}
+
+win_search_and_set <- function(optionName){
+
+  # search
+  x <- win_find(execName(optionName))
+  if(stringr::str_detect(x, "/")) setOption(optionName, dirname(x))
+
 }

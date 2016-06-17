@@ -1,3 +1,3 @@
-m2_create_ring <- function() {
-
+ring <- function() {
+  NULL
 }
