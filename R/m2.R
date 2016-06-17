@@ -1,16 +1,14 @@
-#' Initialize, call, and stop a Macaulay2 process
+#' Call and reset a Macaulay2 process
 #'
-#' Initialize, call, and stop a Macaulay2 process
+#' Call and reset a Macaulay2 process
 #'
 #' @param port port for Macaulay2 socket
 #' @param code Macaulay2 code
 #' @return m2 return value
-#' @name m2_init
+#' @name m2_call
 #' @examples
 #'
 #' \dontrun{ requires Macaulay2 be installed
-#'
-#' start_m2()
 #'
 #' m2("1 + 1")
 #'
@@ -30,15 +28,12 @@
 #' gb <- str_replace_all(gb, "\\*", " ")
 #' mp(str_split(gb, ", ")[[1]])
 #'
-#' stop_m2()
-#'
-#'
+#' m2("a = 1 + 1")
+#' m2("a")
+#' reset_m2()
+#' m2("a")
 #'
 #' }
-
-
-
-
 
 m2_listen_code <- function (port) {
   sprintf("
@@ -46,38 +41,45 @@ m2_listen_code <- function (port) {
     while true do (
       m2rint_inline = read m2rint_inout;
       if m2rint_inline == \"\" then break;
-      m2rint_outline = toString value(m2rint_inline);
+
+      m2rint_retcode = 0;
+      try ( m2rint_outline = toString value(m2rint_inline); )
+  		else ( m2rint_outline = \"Macaulay2 Error!\"; m2rint_retcode = 1; );
+
+      m2rint_numlines = 1 + #select(///\\n///, m2rint_outline);
+
+      m2rint_inout << m2rint_retcode << \" \" << m2rint_numlines << \"\\n\" << flush;
       m2rint_inout << m2rint_outline << \"\\n\" << flush;
     );
     close m2rint_inout;
   ", port)
 }
-# cat(m2_listen_code(6666L))
+# cat(m2_listen_code(27436L))
 
-
-
-
-
-
-
-
-
-#' @export
-#' @rdname m2_init
 start_m2 <- function(port = 27436L) {
+
+  # grab connection
+  m2_con <- getOption("m2_con")
+
+  # send kill code
+  if (!is.null(m2_con)) {
+    return()
+  }
+
+  message("Starting M2")
 
   # prep for m2 server process
   if(is.mac() || is.unix()) {
 
     system2(
       file.path2(getOption("m2_path"), "M2"),
-      stdout = NULL, stderr = NULL,
+      stdout = "/Users/chris/Downloads/stdout.txt", stderr = "/Users/chris/Downloads/stderr.txt",
       stdin = write_to_temp(m2_listen_code(port)),
       wait = FALSE
     )
     Sys.sleep(1)
 
-  }  else if(is.win()) {
+  } else if(is.win()) {
 
     # TODO: fix later
     # matFile <- file.path2(dir2, "countCode.latte")
@@ -106,12 +108,6 @@ start_m2 <- function(port = 27436L) {
 
 }
 
-
-
-
-
-#' @export
-#' @rdname m2_init
 stop_m2 <- function() {
 
   # grab connection
@@ -126,12 +122,23 @@ stop_m2 <- function() {
 
 }
 
+#' @export
+#' @rdname m2_call
+reset_m2 <- function(port = 27436L) {
 
+  # TODO: check port availability
 
+  stop_m2()
+  start_m2(port)
+
+}
 
 #' @export
-#' @rdname m2_init
+#' @rdname m2_call
 m2 <- function(code) {
+
+  # ensure m2 is running
+  start_m2()
 
   # preempt m2 kill code
   if (code == "") return("")
@@ -143,6 +150,17 @@ m2 <- function(code) {
   writeLines(code, m2_con)
 
   # read from connection and return
-  readLines(m2_con, 1)
+  outinfo <- readLines(m2_con, 1)
 
+  info <- strsplit(outinfo, " ", fixed = TRUE)[[1]]
+  retcode <- strtoi(info[1])
+  numlines <- strtoi(info[2])
+
+  output <- paste(readLines(m2_con, numlines), collapse="\n")
+
+  if (retcode == 1) {
+    stop(output)
+  }
+
+  output
 }
