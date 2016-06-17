@@ -63,7 +63,7 @@ start_m2 <- function(port = 27436L) {
 
   # send kill code
   if (!is.null(m2_con)) {
-    return()
+    return(invisible(0))
   }
 
   message("Starting M2")
@@ -73,7 +73,7 @@ start_m2 <- function(port = 27436L) {
 
     system2(
       file.path2(getOption("m2_path"), "M2"),
-      stdout = "/Users/chris/Downloads/stdout.txt", stderr = "/Users/chris/Downloads/stderr.txt",
+      stdout = NULL, stderr = NULL,
       stdin = write_to_temp(m2_listen_code(port)),
       wait = FALSE
     )
