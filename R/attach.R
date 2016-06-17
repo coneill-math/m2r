@@ -25,9 +25,6 @@
 	# check that the programs were found
 	startup_check_for_program("m2_path")
 
-	# initialize connection - change this?
-	.m2con <<- NULL
-
 	# return
 	invisible(TRUE)
 }
@@ -150,4 +147,24 @@ unix_search_and_set <- function(exec, baseName, optionName){
 
   # invisibly return path
   invisible(dirname(found_path))
+}
+
+
+
+
+
+whereis_is_accessible <- function() unname(Sys.which("whereis")) != ""
+
+win_find <- function(s){
+  wexe <- unname(Sys.which("whereis"))
+  x <- system(paste(wexe, s), intern = TRUE)
+  str_sub(x, nchar(s)+2)
+}
+
+win_search_and_set <- function(optionName){
+
+  # search
+  x <- win_find(execName(optionName))
+  if(stringr::str_detect(x, "/")) setOption(optionName, dirname(x))
+
 }

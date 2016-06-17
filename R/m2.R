@@ -8,6 +8,8 @@
 #' @name m2_init
 #' @examples
 #'
+#' \dontrun{ requires Macaulay2 be installed
+#'
 #' start_m2()
 #'
 #' m2("1 + 1")
@@ -31,6 +33,8 @@
 #' stop_m2()
 #'
 #'
+#'
+#' }
 
 
 
@@ -62,9 +66,6 @@ m2_listen_code <- function (port) {
 #' @rdname m2_init
 start_m2 <- function(port = 27436L) {
 
-  # stop if no connection
-  if (!is.null(.m2con)) return(invisible(1))
-
   # prep for m2 server process
   if(is.mac() || is.unix()) {
 
@@ -95,10 +96,12 @@ start_m2 <- function(port = 27436L) {
   }
 
   # initialize client socket
-  .m2con <<- socketConnection(
-  	host = "localhost", port = port,
-  	blocking = TRUE, server = FALSE,
-  	open = "r+", timeout = 60*60*24*7
+  options(m2_con =
+  	socketConnection(
+      host = "localhost", port = port,
+      blocking = TRUE, server = FALSE,
+      open = "r+", timeout = 60*60*24*7
+    )
   )
 
 }
@@ -110,11 +113,17 @@ start_m2 <- function(port = 27436L) {
 #' @export
 #' @rdname m2_init
 stop_m2 <- function() {
-  if (!is.null(.m2con)) {
-    writeLines("", .m2con)
-    close(.m2con)
-    .m2con <<- NULL
+
+  # grab connection
+  m2_con <- getOption("m2_con")
+
+  # send kill code
+  if (!is.null(m2_con)) {
+    writeLines("", m2_con)
+    close(m2_con)
+    options(m2_con = NULL)
   }
+
 }
 
 
@@ -127,10 +136,13 @@ m2 <- function(code) {
   # preempt m2 kill code
   if (code == "") return("")
 
+  # grab connection
+  m2_con <- getOption("m2_con")
+
   # write to connection
-  writeLines(code, .m2con)
+  writeLines(code, m2_con)
 
   # read from connection and return
-  readLines(.m2con, 1)
+  readLines(m2_con, 1)
 
 }
