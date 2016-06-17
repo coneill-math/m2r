@@ -46,7 +46,7 @@ m2_listen_code <- function (port) {
       try ( m2rint_outline = toString value(m2rint_inline); )
   		else ( m2rint_outline = \"Macaulay2 Error!\"; m2rint_retcode = 1; );
 
-      m2rint_numlines = 1 + #select(///\\n///, m2rint_outline);
+      m2rint_numlines = 1 + #select(///\\\\n///, m2rint_outline);
 
       m2rint_inout << m2rint_retcode << \" \" << m2rint_numlines << \"\\n\" << flush;
       m2rint_inout << m2rint_outline << \"\\n\" << flush;
