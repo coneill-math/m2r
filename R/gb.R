@@ -4,7 +4,6 @@
 #'
 #' @param mpolyList an mpolyList object
 #' @param ring ring
-#' @param vars vars
 #' @return an mpolyList object
 #' @export
 #' @examples
@@ -16,6 +15,9 @@
 #' ( p3 <- mp("t^2 - z") )
 #' ( ms <- mpolyList(p1, p2, p3) )
 #' gb(ms)
+#'
+#' # easier
+#' gb(mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
 #'
 #' }
 

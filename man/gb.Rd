@@ -10,8 +10,6 @@ gb(mpolyList, ring = NA)
 \item{mpolyList}{an mpolyList object}
 
 \item{ring}{ring}
-
-\item{vars}{vars}
 }
 \value{
 an mpolyList object
@@ -28,6 +26,9 @@ Compute a Grobner basis with Macaulay2
 ( p3 <- mp("t^2 - z") )
 ( ms <- mpolyList(p1, p2, p3) )
 gb(ms)
+
+# easier
+gb(mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
 
 }
 }
