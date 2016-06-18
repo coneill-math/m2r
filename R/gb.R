@@ -1,6 +1,6 @@
-#' Compute a Grobner basis with gb
+#' Compute a Grobner basis with Macaulay2
 #'
-#' Compute a Grobner basis with gb
+#' Compute a Grobner basis with Macaulay2
 #'
 #' @param mpolyList an mpolyList object
 #' @param ring ring
@@ -18,7 +18,7 @@
 #' gb(ms)
 #'
 #' }
-library(mpoly)
+
 gb <- function(mpolyList, ring = NA) {
 
   # Convert mpolylist to strings strings readable by M2.

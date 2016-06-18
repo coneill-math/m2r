@@ -2,8 +2,8 @@
 
 export(gb)
 export(m2)
+export(reset_m2)
+export(ring)
 export(set_m2_path)
-export(start_m2)
-export(stop_m2)
 import(mpoly)
 import(stringr)

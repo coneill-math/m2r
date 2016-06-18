@@ -2,9 +2,9 @@
 % Please edit documentation in R/gb.R
 \name{gb}
 \alias{gb}
-\title{Compute a Grobner basis with gb}
+\title{Compute a Grobner basis with Macaulay2}
 \usage{
-gb(mpolyList, ring = NA, vars = vars(mpolyList))
+gb(mpolyList, ring = NA)
 }
 \arguments{
 \item{mpolyList}{an mpolyList object}
@@ -17,28 +17,17 @@ gb(mpolyList, ring = NA, vars = vars(mpolyList))
 an mpolyList object
 }
 \description{
-Compute a Grobner basis with gb
+Compute a Grobner basis with Macaulay2
 }
 \examples{
 
 \dontrun{ requires Macaulay2 be installed
 
-start_m2()
-
-# compute a grobner basis of a polynomial ideal
-(gb <- m2("
-  R = QQ[a..d]
-  I = ideal(a^3-b^2*c, b*c^2-c*d^2, c^3)
-  G = gens gb I
-"))
-
-# parse it into an mpoly object
-library(stringr)
-gb <- str_sub(gb, 10, -3)
-gb <- str_replace_all(gb, "\\\\*", " ")
-mpoly::mp(str_split(gb, ", ")[[1]])
-
-stop_m2()
+( p1 <- mp("t^4 - x") )
+( p2 <- mp("t^3 - y") )
+( p3 <- mp("t^2 - z") )
+( ms <- mpolyList(p1, p2, p3) )
+gb(ms)
 
 }
 }

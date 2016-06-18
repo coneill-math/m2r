@@ -10,8 +10,9 @@ Description: Persistent interface to Macaulay2 (\url{http://www.math.uiuc.edu/Ma
 	and front-end tools facilitating its use in the R ecosystem.
 License: GPL-2
 LazyData: TRUE
+Depends:
+    mpoly (>= 1.0.0)
 Imports:
-    mpoly,
     stringr
 Suggests:
     knitr,
