@@ -2,30 +2,35 @@
 % Please edit documentation in R/ring.R
 \name{ring}
 \alias{ring}
-\title{Create a new ring instance in Macaulay2}
+\title{Create a new ring in Macaulay2}
 \usage{
-ring(vars, coefring = "CC", order = "lex")
+ring(vars, coefring = "CC", order = "GRevLex")
 }
 \arguments{
-\item{vars}{list of variables}
+\item{vars}{vector of variable names}
 
 \item{coefring}{coefficient ring}
+
+\item{order}{a term order}
 }
 \value{
 a reference to a Macaulay2 ring
 }
 \description{
-Create a new ring instance in Macaulay2
+Create a new ring in Macaulay2
 }
 \examples{
 
 \dontrun{ requires Macaulay2 be installed
 
-( p1 <- mp("t^4 - x") )
-( p2 <- mp("t^3 - y") )
-( p3 <- mp("t^2 - z") )
-( ms <- mpolyList(p1, p2, p3) )
-gb(ms)
+(myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "Lex"))
+
+myring[["m2name"]]
+myring[["vars"]]
+myring[["coefring"]]
+myring[["order"]]
+
+m2(paste0("class(", myring[["m2name"]], ")"))
 
 }
 }
