@@ -1,0 +1,61 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "figures/README-",
+  dpi = 250
+)
+```
+
+# __m2r__
+
+__m2r__ is a very new package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2](http://www.math.uiuc.edu/Macaulay2/).
+
+The package grew out of a collaboration at the algebraic statistics [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16) and is currently being actively developed.
+
+
+
+## Getting started
+
+__m2r__ is loaded like any other R package:
+```{r}
+library(m2r)
+```
+
+When loaded, __m2r__ initializes a persistent connection to a back-end Macaulay2 session.  The basic function in R that accesses this connection is `m2()`, which simply accepts a character string that is run by the Macaulay2 session.
+
+```{r}
+m2("1 + 1")
+```
+
+You can see the persistence by setting variables and accessing them across different `m2()` calls:
+
+```{r}
+m2("x = 1")
+m2("x")
+```
+
+
+
+## Rings, ideals, and Grobner bases
+
+
+
+
+## Installation
+
+Here's how you can install this _very developmental_ version of __m2r__.  Remember you need to have [Macaulay2](http://www.math.uiuc.edu/Macaulay2/) downloaded; __m2r__ will look for it in your path variable (in the terminal, `echo $PATH`) as set by `~/.bash_profile` or, if nonexistent, then `~/.bashrc`, then `~/.profile`.
+
+```R
+# install.packages("devtools")
+devtools::install_github("musicman3320/m2r")
+```
