@@ -16,40 +16,86 @@ knitr::opts_chunk$set(
 )
 ```
 
+<!-- NOTE: you have to kill any R M2 process before knitting this. -->
+
+
 # __m2r__
 
 __m2r__ is a very new package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2](http://www.math.uiuc.edu/Macaulay2/).
 
-The package grew out of a collaboration at the algebraic statistics [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16) and is currently being actively developed.
+The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16), funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page). 
 
+It is currently being actively developed.
 
 
 ## Getting started
 
 __m2r__ is loaded like any other R package:
-```{r}
+```{r load_m2}
 library(m2r)
 ```
 
 When loaded, __m2r__ initializes a persistent connection to a back-end Macaulay2 session.  The basic function in R that accesses this connection is `m2()`, which simply accepts a character string that is run by the Macaulay2 session.
 
-```{r}
+```{r basic_connection}
 m2("1 + 1")
 ```
 
 You can see the persistence by setting variables and accessing them across different `m2()` calls:
 
-```{r}
-m2("x = 1")
-m2("x")
+```{r persistence}
+m2("a = 1")
+m2("a")
 ```
+
+Apart from the basic connection to M2, __m2r__ has basic data structures and methods to reference and manipulate the M2 objects within R.  These are being actively developed.
+
 
 
 
 ## Rings, ideals, and Grobner bases
 
+__m2r__ currently has basic support for [rings](https://en.wikipedia.org/wiki/Ring_(mathematics)):
+
+```{r ring_definition}
+R <- ring(c("x", "y", "z"))
+R
+str(R)
+```
+
+You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well.  The basic function to do this is `gb()`:
+```{r basic_grobner}
+gb("t^4 - x", "t^3 - y", "t^2 - z")
+```
+The result is an `mpolyList` object, from the [__mpoly__ package](https://github.com/dkahle/mpoly).  You can see the M2 code by adding `code = TRUE`:
+```{r grobner_code}
+gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
+```
+
+You can compute the basis respective of different orders as follows.  The default ordering is the [grevlex order](https://en.wikipedia.org/wiki/Monomial_order) on the variables given by `mpoly::vars()` applied to the `mpolyList` given by the polynomials.
+```{r grobner_order}
+R <- ring(c("x","y","t","z"), order = "lex")
+gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
+```
 
 
+`gb()` also accepts `mpoly` objects, like `gb(p1, p2, p3)` where `p1`, `p2`, and `p3` are `mpoly` objects (e.g. `p1 <- mp("t^4 - x")`).  There is also a [standard evaluation](http://adv-r.had.co.nz/Computing-on-the-language.html) version of `gb()` called `gb_()`, which takes in a `mpolyList` object directly.
+```{r grobner_standard}
+(ps <- mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
+gb_(ps)
+```
+
+
+
+
+
+
+
+
+
+## Acknowledgements
+
+This material is based upon work supported by the National Science Foundation under Grant No. 1321794.
 
 ## Installation
 
