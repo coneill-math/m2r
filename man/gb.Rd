@@ -2,14 +2,23 @@
 % Please edit documentation in R/gb.R
 \name{gb}
 \alias{gb}
+\alias{gb_}
 \title{Compute a Grobner basis with Macaulay2}
 \usage{
-gb(mpolyList, ring = NA)
+gb(..., ring, code = FALSE)
+
+gb_(mpolyList, ring, code = FALSE)
 }
 \arguments{
-\item{mpolyList}{an mpolyList object}
+\item{...}{a nonstandard evaluation listing of mpoly or vector of
+character strings containing referencing multivariate
+polynomials to pass to \code{\link{mp}}}
 
 \item{ring}{ring}
+
+\item{code}{message code to user? (default = FALSE)}
+
+\item{mpolyList}{an mpolyList object}
 }
 \value{
 an mpolyList object
@@ -17,19 +26,61 @@ an mpolyList object
 \description{
 Compute a Grobner basis with Macaulay2
 }
+\details{
+\code{gb} uses nonstandard evaluation; \code{gb_} is the standard
+evaluation equivalent.
+}
 \examples{
 
 \dontrun{ requires Macaulay2 be installed
 
-( p1 <- mp("t^4 - x") )
-( p2 <- mp("t^3 - y") )
-( p3 <- mp("t^2 - z") )
-( ms <- mpolyList(p1, p2, p3) )
-gb(ms)
+gb("t^4 - x", "t^3 - y", "t^2 - z")
+gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 
-# easier
-gb(mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
+
+
+
+# grobner bases with different orders
+# the default is lex order with the variable ordering
+vars(mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
+gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
+
+
+# you can use different orderings
+(ps <- mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
+
+R <- ring(c("t","x","y","z"), coefring = "QQ", order = "lex")
+gb(ps, ring = R)
+
+R2 <- ring(c("x","y","t","z"), coefring = "QQ", order = "lex")
+gb(ps, ring = R2)
+
+
+
+# more nonstandard evaluation
+gb("t^4 - x", "t^3 - y", "t^2 - z")
+
+gb(
+  mp("t^4 - x"),
+  mp("t^3 - y"),
+  mp("t^2 - z")
+)
+
+(ps <- mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
+gb(ps)
+
+
+# standard evaluation
+gb_(mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
+gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
+
+
+
+
 
 }
+}
+\seealso{
+\code{\link{mp}}
 }
 
