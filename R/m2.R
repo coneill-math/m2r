@@ -3,6 +3,7 @@
 #' Call and reset a Macaulay2 process
 #'
 #' @param port port for Macaulay2 socket
+#' @param timeout number of sections to attempt Macaulay2 connection before failing
 #' @param code Macaulay2 code
 #' @return m2 return value
 #' @name m2_call
@@ -35,7 +36,7 @@
 #'
 #' }
 
-m2_listen_code <- function (port) {
+m2_listen_code <- function (port, timeout) {
   sprintf("
     m2rint_inout = openInOut \"$:%d\";
     while true do (
@@ -54,14 +55,14 @@ m2_listen_code <- function (port) {
     close m2rint_inout;
   ", port)
 }
-# cat(m2_listen_code(27436L))
+# cat(m2_listen_code(27436L, 10))
 
-start_m2 <- function(port = 27436L) {
+start_m2 <- function(port = 27436L, timeout = 10) {
 
   # grab connection
   m2_con <- getOption("m2_con")
 
-  # send kill code
+  # only start if not already running
   if (!is.null(m2_con)) {
     return(invisible(0))
   }
@@ -74,10 +75,9 @@ start_m2 <- function(port = 27436L) {
     system2(
       file.path2(getOption("m2_path"), "M2"),
       stdout = NULL, stderr = NULL,
-      stdin = write_to_temp(m2_listen_code(port)),
+      stdin = write_to_temp(m2_listen_code(port, timeout)),
       wait = FALSE
     )
-    Sys.sleep(1)
 
   } else if(is.win()) {
 
@@ -98,13 +98,33 @@ start_m2 <- function(port = 27436L) {
   }
 
   # initialize client socket
-  options(m2_con =
-  	socketConnection(
-      host = "localhost", port = port,
-      blocking = TRUE, server = FALSE,
-      open = "r+", timeout = 60*60*24*7
+  con <- NULL
+  for (i in seq.int(0,20*timeout)) {
+
+    tryCatch(
+      con <- suppressWarnings(
+        socketConnection(
+          host = "localhost", port = port,
+          blocking = TRUE, server = FALSE,
+          open = "r+", timeout = 60*60*24*7
+        )
+      ),
+      error = function(e) {  }
     )
-  )
+
+    if (!is.null(con)) break()
+
+    Sys.sleep(0.05)
+
+  }
+
+  if (is.null(con)) {
+
+    stop("Unable to connect to M2")
+
+  }
+
+  options(m2_con = con)
 
 }
 
@@ -124,12 +144,12 @@ stop_m2 <- function() {
 
 #' @export
 #' @rdname m2_call
-reset_m2 <- function(port = 27436L) {
+reset_m2 <- function(port = 27436L, timeout = 10) {
 
   # TODO: check port availability
 
   stop_m2()
-  start_m2(port)
+  start_m2(port, timeout)
 
 }
 
