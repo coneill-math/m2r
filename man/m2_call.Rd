@@ -7,14 +7,16 @@
 \alias{reset_m2}
 \title{Call and reset a Macaulay2 process}
 \usage{
-m2_listen_code(port)
+m2_listen_code(port, timeout)
 
-reset_m2(port = 27436L)
+reset_m2(port = 27436L, timeout = 10)
 
 m2(code)
 }
 \arguments{
 \item{port}{port for Macaulay2 socket}
+
+\item{timeout}{number of sections to attempt Macaulay2 connection before failing}
 
 \item{code}{Macaulay2 code}
 }

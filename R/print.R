@@ -17,10 +17,11 @@
 #'
 #' }
 #'
+
 print.PolynomialRing <- function(x, ...){
 
   s <- sprintf(
-    "M2 PolynomialRing: %s[%s]  (%s)",
+    "M2 PolynomialRing: %s[%s], %s order",
     x$coefring, paste(x$vars, collapse = ","), x$order
   )
   cat(s)

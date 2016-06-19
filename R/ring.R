@@ -23,6 +23,7 @@
 #'
 #' }
 #'
+
 ring <- function(vars,
   coefring = c("CC", "RR", "QQ", "ZZ"),
   order = c("grevlex", "lex", "glex"),
