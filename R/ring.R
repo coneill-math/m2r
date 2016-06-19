@@ -12,7 +12,7 @@
 #'
 #' \dontrun{ requires Macaulay2 be installed
 #'
-#' (myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "Lex"))
+#' (myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 #'
 #' myring[["m2name"]]
 #' myring[["vars"]]
@@ -25,7 +25,7 @@
 #'
 ring <- function(vars,
   coefring = c("CC", "RR", "QQ", "ZZ"),
-  order = c("lex", "glex", "grevlex"),
+  order = c("grevlex", "lex", "glex"),
   code = FALSE
 ) {
 

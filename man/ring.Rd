@@ -4,8 +4,8 @@
 \alias{ring}
 \title{Create a new ring in Macaulay2}
 \usage{
-ring(vars, coefring = c("CC", "RR", "QQ", "ZZ"), order = c("lex", "glex",
-  "grevlex"), code = FALSE)
+ring(vars, coefring = c("CC", "RR", "QQ", "ZZ"), order = c("grevlex", "lex",
+  "glex"), code = FALSE)
 }
 \arguments{
 \item{vars}{vector of variable names}
@@ -26,7 +26,7 @@ Create a new ring in Macaulay2
 
 \dontrun{ requires Macaulay2 be installed
 
-(myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "Lex"))
+(myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 
 myring[["m2name"]]
 myring[["vars"]]
