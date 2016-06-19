@@ -38,21 +38,21 @@
 
 m2_listen_code <- function (port, timeout) {
   sprintf("
-    m2rint_inout = openInOut \"$:%d\";
+    m2rintinout = openInOut \"$:%d\";
     while true do (
-      m2rint_inline = read m2rint_inout;
-      if m2rint_inline == \"\" then break;
+      m2rintinline = read m2rintinout;
+      if m2rintinline == \"\" then break;
 
-      m2rint_retcode = 0;
-      try ( m2rint_outline = toString value(m2rint_inline); )
-  		else ( m2rint_outline = \"Macaulay2 Error!\"; m2rint_retcode = 1; );
+      m2rintretcode = 0;
+      try ( m2rintoutline = toString value(m2rintinline); )
+  		else ( m2rintoutline = \"Macaulay2 Error!\"; m2rintretcode = 1; );
 
-      m2rint_numlines = 1 + #select(///\\\\n///, m2rint_outline);
+      m2rintnumlines = 1 + #select(///\\\\n///, m2rintoutline);
 
-      m2rint_inout << m2rint_retcode << \" \" << m2rint_numlines << \"\\n\" << flush;
-      m2rint_inout << m2rint_outline << \"\\n\" << flush;
+      m2rintinout << m2rintretcode << \" \" << m2rintnumlines << \"\\n\" << flush;
+      m2rintinout << m2rintoutline << \"\\n\" << flush;
     );
-    close m2rint_inout;
+    close m2rintinout;
   ", port)
 }
 # cat(m2_listen_code(27436L, 10))
