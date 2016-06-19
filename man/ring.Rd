@@ -4,7 +4,8 @@
 \alias{ring}
 \title{Create a new ring in Macaulay2}
 \usage{
-ring(vars, coefring = "CC", order = "GRevLex")
+ring(vars, coefring = c("CC", "RR", "QQ", "ZZ"), order = c("lex", "glex",
+  "grevlex"), code = FALSE)
 }
 \arguments{
 \item{vars}{vector of variable names}
@@ -12,6 +13,8 @@ ring(vars, coefring = "CC", order = "GRevLex")
 \item{coefring}{coefficient ring}
 
 \item{order}{a term order}
+
+\item{code}{message code to user? (default = FALSE)}
 }
 \value{
 a reference to a Macaulay2 ring
@@ -33,5 +36,6 @@ myring[["order"]]
 m2(paste0("class(", myring[["m2name"]], ")"))
 
 }
+
 }
 
