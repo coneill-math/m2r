@@ -50,13 +50,8 @@ ring <- function(vars,
     m2order <- paste0("{", order, " => ", length(vars), "}")
   }
 
-  # grab # of current rings, set ring number, and increment
-  ringnum <- getOption("m2_ring_count")
-  ringnum <- ifelse(is.null(ringnum), 1L, strtoi(ringnum))
-  setOption("m2_ring_count", ringnum + 1)
-
   # make ring name
-  ringname <- sprintf("m2rintring%08d", ringnum)
+  ringname <- name_and_increment("ring", "m2_ring_count")
 
   # sortedvars <- vars(reorder(mp(paste(vars, collapse = " ")), order = order))
   sortedvars <- vars

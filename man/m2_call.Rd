@@ -11,12 +11,12 @@ m2_listen_code(port, timeout)
 
 reset_m2(port = 27436L, timeout = 10)
 
-m2(code)
+m2(code, timeout = -1)
 }
 \arguments{
 \item{port}{port for Macaulay2 socket}
 
-\item{timeout}{number of sections to attempt Macaulay2 connection before failing}
+\item{timeout}{number of seconds before aborting}
 
 \item{code}{Macaulay2 code}
 }

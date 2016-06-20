@@ -3,7 +3,7 @@
 #' Call and reset a Macaulay2 process
 #'
 #' @param port port for Macaulay2 socket
-#' @param timeout number of sections to attempt Macaulay2 connection before failing
+#' @param timeout number of seconds before aborting
 #' @param code Macaulay2 code
 #' @return m2 return value
 #' @name m2_call
@@ -44,13 +44,18 @@ m2_listen_code <- function (port, timeout) {
       if m2rintinline == \"\" then break;
 
       m2rintretcode = 0;
-      try ( m2rintoutline = toString value(m2rintinline); )
-  		else ( m2rintoutline = \"Macaulay2 Error!\"; m2rintretcode = 1; );
+      m2rintoutline = 0;
+      try ( m2rintoutline = toString value(m2rintinline); );
+
+      if (try (m2rintoutline == 0) else false) then (
+        m2rintoutline = \"Macaulay2 Error!\";
+        m2rintretcode = 1;
+      );
 
       m2rintnumlines = 1 + #select(///\\\\n///, m2rintoutline);
 
-      m2rintinout << m2rintretcode << \" \" << m2rintnumlines << \"\\n\" << flush;
-      m2rintinout << m2rintoutline << \"\\n\" << flush;
+      m2rintinout << m2rintretcode << \" \" << m2rintnumlines << \"\\n\"
+                  << m2rintoutline << \"\\n\" << flush;
     );
     close m2rintinout;
   ", port)
@@ -105,7 +110,7 @@ start_m2 <- function(port = 27436L, timeout = 10) {
       con <- suppressWarnings(
         socketConnection(
           host = "localhost", port = port,
-          blocking = TRUE, server = FALSE,
+          blocking = FALSE, server = FALSE,
           open = "r+", timeout = 60*60*24*7
         )
       ),
@@ -125,7 +130,9 @@ start_m2 <- function(port = 27436L, timeout = 10) {
   }
 
   options(m2_con = con)
-
+  options(m2_procid = strtoi(m2("processID()")))
+  options(m2_port = port)
+  options(m2_timeout = timeout)
 }
 
 stop_m2 <- function() {
@@ -146,8 +153,6 @@ stop_m2 <- function() {
 #' @rdname m2_call
 reset_m2 <- function(port = 27436L, timeout = 10) {
 
-  # TODO: check port availability
-
   stop_m2()
   start_m2(port, timeout)
 
@@ -155,7 +160,7 @@ reset_m2 <- function(port = 27436L, timeout = 10) {
 
 #' @export
 #' @rdname m2_call
-m2 <- function(code) {
+m2 <- function(code, timeout = -1) {
 
   # ensure m2 is running
   start_m2()
@@ -165,20 +170,51 @@ m2 <- function(code) {
 
   # grab connection
   m2_con <- getOption("m2_con")
+  m2_procid <- getOption("m2_procid")
 
   # write to connection
   writeLines(code, m2_con)
 
-  # read from connection and return
-  outinfo <- readLines(m2_con, 1)
+  i <- 0
+  outinfo <- NULL
+  while (TRUE) {
+    # read output info
+    outinfo <- readLines(m2_con, 1)
 
-  info <- strsplit(outinfo, " ", fixed = TRUE)[[1]]
-  retcode <- strtoi(info[1])
-  numlines <- strtoi(info[2])
+    if (length(outinfo) > 0) {
+      break()
+    }
+
+    i <- i + 1
+    if (timeout > 0 && i >= timeout * 20) {
+      break()
+    } else {
+      Sys.sleep(0.05)
+    }
+  }
+
+  if (length(outinfo) > 0) {
+    # read output from connection and return
+    info <- strsplit(outinfo, " ", fixed = TRUE)[[1]]
+
+    retcode <- strtoi(info[1])
+    numlines <- strtoi(info[2])
+  } else {
+    # cancel command if needed
+    tools::pskill(m2_procid, tools::SIGINT)
+    Sys.sleep(0.05)
+
+    retcode <- 2
+    numlines <- -1
+  }
 
   output <- paste(readLines(m2_con, numlines), collapse="\n")
 
-  if (retcode == 1) {
+  if (retcode == 2) {
+    stop_m2()
+    # start_m2(getOption("m2_port"), getOption("m2_timeout"))
+    stop("Command timed out, M2 connection lost")
+  } else if (retcode == 1) {
     stop(output)
   }
 
