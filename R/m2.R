@@ -52,7 +52,7 @@ m2_listen_code <- function (port, timeout) {
         m2rintretcode = 1;
       );
 
-      m2rintnumlines = 1 + #select(///\\\\n///, m2rintoutline);
+      m2rintnumlines = 1 + #select(\"\\n\", m2rintoutline);
 
       m2rintinout << m2rintretcode << \" \" << m2rintnumlines << \"\\n\"
                   << m2rintoutline << \"\\n\" << flush;
