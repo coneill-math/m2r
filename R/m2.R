@@ -117,16 +117,16 @@ start_m2 <- function(port = 27436L, timeout = 10) {
       error = function(e) {  }
     )
 
-    if (!is.null(con)) break()
-
-    Sys.sleep(0.05)
+    if (!is.null(con)) {
+      break()
+    } else {
+      Sys.sleep(0.05)
+    }
 
   }
 
   if (is.null(con)) {
-
     stop("Unable to connect to M2")
-
   }
 
   options(m2_con = con)
@@ -139,12 +139,19 @@ stop_m2 <- function() {
 
   # grab connection
   m2_con <- getOption("m2_con")
+  m2_procid <- getOption("m2_procid")
 
   # send kill code
   if (!is.null(m2_con)) {
     writeLines("", m2_con)
     close(m2_con)
+
+    # not elegant, but a necessary safety measure
+    Sys.sleep(0.01)
+    tools::pskill(m2_procid)
+
     options(m2_con = NULL)
+    options(m2_procid = NULL)
   }
 
 }
@@ -202,7 +209,7 @@ m2 <- function(code, timeout = -1) {
   } else {
     # cancel command if needed
     tools::pskill(m2_procid, tools::SIGINT)
-    Sys.sleep(0.05)
+    Sys.sleep(0.01)
 
     retcode <- 2
     numlines <- -1
