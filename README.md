@@ -3,11 +3,11 @@
 **m2r**
 =======
 
-**m2r** is a very new package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2](http://www.math.uiuc.edu/Macaulay2/).
+**m2r** is a very new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2](http://www.math.uiuc.edu/Macaulay2/).
 
 The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16), funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page).
 
-It is currently being actively developed.
+It is currently being actively developed, so expect changes. If you have a feature request, please file an issue!
 
 Getting started
 ---------------
@@ -114,7 +114,7 @@ gb_(ps)
 Acknowledgements
 ----------------
 
-This material is based upon work supported by the National Science Foundation under Grant No. 1321794.
+This material is based upon work supported by the National Science Foundation under [Grant No. 1321794](http://nsf.gov/awardsearch/showAward?AWD_ID=1321794).
 
 Installation
 ------------
