@@ -33,15 +33,11 @@ matrix_m2 <- function(m, ring = NA, code = FALSE) {
   matrix_name <- name_and_increment("matrix", "m2_matrix_count")
 
   # prepare matrix string
-  rows <- lapply(seq(1,nrow(m)), function(i) paste0("{", paste0(m[i,], collapse = paste0(ring_str, ",")), paste0(ring_str, "}")))
-  matrix_str <- paste0("{", paste0(rows, collapse = ","), "}")
+  matrix_str <- listify( apply(m, 1, listify) )
 
   # construct code and message
   # matrix{{1,2,3},{4,5,6}}
-  line <- sprintf(
-    "%s = matrix%s",
-    matrix_name, matrix_str
-  )
+  line <- sprintf("%s = matrix%s", matrix_name, matrix_str)
   if(code) message(line)
 
   # run m2
