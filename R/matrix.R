@@ -15,13 +15,12 @@
 #'
 #' mymatrix$m2name
 #' m2(mymatrix$m2name)
-#' m2(mymatrix$rmatrix)
 #' m2(paste0("class(", mymatrix$m2name, ")"))
 #'
 #' }
 #'
 
-matrix_m2 <- function(m, ring = NA, code = FALSE) {
+matrix_m2 <- function(mat, ring = NA, code = FALSE) {
 
   if (missing(ring)) {
     ring_str <- ""
@@ -33,7 +32,7 @@ matrix_m2 <- function(m, ring = NA, code = FALSE) {
   matrix_name <- name_and_increment("matrix", "m2_matrix_count")
 
   # prepare matrix string
-  matrix_str <- listify( apply(m, 1, listify) )
+  matrix_str <- listify( apply(mat, 1, listify) )
 
   # construct code and message
   # matrix{{1,2,3},{4,5,6}}
@@ -46,7 +45,7 @@ matrix_m2 <- function(m, ring = NA, code = FALSE) {
   # construct R-side matrix, class and return
   matrix <- list(
     m2name = matrix_name,
-    rmatrix = m
+    rmatrix = mat
   )
   class(matrix) <- c("Matrix", "m2")
   matrix
