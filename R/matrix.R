@@ -2,8 +2,8 @@
 #'
 #' Create a new matrix in Macaulay2
 #'
-#' @param mat matrix
-#' @param ring ring containing the matrix entries
+#' @param mat a matrix
+#' @param ring a ring containing the matrix entries
 #' @param code message code to user? (default = FALSE)
 #' @return a reference to a Macaulay2 ring
 #' @export
@@ -15,6 +15,7 @@
 #'
 #' mymatrix$m2name
 #' m2(mymatrix$m2name)
+#' m2(mymatrix$rmatrix)
 #' m2(paste0("class(", mymatrix$m2name, ")"))
 #'
 #' }
@@ -48,7 +49,8 @@ matrix_m2 <- function(m, ring = NA, code = FALSE) {
 
   # construct R-side matrix, class and return
   matrix <- list(
-    m2name = matrix_name
+    m2name = matrix_name,
+    rmatrix = m
   )
   class(matrix) <- c("Matrix", "m2")
   matrix
