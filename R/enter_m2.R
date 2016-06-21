@@ -43,7 +43,7 @@ enter_m2 <- function (port = 27436L, timeout = 10) {
     i <- readline("i : ")
     if(i == "exit") break
     o <- m2(i)
-    cat(paste("o : ", o))
+    cat(paste0("o : ", o))
   }
   invisible(TRUE)
 }
