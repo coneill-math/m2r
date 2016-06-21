@@ -14,12 +14,12 @@
 #'
 #' (myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 #'
-#' myring[["m2name"]]
-#' myring[["vars"]]
-#' myring[["coefring"]]
-#' myring[["order"]]
+#' myring$m2name
+#' myring$vars
+#' myring$coefring
+#' myring$order
 #'
-#' m2(paste0("class(", myring[["m2name"]], ")"))
+#' m2(paste0("class(", myring$m2name, ")"))
 #'
 #' }
 #'
@@ -50,13 +50,8 @@ ring <- function(vars,
     m2order <- paste0("{", order, " => ", length(vars), "}")
   }
 
-  # grab # of current rings, set ring number, and increment
-  ringnum <- getOption("m2_ring_count")
-  ringnum <- ifelse(is.null(ringnum), 1L, strtoi(ringnum))
-  setOption("m2_ring_count", ringnum + 1)
-
   # make ring name
-  ringname <- sprintf("m2rintring%08d", ringnum)
+  ringname <- name_and_increment("ring", "m2_ring_count")
 
   # sortedvars <- vars(reorder(mp(paste(vars, collapse = " ")), order = order))
   sortedvars <- vars

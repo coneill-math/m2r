@@ -11,12 +11,12 @@ m2_listen_code(port, timeout)
 
 reset_m2(port = 27436L, timeout = 10)
 
-m2(code)
+m2(code, timeout = -1)
 }
 \arguments{
 \item{port}{port for Macaulay2 socket}
 
-\item{timeout}{number of sections to attempt Macaulay2 connection before failing}
+\item{timeout}{number of seconds before aborting}
 
 \item{code}{Macaulay2 code}
 }
@@ -35,18 +35,11 @@ m2("1 + 1")
 m2("factor 32004")
 
 # compute a grobner basis of a polynomial ideal
-(gb <- m2("
+m2("
   R = QQ[a..d]
   I = ideal(a^3-b^2*c, b*c^2-c*d^2, c^3)
   G = gens gb I
-"))
-
-# parse it into an mpoly object
-library(stringr)
-library(mpoly)
-gb <- str_sub(gb, 10, -3)
-gb <- str_replace_all(gb, "\\\\*", " ")
-mp(str_split(gb, ", ")[[1]])
+")
 
 m2("a = 1 + 1")
 m2("a")

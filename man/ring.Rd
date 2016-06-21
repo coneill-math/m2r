@@ -28,12 +28,12 @@ Create a new ring in Macaulay2
 
 (myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 
-myring[["m2name"]]
-myring[["vars"]]
-myring[["coefring"]]
-myring[["order"]]
+myring$m2name
+myring$vars
+myring$coefring
+myring$order
 
-m2(paste0("class(", myring[["m2name"]], ")"))
+m2(paste0("class(", myring$m2name, ")"))
 
 }
 
