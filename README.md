@@ -49,13 +49,13 @@ Rings, ideals, and Grobner bases
 R <- ring(c("x", "y", "z"))
 R
 #> M2 PolynomialRing: CC[x,y,z], grevlex order
-str(R)
+str_m2(R)
 #> M2 Object
 #>     Type : PolynomialRing
-#>     Vars : x, y, z
-#>    Order : grevlex
 #>   R Name : R
 #>  M2 Name : m2rintring00000001
+#>     Vars : x, y, z
+#>    Order : grevlex
 ```
 
 You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well. The basic function to do this is `gb()`:

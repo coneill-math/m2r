@@ -72,7 +72,7 @@ __m2r__ currently has basic support for [rings](https://en.wikipedia.org/wiki/Ri
 ```{r ring_definition}
 R <- ring(c("x", "y", "z"))
 R
-str(R)
+str_m2(R)
 ```
 
 You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well.  The basic function to do this is `gb()`:
