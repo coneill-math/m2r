@@ -7,11 +7,11 @@
 matrix_m2(m, ring = NA, code = FALSE)
 }
 \arguments{
-\item{m}{matrix}
-
-\item{ring}{ring containing the matrix entries}
+\item{ring}{a ring containing the matrix entries}
 
 \item{code}{message code to user? (default = FALSE)}
+
+\item{mat}{a matrix}
 }
 \value{
 a reference to a Macaulay2 ring
@@ -27,6 +27,7 @@ Create a new matrix in Macaulay2
 
 mymatrix$m2name
 m2(mymatrix$m2name)
+m2(mymatrix$rmatrix)
 m2(paste0("class(", mymatrix$m2name, ")"))
 
 }
