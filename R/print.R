@@ -38,10 +38,7 @@ print.PolynomialRing <- function(x, ...){
 #' @rdname m2_print
 print.Matrix <- function(x, ...){
 
-  s <- sprintf(
-    "M2 Matrix: %s",
-    m2(x$m2name)
-  )
+  s <- sprintf("M2 Matrix: %s", m2(x$m2name))
   cat(s)
 
   invisible(s)

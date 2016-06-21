@@ -7,11 +7,11 @@
 matrix_m2(m, ring = NA, code = FALSE)
 }
 \arguments{
+\item{m}{matrix}
+
 \item{ring}{ring containing the matrix entries}
 
 \item{code}{message code to user? (default = FALSE)}
-
-\item{mat}{matrix}
 }
 \value{
 a reference to a Macaulay2 ring

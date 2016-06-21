@@ -30,3 +30,5 @@ name_and_increment <- function(prefix, option) {
   # make name
   sprintf("m2rint%s%08d", prefix, num)
 }
+
+listify <- function(strings) paste0("{", paste(strings, collapse = ","), "}")
