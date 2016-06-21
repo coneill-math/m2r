@@ -39,8 +39,19 @@ solve_system <- function (mpolyList) {
     needsPackage "PHCpack"
     R := CC[%s]
     pts := solveSystem {%s};
-    for i in 0..(#pts-1) list (pts#i#Coordinates)
+    for i in 0..(#pts-1) list (toExternalString pts#i#Coordinates)
   ', var_str, poly_str)
 
-  m2(m2_code)
+  m2_out <- str_sub(m2(m2_code),2,-2)
+  m2_out <- str_replace_all(m2_out, "p53", "")
+  m2_out <- str_replace_all(m2_out, "toCC\\(", "complex(real=")
+  m2_out <- str_replace_all(m2_out, ",complex", "Dcomplex")
+  m2_out <- str_replace_all(m2_out, "\\},", "\\}")
+  m2_out <- str_replace_all(m2_out, ",",",imaginary=")
+  m2_out <- str_replace_all(m2_out, "Dcomplex", ",complex")
+  m2_out <- str_replace_all(m2_out, "\\{", "c\\(")
+  m2_out <- str_replace_all(m2_out, "\\}", "\\),")
+  m2_out <- paste0("list(",str_sub(m2_out,0,-2),")")
+  m2_out <- eval(parse(text=m2_out))
+  m2_out
 }
