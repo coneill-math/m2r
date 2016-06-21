@@ -35,18 +35,11 @@ m2("1 + 1")
 m2("factor 32004")
 
 # compute a grobner basis of a polynomial ideal
-(gb <- m2("
+m2("
   R = QQ[a..d]
   I = ideal(a^3-b^2*c, b*c^2-c*d^2, c^3)
   G = gens gb I
-"))
-
-# parse it into an mpoly object
-library(stringr)
-library(mpoly)
-gb <- str_sub(gb, 10, -3)
-gb <- str_replace_all(gb, "\\\\*", " ")
-mp(str_split(gb, ", ")[[1]])
+")
 
 m2("a = 1 + 1")
 m2("a")
