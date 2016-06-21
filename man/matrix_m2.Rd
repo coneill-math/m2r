@@ -4,14 +4,14 @@
 \alias{matrix_m2}
 \title{Create a new matrix in Macaulay2}
 \usage{
-matrix_m2(m, ring = NA, code = FALSE)
+matrix_m2(mat, ring = NA, code = FALSE)
 }
 \arguments{
+\item{mat}{a matrix}
+
 \item{ring}{a ring containing the matrix entries}
 
 \item{code}{message code to user? (default = FALSE)}
-
-\item{mat}{a matrix}
 }
 \value{
 a reference to a Macaulay2 ring
@@ -27,7 +27,6 @@ Create a new matrix in Macaulay2
 
 mymatrix$m2name
 m2(mymatrix$m2name)
-m2(mymatrix$rmatrix)
 m2(paste0("class(", mymatrix$m2name, ")"))
 
 }
