@@ -36,6 +36,13 @@ print.PolynomialRing <- function(x, ...){
 
 #' @export
 #' @rdname m2_print
+print.Ideal <- function(x, ...){
+  cat("M2 Ideal")
+}
+
+
+#' @export
+#' @rdname m2_print
 print.Matrix <- function(x, ...){
 
   s <- sprintf("M2 Matrix: %s", m2(x$m2name))
