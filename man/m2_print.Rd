@@ -2,11 +2,14 @@
 % Please edit documentation in R/print.R
 \name{m2_print}
 \alias{m2_print}
+\alias{print.Ideal}
 \alias{print.Matrix}
 \alias{print.PolynomialRing}
 \title{Print a Macaulay2 object}
 \usage{
 \method{print}{PolynomialRing}(x, ...)
+
+\method{print}{Ideal}(x, ...)
 
 \method{print}{Matrix}(x, ...)
 }

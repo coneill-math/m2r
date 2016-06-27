@@ -31,7 +31,7 @@ because the solver only works over the complex numbers.
 
 (mpolyList <- mp(c("t^4 - x", "t^3 - y", "t^2 - z", "x+y+z")))
 solve_system(mpolyList)
-
+mixed_volume(mpolyList,startsystem=TRUE)
 }
 
 }
