@@ -99,7 +99,14 @@ gb_(ps)
 
 
 
+## Additional features
 
+### Factor integers
+
+```{r factor_n}
+(x <- 2^5 * 3^4 * 5^3 * 7^2 * 11^1)
+factor_n(x)
+```
 
 
 
