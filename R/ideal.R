@@ -2,9 +2,9 @@
 #'
 #' Create a new ideal in Macaulay2
 #'
-#' @param list of mpolys
-#' @param ring
-#' @param code message code to user? (default = FALSE)
+#' @param mpolyList list of mpolys
+#' @param ring the referent ring in Macaulay2
+#' @param code logical; message code to user? (default = FALSE)
 #' @return a reference to a Macaulay2 ideal
 #' @export
 #' @examples
