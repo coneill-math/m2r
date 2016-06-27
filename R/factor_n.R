@@ -39,7 +39,7 @@ factor_n <- function (n, code = FALSE) {
     if(str_detect(factor, fixed("^"))) {
       return( str_split(factor, fixed("^"))[[1]] )
     } else {
-      return( c(factor, 0L) )
+      return( c(factor, 1L) )
     }
   })
 
