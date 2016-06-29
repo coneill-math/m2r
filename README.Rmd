@@ -7,7 +7,6 @@ output:
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, echo = FALSE}
-
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -101,11 +100,37 @@ gb_(ps)
 
 ## Additional features
 
+
+
+
 ### Factor integers
 
 ```{r factor_n}
 (x <- 2^5 * 3^4 * 5^3 * 7^2 * 11^1)
 factor_n(x)
+```
+
+
+
+### Smith normal form of a matrix
+
+The Smith normal form of a matrix here refers to the "decomposition"" of an integer matrix $D = PMQ$, where $D$, $P$, and $Q$ are integer matrices and $D$ is diagonal. This is somewhat like a singular value decomposition for integer matrices.
+
+```{r snf}
+M <- matrix(c(
+   2,  4,   4,
+  -6,  6,  12,
+  10, -4, -16
+), nrow = 3, byrow = TRUE)
+
+(mats <- snf(M))
+P <- mats$P; D <- mats$D; Q <- mats$Q
+
+P %*% M %*% Q                # = D
+solve(P) %*% D %*% solve(Q)  # = M
+
+det(P)
+det(Q)
 ```
 
 

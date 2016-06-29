@@ -31,4 +31,48 @@ name_and_increment <- function(prefix, option) {
   sprintf("m2rint%s%08d", prefix, num)
 }
 
-listify <- function(strings) paste0("{", paste(strings, collapse = ","), "}")
+
+
+
+listify <- function (strings) paste0("{", paste(strings, collapse = ","), "}")
+
+listify_mat <- function (mat) listify(apply(t(mat), 1, listify))
+# (mat <- matrix(1:9, nrow = 3))
+# listify_mat(mat)
+
+
+
+
+delistify <- function (string, f, collapse, ...) {
+
+  # dewhiten
+  s <- str_replace_all(string, "[\\s]+", "")
+
+  # kill outside {}
+  s <- str_sub(s, 3, -3)
+
+  # break it up
+  s <- str_split(s, fixed("},{"))[[1]]
+  s <- str_split(s, fixed(","))
+
+  # f, if available
+  if ( !missing(f) ) s <- lapply(s, f, ...)
+
+  # collapse, if available
+  if ( !missing(collapse) ) s <- do.call(collapse, s)
+
+  # return
+  s
+
+}
+# string <- "{{1,2,3}, {1,34,45}, {2213,1123,6543}, {0,0,0}}"
+# delistify(string)
+# str(delistify(string))
+# delistify(string, as.integer)
+# delistify(string, as.integer, rbind)
+
+
+
+
+
+
