@@ -130,7 +130,7 @@ factor_n(x)
 
 ### Smith normal form of a matrix
 
-The Smith normal form of a matrix here refers to the decomposition of an integer matrix *D = PMQ*, where *D*, *P*, and *Q* are integer matrices and *D* is diagonal. This is somewhat like a singular value decomposition for integer matrices.
+The Smith normal form of a matrix *M* here refers to the decomposition of an integer matrix *D = PMQ*, where *D*, *P*, and *Q* are integer matrices and *D* is diagonal. *P* and *Q* are unimodular matrices (their determinants are -1 or 1), so they are invertible. This is somewhat like a singular value decomposition for integer matrices.
 
 ``` r
 M <- matrix(c(
