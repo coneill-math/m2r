@@ -128,6 +128,54 @@ factor_n(x)
 #> [5,]    11     1
 ```
 
+### Smith normal form of a matrix
+
+The Smith normal form of a matrix here refers to the "decomposition"" of an integer matrix \(D = PMQ\), where \(D\), \(P\), and \(Q\) are integer matrices and \(D\) is diagonal. This is somewhat like a singular value decomposition for integer matrices.
+
+``` r
+M <- matrix(c(
+   2,  4,   4,
+  -6,  6,  12,
+  10, -4, -16
+), nrow = 3, byrow = TRUE)
+
+(mats <- snf(M))
+#> $D
+#>      [,1] [,2] [,3]
+#> [1,]   12    0    0
+#> [2,]    0    6    0
+#> [3,]    0    0    2
+#> 
+#> $Q
+#>      [,1] [,2] [,3]
+#> [1,]    2    1    1
+#> [2,]    0    1    0
+#> [3,]   -1    0    0
+#> 
+#> $P
+#>      [,1] [,2] [,3]
+#> [1,]   -3    4    3
+#> [2,]   -1    3    2
+#> [3,]    2   -3   -2
+P <- mats$P; D <- mats$D; Q <- mats$Q
+
+P %*% M %*% Q                # = D
+#>      [,1] [,2] [,3]
+#> [1,]   12    0    0
+#> [2,]    0    6    0
+#> [3,]    0    0    2
+solve(P) %*% D %*% solve(Q)  # = M
+#>      [,1] [,2] [,3]
+#> [1,]    2    4    4
+#> [2,]   -6    6   12
+#> [3,]   10   -4  -16
+
+det(P)
+#> [1] -1
+det(Q)
+#> [1] 1
+```
+
 Acknowledgements
 ----------------
 

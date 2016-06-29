@@ -2,7 +2,8 @@
 #'
 #' For an integer matrix M, this computes the matrices D, P, and Q
 #' such that \emph{D = PMQ}, which can be seen as an analogue of the
-#' singular value decomposition.
+#' singular value decomposition. All are integer matrices, and P and
+#' Q are unimodular (have determinants +- 1).
 #'
 #' @param mat a matrix (integer entries)
 #' @param code logical; message code to user? (default = FALSE)
@@ -17,9 +18,15 @@
 #'   -6,  6,  12,
 #'   10, -4, -16
 #' ), nrow = 3, byrow = TRUE)
+#'
 #' (mats <- snf(M))
 #' P <- mats$P; D <- mats$D; Q <- mats$Q
-#' P %*% M %*% Q # = D
+#'
+#' P %*% M %*% Q                # = D
+#' solve(P) %*% D %*% solve(Q)  # = M
+#'
+#' det(P)
+#' det(Q)
 #'
 #' }
 #'
