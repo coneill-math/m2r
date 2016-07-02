@@ -13,7 +13,8 @@ LazyData: TRUE
 Depends:
     mpoly (>= 1.0.0)
 Imports:
-    stringr
+    stringr,
+    gmp
 SystemRequirements:
     Macaulay2 (\url{http://www.math.uiuc.edu/Macaulay2/})
 Suggests:

@@ -46,9 +46,9 @@ snf <- function (mat, code = FALSE) {
 
   # make into list and return
   list(
-    D = delistify(char[1], as.integer, rbind),
-    Q = t(delistify(char[2], as.integer, rbind)),
-    P = t(delistify(char[3], as.integer, rbind))
+    D = delistify(char[1], as.bigz, rbind),
+    Q = t(delistify(char[2], as.bigz, rbind)),
+    P = t(delistify(char[3], as.bigz, rbind))
   )
 }
 
