@@ -4,18 +4,22 @@
 \alias{factor_n}
 \title{Factor an integer into primes}
 \usage{
-factor_n(n, code = FALSE)
+factor_n(n, gmp = FALSE, code = FALSE)
 }
 \arguments{
 \item{n}{an integer or a polynomial}
 
+\item{gmp}{logical; use multiple precision arithmetic? see
+\code{\link{as.bigz}}}
+
 \item{code}{logical; message code to user? (default = FALSE)}
 }
 \value{
-a character or integer matrix with columns named
-  \code{prime} and \code{power}. if all the numbers have fewer
-  than 10 digits, the matrix returned contains integers;
-  otherwise it contains characters.
+if \code{gmp = FALSE}, a character or integer matrix with
+  columns named \code{prime} and \code{power}. if all the numbers
+  have fewer than 10 digits, the matrix returned contains
+  integers; otherwise it contains characters. if \code{gmp =
+  TRUE}, a big integer matrix.
 }
 \description{
 Factor an integer into primes
@@ -29,6 +33,7 @@ factor_n(3234432540)
 factor_n(323443254223453)
 factor_n(rpois(1, 1e4))
 factor_n("32344325422364353453")
+factor_n("32344325422364353453", gmp = TRUE)
 m2("11 * 479 * 6138607975396537")
 11 * 479 * 6138607975396537
 

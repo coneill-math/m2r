@@ -3,11 +3,14 @@
 #' Factor an integer into primes
 #'
 #' @param n an integer or a polynomial
+#' @param gmp logical; use multiple precision arithmetic? see
+#'   \code{\link{as.bigz}}
 #' @param code logical; message code to user? (default = FALSE)
-#' @return a character or integer matrix with columns named
-#'   \code{prime} and \code{power}. if all the numbers have fewer
-#'   than 10 digits, the matrix returned contains integers;
-#'   otherwise it contains characters.
+#' @return if \code{gmp = FALSE}, a character or integer matrix with
+#'   columns named \code{prime} and \code{power}. if all the numbers
+#'   have fewer than 10 digits, the matrix returned contains
+#'   integers; otherwise it contains characters. if \code{gmp =
+#'   TRUE}, a big integer matrix.
 #' @export
 #' @examples
 #'
@@ -18,12 +21,13 @@
 #' factor_n(323443254223453)
 #' factor_n(rpois(1, 1e4))
 #' factor_n("32344325422364353453")
+#' factor_n("32344325422364353453", gmp = TRUE)
 #' m2("11 * 479 * 6138607975396537")
 #' 11 * 479 * 6138607975396537
 #'
 #' }
 #'
-factor_n <- function (n, code = FALSE) {
+factor_n <- function (n, gmp = FALSE, code = FALSE) {
 
   # compute factor with m2, e.g. "2^2*67*97*9433"
   if(is.numeric(n)) n <- as.character(n) # for big Z's
@@ -44,15 +48,17 @@ factor_n <- function (n, code = FALSE) {
   })
 
   # reformat
-  mat <- simplify2array(list)
-  mat <- t(mat)
-  dimnames(mat) <- list(NULL, c("prime", "power"))
+  mat <- t(simplify2array(list))
 
-  # convert to integer
-  if( all(nchar(mat) < 10) ) {
+  # convert to int
+  if (gmp) {
+    mat <- as.bigz(mat)
+  } else if( all(nchar(mat) < 10) ) { # conv 2 int if small
     dim <- dim(mat)
     mat <- as.integer(mat)
     dim(mat) <- dim
+    colnames(mat) <- c("prime", "power")
+  } else { # if char array
     colnames(mat) <- c("prime", "power")
   }
 
