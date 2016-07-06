@@ -55,7 +55,7 @@ m2_listen_code <- function (port, timeout) {
 }
 # cat(m2_listen_code(27436L, 10))
 
-start_m2 <- function(port = 27436L, timeout = 10) {
+do_start_m2 <- function(port = 27436L, timeout = 10) {
 
   # grab connection
   m2_con <- getOption("m2_con")
@@ -119,13 +119,29 @@ start_m2 <- function(port = 27436L, timeout = 10) {
   }
 
   if (is.null(con)) {
-    stop("Unable to connect to M2")
+    return(invisible(1))
   }
 
   options(m2_con = con)
   options(m2_procid = strtoi(m2("processID()")))
   options(m2_port = port)
   options(m2_timeout = timeout)
+  return(invisible(0))
+}
+start_m2 <- function(port = 27436L, timeout = 10, attempts = 10) {
+
+
+  for(i in seq.int(0,attempts-1)) {
+    if (do_start_m2(port,timeout) == 0) {
+      break
+    }
+    if(i == attempts - 1) {
+      message(sprintf("%s attempts made at connecting. Aborting start_m2",attempts))
+    } else {
+      message(sprintf("Unable to connect to M2 on port %s. Attempting to connect on port %s", port, port + 1))
+      port = port + 1
+    }
+  }
 }
 
 stop_m2 <- function() {
@@ -180,6 +196,7 @@ m2 <- function(code, timeout = -1) {
   while (TRUE) {
     # read output info
     outinfo <- readLines(m2_con, 1)
+
 
     if (length(outinfo) > 0) {
       break()
