@@ -30,7 +30,7 @@
 factor_n <- function (n, gmp = FALSE, code = FALSE) {
 
   # compute factor with m2, e.g. "2^2*67*97*9433"
-  if(is.numeric(n)) n <- as.character(n) # for big Z's
+  if(is.numeric(n)) n <- as.character(format(n,scientific = F)) # for big Z's
   m2_code <- sprintf("factor %s", n)
   if(code) message(m2_code)
   char <- m2(m2_code)
