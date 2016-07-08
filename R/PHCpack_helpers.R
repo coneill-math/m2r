@@ -1,5 +1,8 @@
 mpolyList_to_m2_str <- function(mpolyList) {
   # allow for character vectors
+  if (class(mpolyList) == "mpoly") {
+    mpolyList <- mpolyList(mpolyList)
+  }
   if(is.character(mpolyList)) mpolyList <- mp(mpolyList)
 
   # convert mpolylist to strings readable by m2
