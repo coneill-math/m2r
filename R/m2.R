@@ -38,7 +38,12 @@ m2_listen_code <- function (port, timeout) {
 
       m2rintretcode = 0;
       m2rintoutline = 0;
-      try ( m2rintoutline = toString value(m2rintinline); );
+      try (
+        m2rintoutval = value(m2rintinline);
+        m2rintoutline = toString m2rintoutval;
+        m2rintouttype = class m2rintoutval;
+        m2rintouttypetype = class m2rintouttype;
+      );
 
       if (try (m2rintoutline == 0) else false) then (
         m2rintoutline = \"Macaulay2 Error!\";
@@ -47,7 +52,9 @@ m2_listen_code <- function (port, timeout) {
 
       m2rintnumlines = 1 + #select(\"\\n\", m2rintoutline);
 
-      m2rintinout << m2rintretcode << \" \" << m2rintnumlines << \"\\n\"
+      m2rintinout << m2rintretcode << \" \" << m2rintnumlines << \" \"
+                  << toString(m2rintouttype) << \" \"
+                  << toString(m2rintouttypetype) << \"\\n\"
                   << m2rintoutline << \"\\n\" << flush;
     );
     close m2rintinout;
@@ -128,6 +135,7 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
   options(m2_timeout = timeout)
   return(invisible(0))
 }
+
 start_m2 <- function(port = 27436L, timeout = 10, attempts = 10) {
 
 
@@ -197,7 +205,6 @@ m2 <- function(code, timeout = -1) {
     # read output info
     outinfo <- readLines(m2_con, 1)
 
-
     if (length(outinfo) > 0) {
       break()
     }
@@ -216,6 +223,8 @@ m2 <- function(code, timeout = -1) {
 
     retcode <- strtoi(info[1])
     numlines <- strtoi(info[2])
+    type1 <- info[3]
+    type2 <- info[4]
   } else {
     # cancel command if needed
     tools::pskill(m2_procid, tools::SIGINT)
@@ -233,6 +242,14 @@ m2 <- function(code, timeout = -1) {
     stop("Command timed out, M2 connection lost")
   } else if (retcode == 1) {
     stop(output)
+  }
+
+  if (type2 == "Type") {
+    setOption("m2_returntype", type1)
+  } else if (type2 == "Ring") {
+    setOption("m2_returntype", paste("RingElement", type1))
+  } else {
+    setOption("m2_returntype", paste(c(type1,type2), sep = ","))
   }
 
   output
