@@ -16,26 +16,26 @@ Getting started
 
 ``` r
 library(m2r)
-#> Loading required package: mpoly
-#> Loading required package: stringr
-#>   M2 found in /Applications/Macaulay2-1.5/bin
+#  Loading required package: mpoly
+#  Loading required package: stringr
+#    M2 found in /Applications/Macaulay2-1.5/bin
 ```
 
 When loaded, **m2r** initializes a persistent connection to a back-end Macaulay2 session. The basic function in R that accesses this connection is `m2()`, which simply accepts a character string that is run by the Macaulay2 session.
 
 ``` r
 m2("1 + 1")
-#> Starting M2
-#> [1] "2"
+#  Starting M2
+#  [1] "2"
 ```
 
 You can see the persistence by setting variables and accessing them across different `m2()` calls:
 
 ``` r
 m2("a = 1")
-#> [1] "1"
+#  [1] "1"
 m2("a")
-#> [1] "1"
+#  [1] "1"
 ```
 
 Apart from the basic connection to M2, **m2r** has basic data structures and methods to reference and manipulate the M2 objects within R. These are being actively developed.
@@ -48,41 +48,43 @@ Rings, ideals, and Grobner bases
 ``` r
 R <- ring(c("x", "y", "z"))
 R
-#> M2 PolynomialRing: CC[x,y,z], grevlex order
+#  M2 PolynomialRing: CC[x,y,z], grevlex order
 str_m2(R)
-#> M2 Object
-#>     Type : PolynomialRing
-#>   R Name : R
-#>  M2 Name : m2rintring00000001
-#>     Vars : x, y, z
-#>    Order : grevlex
+#  M2 Object
+#      Type : PolynomialRing
+#    R Name : R
+#   M2 Name : m2rintring00000001
+#      Vars : x, y, z
+#     Order : grevlex
 ```
 
 You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well. The basic function to do this is `gb()`:
 
 ``` r
 gb("t^4 - x", "t^3 - y", "t^2 - z")
-#> z^2  -  x
-#> z t  -  y
-#> -1 z x  +  y^2
-#> -1 x  +  t y
-#> -1 z y  +  x t
-#> -1 z  +  t^2
+#  t**4  -  xt**3  -  yt**2  -  z
+#  z^2  -  x
+#  z t  -  y
+#  -1 z x  +  y^2
+#  -1 x  +  t y
+#  -1 z y  +  x t
+#  -1 z  +  t^2
 ```
 
 The result is an `mpolyList` object, from the [**mpoly** package](https://github.com/dkahle/mpoly). You can see the M2 code by adding `code = TRUE`:
 
 ``` r
 gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
-#> R := QQ[t,x,y,z]
-#> I := ideal(t^4  -  x, t^3  -  y, t^2  -  z)
-#> gens gb I
-#> z^2  -  x
-#> z t  -  y
-#> -1 z x  +  y^2
-#> -1 x  +  t y
-#> -1 z y  +  x t
-#> -1 z  +  t^2
+#  t**4  -  xt**3  -  yt**2  -  z
+#  R := QQ[t,x,y,z]
+#  I := ideal(t^4  -  x, t^3  -  y, t^2  -  z)
+#  gens gb I
+#  z^2  -  x
+#  z t  -  y
+#  -1 z x  +  y^2
+#  -1 x  +  t y
+#  -1 z y  +  x t
+#  -1 z  +  t^2
 ```
 
 You can compute the basis respective of different orders as follows. The default ordering is the [grevlex order](https://en.wikipedia.org/wiki/Monomial_order) on the variables given by `mpoly::vars()` applied to the `mpolyList` given by the polynomials.
@@ -90,25 +92,27 @@ You can compute the basis respective of different orders as follows. The default
 ``` r
 R <- ring(c("x","y","t","z"), order = "lex")
 gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
-#> t^2  -  z
-#> -1 t z  +  y
-#> -1 z^2  +  x
+#  t**4  -  xt**3  -  yt**2  -  z
+#  t^2  -  z
+#  -1 t z  +  y
+#  -1 z^2  +  x
 ```
 
 `gb()` also accepts `mpoly` objects, like `gb(p1, p2, p3)` where `p1`, `p2`, and `p3` are `mpoly` objects (e.g. `p1 <- mp("t^4 - x")`). There is also a [standard evaluation](http://adv-r.had.co.nz/Computing-on-the-language.html) version of `gb()` called `gb_()`, which takes in a `mpolyList` object directly.
 
 ``` r
 (ps <- mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
-#> t^4  -  x
-#> t^3  -  y
-#> t^2  -  z
+#  t^4  -  x
+#  t^3  -  y
+#  t^2  -  z
 gb_(ps)
-#> z^2  -  x
-#> z t  -  y
-#> -1 z x  +  y^2
-#> -1 x  +  t y
-#> -1 z y  +  x t
-#> -1 z  +  t^2
+#  t**4  -  xt**3  -  yt**2  -  z
+#  z^2  -  x
+#  z t  -  y
+#  -1 z x  +  y^2
+#  -1 x  +  t y
+#  -1 z y  +  x t
+#  -1 z  +  t^2
 ```
 
 Additional features
@@ -118,14 +122,14 @@ Additional features
 
 ``` r
 (x <- 2^5 * 3^4 * 5^3 * 7^2 * 11^1)
-#> [1] 174636000
+#  [1] 174636000
 factor_n(x)
-#>      prime power
-#> [1,]     2     5
-#> [2,]     3     4
-#> [3,]     5     3
-#> [4,]     7     2
-#> [5,]    11     1
+#       prime power
+#  [1,]     2     5
+#  [2,]     3     4
+#  [3,]     5     3
+#  [4,]     7     2
+#  [5,]    11     1
 ```
 
 ### Smith normal form of a matrix
@@ -140,40 +144,40 @@ M <- matrix(c(
 ), nrow = 3, byrow = TRUE)
 
 (mats <- snf(M))
-#> $D
-#>      [,1] [,2] [,3]
-#> [1,]   12    0    0
-#> [2,]    0    6    0
-#> [3,]    0    0    2
-#> 
-#> $Q
-#>      [,1] [,2] [,3]
-#> [1,]    2    1    1
-#> [2,]    0    1    0
-#> [3,]   -1    0    0
-#> 
-#> $P
-#>      [,1] [,2] [,3]
-#> [1,]   -3    4    3
-#> [2,]   -1    3    2
-#> [3,]    2   -3   -2
+#  $D
+#       [,1] [,2] [,3]
+#  [1,]   12    0    0
+#  [2,]    0    6    0
+#  [3,]    0    0    2
+#  
+#  $Q
+#       [,1] [,2] [,3]
+#  [1,]    2    1    1
+#  [2,]    0    1    0
+#  [3,]   -1    0    0
+#  
+#  $P
+#       [,1] [,2] [,3]
+#  [1,]   -3    4    3
+#  [2,]   -1    3    2
+#  [3,]    2   -3   -2
 P <- mats$P; D <- mats$D; Q <- mats$Q
 
 P %*% M %*% Q                # = D
-#>      [,1] [,2] [,3]
-#> [1,]   12    0    0
-#> [2,]    0    6    0
-#> [3,]    0    0    2
+#       [,1] [,2] [,3]
+#  [1,]   12    0    0
+#  [2,]    0    6    0
+#  [3,]    0    0    2
 solve(P) %*% D %*% solve(Q)  # = M
-#>      [,1] [,2] [,3]
-#> [1,]    2    4    4
-#> [2,]   -6    6   12
-#> [3,]   10   -4  -16
+#       [,1] [,2] [,3]
+#  [1,]    2    4    4
+#  [2,]   -6    6   12
+#  [3,]   10   -4  -16
 
 det(P)
-#> [1] -1
+#  [1] -1
 det(Q)
-#> [1] 1
+#  [1] 1
 ```
 
 Acknowledgements
