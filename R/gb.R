@@ -10,6 +10,8 @@
 #'   polynomials to pass to \code{\link{mp}}
 #' @param mpolyList an mpolyList object
 #' @param ring ring
+#' @param degreeLimit parameter that stops computation after S-polynomials
+#'   have reached a given degree. Only meaningful in homogeneous case.
 #' @param code message code to user? (default = FALSE)
 #' @return an mpolyList object
 #' @seealso \code{\link{mp}}
@@ -58,8 +60,8 @@
 #' gb_(mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
 #' gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
 #'
-#'
-#'
+#' gb(mp("x y-z^2"),mp("y^2-w^2"))
+#' gb(mp("x y-z^2"),mp("y^2-w^2"), degreeLimit = 2)
 #'
 #'
 #' }
@@ -67,7 +69,7 @@
 
 #' @export
 #' @rdname gb
-gb <- function(..., ring, code = FALSE) {
+gb <- function(..., ring, degreeLimit, code = FALSE) {
 
   # grab args
   args <- as.list(match.call(expand.dots = FALSE))[-1]
@@ -102,7 +104,7 @@ gb <- function(..., ring, code = FALSE) {
 
 #' @export
 #' @rdname gb
-gb_ <- function(mpolyList, ring, code = FALSE) {
+gb_ <- function(mpolyList, ring, degreeLimit = -1, code = FALSE) {
 
   # allow for character vectors
   if(is.character(mpolyList)) mpolyList <- mp(mpolyList)
@@ -123,7 +125,12 @@ gb_ <- function(mpolyList, ring, code = FALSE) {
   }
 
   # aggregate m2 code, message if wanted, run m2
-  m2_code <- paste0(ring_str, ideal_str, "gens gb I")
+  m2_code <- paste0(ring_str, ideal_str, "gens gb ")
+  if (degreeLimit > 0) {
+    m2_code <- paste0(m2_code, "(I, DegreeLimit=>", degreeLimit, ")")
+  } else {
+    m2_code <- paste0(m2_code, "I")
+  }
   if(code) message(m2_code)
   m2_out <- m2(m2_code)
 
