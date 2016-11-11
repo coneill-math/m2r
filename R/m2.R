@@ -29,32 +29,50 @@
 #'
 #' }
 
+
+
+
+
 m2_listen_code <- function (port, timeout) {
   sprintf("
     m2rintinout = openInOut \"$:%d\";
+    m2rintruncount = 1;
     while true do (
       m2rintinline = read m2rintinout;
       if m2rintinline == \"\" then break;
 
       m2rintretcode = 0;
-      m2rintoutline = 0;
+      m2rintoutvalsucceeded = false;
+      m2rintoutlinesucceeded = false;
       try (
         m2rintoutval = value(m2rintinline);
-        m2rintoutline = toString m2rintoutval;
-        m2rintouttype = class m2rintoutval;
-        m2rintouttypetype = class m2rintouttype;
+        m2rintoutvalsucceeded = true;
+
+        m2rintoutclass = class m2rintoutval;
+        m2rintoutclassclass = class m2rintoutclass;
+
+        m2rintvarname = \"m2o\" | toString(m2rintruncount);
+        value(m2rintvarname | \" = m2rintoutval;\");
+        m2rintruncount = m2rintruncount + 1;
+
+        m2rintoutline = toExternalString m2rintoutval;
+        m2rintoutlinesucceeded = true;
       );
 
-      if (try (m2rintoutline == 0) else false) then (
+      if not m2rintoutvalsucceeded then (
         m2rintoutline = \"Macaulay2 Error!\";
         m2rintretcode = 1;
+      ) else if not m2rintoutlinesucceeded then (
+        m2rintoutline = \"Macaulay2 toExternalString Error!\";
+        m2rintretcode = 2;
       );
 
       m2rintnumlines = 1 + #select(\"\\n\", m2rintoutline);
 
       m2rintinout << m2rintretcode << \" \" << m2rintnumlines << \" \"
-                  << toString(m2rintouttype) << \" \"
-                  << toString(m2rintouttypetype) << \"\\n\"
+                  << toString(m2rintvarname) << \" \"
+                  << toString(m2rintoutclass) << \" \"
+                  << toString(m2rintoutclassclass) << \"\\n\"
                   << m2rintoutline << \"\\n\" << flush;
     );
     close m2rintinout;
@@ -62,15 +80,20 @@ m2_listen_code <- function (port, timeout) {
 }
 # cat(m2_listen_code(27436L, 10))
 
+
+
+
+
+
+
+
 do_start_m2 <- function(port = 27436L, timeout = 10) {
 
   # grab connection
   m2_con <- getOption("m2_con")
 
   # only start if not already running
-  if (!is.null(m2_con)) {
-    return(invisible(0))
-  }
+  if (!is.null(m2_con)) return(invisible(0))
 
   message("Starting M2")
 
@@ -118,39 +141,45 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
     )
 
     if (!is.null(con)) {
-      break()
+      break
     } else {
       Sys.sleep(0.05)
     }
 
   }
 
-  if (is.null(con)) {
-    return(invisible(1))
-  }
+  if (is.null(con)) return(invisible(1))
 
-  options(m2_con = con)
+  options(m2_con = con, m2_port = port, m2_timeout = timeout)
   options(m2_procid = strtoi(m2("processID()")))
-  options(m2_port = port)
-  options(m2_timeout = timeout)
-  return(invisible(0))
+  invisible(0)
 }
+
+
+
+
+
+
 
 start_m2 <- function(port = 27436L, timeout = 10, attempts = 10) {
 
-
   for(i in seq.int(0,attempts-1)) {
-    if (do_start_m2(port,timeout) == 0) {
-      break
-    }
-    if(i == attempts - 1) {
+    if (do_start_m2(port, timeout) == 0) break
+    if (i == attempts - 1) {
       message(sprintf("%s attempts made at connecting. Aborting start_m2",attempts))
     } else {
       message(sprintf("Unable to connect to M2 on port %s. Attempting to connect on port %s", port, port + 1))
       port = port + 1
     }
   }
+
 }
+
+
+
+
+
+
 
 stop_m2 <- function() {
 
@@ -167,11 +196,13 @@ stop_m2 <- function() {
     Sys.sleep(0.01)
     tools::pskill(m2_procid)
 
-    options(m2_con = NULL)
-    options(m2_procid = NULL)
+    options(m2_con = NULL, m2_procid = NULL)
   }
 
 }
+
+
+
 
 #' @export
 #' @rdname m2_call
@@ -182,9 +213,32 @@ reset_m2 <- function(port = 27436L, timeout = 10) {
 
 }
 
+
+
+m2_to_r. <- function(variables) {
+
+}
+
+
+
+
+
+
 #' @export
 #' @rdname m2_call
 m2 <- function(code, timeout = -1) {
+  m2_binding <- do.call(m2., as.list(match.call())[-1])
+
+  m2_to_r(m2_binding)
+}
+
+
+
+
+
+#' @export
+#' @rdname m2_call
+m2. <- function(code, timeout = -1) {
 
   # ensure m2 is running
   start_m2()
@@ -201,17 +255,15 @@ m2 <- function(code, timeout = -1) {
 
   i <- 0
   outinfo <- NULL
-  while (TRUE) {
+  repeat {
     # read output info
     outinfo <- readLines(m2_con, 1)
 
-    if (length(outinfo) > 0) {
-      break()
-    }
+    if (length(outinfo) > 0) break
 
     i <- i + 1
     if (timeout > 0 && i >= timeout * 20) {
-      break()
+      break
     } else {
       Sys.sleep(0.05)
     }
@@ -223,34 +275,60 @@ m2 <- function(code, timeout = -1) {
 
     retcode <- strtoi(info[1])
     numlines <- strtoi(info[2])
-    type1 <- info[3]
-    type2 <- info[4]
+    m2_name <- info[3]
+    m2_class <- info[4]
+    m2_class_class <- info[5]
   } else {
     # cancel command if needed
     tools::pskill(m2_procid, tools::SIGINT)
     Sys.sleep(0.01)
 
-    retcode <- 2
-    numlines <- -1
+    retcode <- -1L
+    numlines <- -1L
   }
 
-  output <- paste(readLines(m2_con, numlines), collapse="\n")
+  output <- paste(readLines(m2_con, numlines), collapse = "\n")
 
-  if (retcode == 2) {
+  if (retcode == -1L) {
+    # timeout occurred, kill M2 instance and stop
     stop_m2()
     # start_m2(getOption("m2_port"), getOption("m2_timeout"))
     stop("Command timed out, M2 connection lost")
-  } else if (retcode == 1) {
+  } else if (retcode == 1L) {
+    # user's code string errored, alert them
     stop(output)
+  } else if (retcode == 2L) {
+    # toExternalString failed, make ext_str NULL
+    output <- NULL
   }
 
-  if (type2 == "Type") {
-    setOption("m2_returntype", type1)
-  } else if (type2 == "Ring") {
-    setOption("m2_returntype", paste("RingElement", type1))
-  } else {
-    setOption("m2_returntype", paste(c(type1,type2), sep = ","))
-  }
+  # aggregate and class
+  out <- list(
+    ext_str = output,
+    m2_name = m2_name,
+    m2_class = m2_class,
+    m2_class_class = m2_class_class
+  )
+  class(out) <- c("m2_pointer", "m2")
 
-  output
+  # return
+  out
 }
+
+
+
+
+
+# if (type2 == "Type") {
+#   setOption("m2_returntype", type1)
+# } else if (type2 == "Ring") {
+#   setOption("m2_returntype", paste("RingElement", type1))
+# } else {
+#   setOption("m2_returntype", paste(c(type1,type2), sep = ","))
+# }
+
+
+
+
+
+

@@ -18,7 +18,7 @@ Getting started
 library(m2r)
 #  Loading required package: mpoly
 #  Loading required package: stringr
-#    M2 found in /Applications/Macaulay2-1.5/bin
+#    M2 found in /Applications/Macaulay2-1.9.2/bin
 ```
 
 When loaded, **m2r** initializes a persistent connection to a back-end Macaulay2 session. The basic function in R that accesses this connection is `m2()`, which simply accepts a character string that is run by the Macaulay2 session.
@@ -62,7 +62,6 @@ You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as
 
 ``` r
 gb("t^4 - x", "t^3 - y", "t^2 - z")
-#  t**4  -  xt**3  -  yt**2  -  z
 #  z^2  -  x
 #  z t  -  y
 #  -1 z x  +  y^2
@@ -75,7 +74,6 @@ The result is an `mpolyList` object, from the [**mpoly** package](https://github
 
 ``` r
 gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
-#  t**4  -  xt**3  -  yt**2  -  z
 #  R := QQ[t,x,y,z]
 #  I := ideal(t^4  -  x, t^3  -  y, t^2  -  z)
 #  gens gb I
@@ -92,7 +90,6 @@ You can compute the basis respective of different orders as follows. The default
 ``` r
 R <- ring(c("x","y","t","z"), order = "lex")
 gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
-#  t**4  -  xt**3  -  yt**2  -  z
 #  t^2  -  z
 #  -1 t z  +  y
 #  -1 z^2  +  x
@@ -106,7 +103,6 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
 #  t^3  -  y
 #  t^2  -  z
 gb_(ps)
-#  t**4  -  xt**3  -  yt**2  -  z
 #  z^2  -  x
 #  z t  -  y
 #  -1 z x  +  y^2

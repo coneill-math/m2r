@@ -1,3 +1,44 @@
+#' Convert a M2 object into an R object
+#'
+#' Convert a M2 object into an R object
+#'
+#' @param x x
+#' @param ... ...
+#' @return an R object
+#' @name m2_to_r
+#' @examples
+#'
+#' \dontrun{ requires Macaulay2 be installed
+#'
+#'
+#'
+#' }
+
+
+
+
+
+
+
+
+#' @rdname m2_to_r
+#' @export
+m2_to_r <- function(x, ...) UseMethod("m2_to_r")
+
+
+
+
+
+m2_to_r.default <- function(x, ...) x$ext_str
+
+
+
+
+
+
+
+
+
 
 
 # m2 symbol name character
@@ -50,7 +91,7 @@ m2_tokenize <- function(s) {
         if (op == substr(s, i, i + nchar(op) - 1)) {
           tokens <- append(tokens, op)
           i <- i + nchar(op) - 1
-          break()
+          break
         }
       }
 
@@ -163,7 +204,7 @@ m2_parse <- function(tokens, start = 1, retnextindex = FALSE) {
     class(ret) <- c("M2","Option")
   }
 
-  return(parse_return(retnextindex, ret, i))
+  parse_return(retnextindex, ret, i)
 
 }
 
@@ -188,7 +229,7 @@ m2_parse_new_object <- function(tokens, start = 1, retnextindex = FALSE) {
 
   }
 
-  return(parse_return(retnextindex, ret, i))
+  parse_return(retnextindex, ret, i)
 
 }
 
@@ -203,7 +244,7 @@ m2_parse_array <- function(tokens, start = 1, retnextindex = FALSE) {
   if (tokens[i] == "]") {
     i <- i + 1
   } else {
-    while (TRUE) {
+    repeat {
 
       elem <- m2_parse(tokens, start = i, retnextindex = TRUE)
       ret <- append(ret, elem$result)
@@ -221,7 +262,7 @@ m2_parse_array <- function(tokens, start = 1, retnextindex = FALSE) {
 
   class(ret) <- c("M2","Array")
 
-  return(parse_return(retnextindex, ret, i))
+  parse_return(retnextindex, ret, i)
 
 }
 
@@ -236,16 +277,14 @@ m2_parse_list <- function(tokens, start = 1, retnextindex = FALSE) {
   if (tokens[i] == "}") {
     i <- i + 1
   } else {
-    while (TRUE) {
+    repeat {
 
       elem <- m2_parse(tokens, start = i, retnextindex = TRUE)
 
       ret <- append(ret, elem$result);
       i <- elem$nIndex + 1
 
-      if (tokens[i-1] == "}") {
-        break()
-      }
+      if (tokens[i-1] == "}") break
 
       error_on_fail(tokens[i-1] == ",", "Parsing error: malformed list")
       error_on_fail(i <= length(tokens), "Parsing error: malformed list")
@@ -255,15 +294,13 @@ m2_parse_list <- function(tokens, start = 1, retnextindex = FALSE) {
 
   class(ret) <- c("M2","List")
 
-  return(parse_return(retnextindex, ret, i))
+  parse_return(retnextindex, ret, i)
 
 }
 
 
 error_on_fail <- function(t, e) {
-  if (!t) {
-    stop(e)
-  }
+  if (!t) stop(e)
 }
 
 parse_return <- function(retnextindex, ret, i) {
@@ -275,6 +312,22 @@ parse_return <- function(retnextindex, ret, i) {
   }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
