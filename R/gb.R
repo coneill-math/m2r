@@ -110,8 +110,7 @@ gb_ <- function(mpolyList, ring, degreeLimit = -1, code = FALSE) {
   if(is.character(mpolyList)) mpolyList <- mp(mpolyList)
 
   # convert mpolylist to strings readable by m2
-  poly_str <- suppressMessages(paste0( lapply(mpolyList, print, stars=TRUE), collapse=", "))
-  poly_str <- str_replace_all(poly_str, "\\*\\*", "^")
+  poly_str <- mpolyList_to_m2_str(mpolyList)
 
   # make ideal, vars, and ring strings for m2
   ideal_str <- paste0("I := ideal(", poly_str, ")\n")
@@ -136,8 +135,9 @@ gb_ <- function(mpolyList, ring, degreeLimit = -1, code = FALSE) {
 
   # comb code, mpoly parse, and out
   m2_out <- str_sub(m2_out, 10, -3)
+  m2_out <- str_split(m2_out, ", ")[[1]]
   m2_out <- str_replace_all(m2_out, "\\*", " ")
-  mp(str_split(m2_out, ", ")[[1]])
+  mp(m2_out)
 }
 
 
