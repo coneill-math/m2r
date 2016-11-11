@@ -11,19 +11,22 @@
 #'
 #' \dontrun{ requires Macaulay2 be installed and an interactive session
 #'
-#' (myring <- ring(c("x","y"), coefring = "QQ", order = "lex"))
+#' (xy <- ring(c("x","y"), "QQ", "lex"))
 #' p <- mp("x^4 - y^4")
-#' factor_poly(p, myring)
+#' factor_poly(p, xy)
 #'
+#' (xyz <- ring(c("x","y", "z"), "QQ", "lex"))
+#' p <- mp("(x-1)^3 - (y-1)^3")
+#' factor_poly(p, xyz)
 #'
 #' }
 #'
 factor_poly <- function (mpoly, ring, code = FALSE) {
-  if ((ring$coefring != "QQ") & (ring$coefring != "ZZ")) {
+  if (ring$coefring != "QQ" & ring$coefring != "ZZ") {
     stop("factor_poly only supports rings with coefficient in ZZ or QQ")
   }
   m2_mpoly <- mpolyList_to_m2_str(mpoly)
-  m2_code <- sprintf("use %s; factor (%s)",ring$m2name, m2_mpoly)
+  m2_code <- sprintf("use %s; factor (%s)", ring$m2name, m2_mpoly)
 
   if(code) message(m2_code)
   m2_out <- m2(m2_code)

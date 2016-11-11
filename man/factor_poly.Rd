@@ -23,10 +23,13 @@ Factor a polynomial
 
 \dontrun{ requires Macaulay2 be installed and an interactive session
 
-(myring <- ring(c("x","y"), coefring = "QQ", order = "lex"))
+(xy <- ring(c("x","y"), "QQ", "lex"))
 p <- mp("x^4 - y^4")
-factor_poly(p, myring)
+factor_poly(p, xy)
 
+(xyz <- ring(c("x","y", "z"), "QQ", "lex"))
+p <- mp("(x-1)^3 - (y-1)^3")
+factor_poly(p, xyz)
 
 }
 
