@@ -2,6 +2,7 @@
 % Please edit documentation in R/m2.R
 \name{m2_call}
 \alias{m2}
+\alias{m2.}
 \alias{m2_call}
 \alias{m2_listen_code}
 \alias{reset_m2}
@@ -12,6 +13,8 @@ m2_listen_code(port, timeout)
 reset_m2(port = 27436L, timeout = 10)
 
 m2(code, timeout = -1)
+
+m2.(code, timeout = -1)
 }
 \arguments{
 \item{port}{port for Macaulay2 socket}
