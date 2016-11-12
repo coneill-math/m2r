@@ -20,7 +20,23 @@
 #' }
 #'
 
+
 matrix_m2 <- function(mat, ring = NA, code = FALSE) {
+
+  ret <- matrix_m2.(mat, ring,code)
+
+  # construct R-side matrix, class and return
+  matrix <- list(
+    m2name = ret$m2name,
+    rmatrix = mat
+  )
+  class(matrix) <- c("Matrix", "m2")
+  matrix
+
+}
+
+
+matrix_m2. <- function(mat, ring = NA, code = FALSE) {
 
   if (missing(ring)) {
     ring_str <- ""
@@ -40,13 +56,23 @@ matrix_m2 <- function(mat, ring = NA, code = FALSE) {
   if(code) message(line)
 
   # run m2
-  m2(line)
+  ret <- m2.(line)
 
-  # construct R-side matrix, class and return
+  ret$m2name <- matrix_name
+  ret
+
+}
+
+
+m2_parse_function.m2_map(x) {
+
+  # TODO: x ---->>>> matrix_name, mat
+
   matrix <- list(
     m2name = matrix_name,
     rmatrix = mat
   )
-  class(matrix) <- c("Matrix", "m2")
+  class(matrix) <- c("m2_matrix", "m2")
   matrix
 }
+
