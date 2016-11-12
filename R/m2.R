@@ -87,13 +87,29 @@ m2_listen_code <- function (port, timeout) {
 
 
 
+start_m2 <- function(port = 27436L, timeout = 10, attempts = 10) {
+
+  for(i in seq.int(0,attempts-1)) {
+    if (do_start_m2(port, timeout) == 0) break
+    if (i == attempts - 1) {
+      message(sprintf("%s attempts made at connecting. Aborting start_m2", attempts))
+    } else {
+      message(sprintf("Unable to connect to M2 on port %s. Attempting to connect on port %s", port, port + 1))
+      port = port + 1
+    }
+  }
+
+}
+
+
+
+
+
+
 do_start_m2 <- function(port = 27436L, timeout = 10) {
 
-  # grab connection
-  m2_con <- getOption("m2_con")
-
   # only start if not already running
-  if (!is.null(m2_con)) return(invisible(0))
+  if (!is.null(get_m2_con())) return(invisible(0))
 
   message("Starting M2")
 
@@ -101,7 +117,7 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
   if(is.mac() || is.unix()) {
 
     system2(
-      file.path2(getOption("m2_path"), "M2"),
+      file.path2(get_m2_path(), "M2"),
       stdout = NULL, stderr = NULL,
       stdin = write_to_temp(m2_listen_code(port, timeout)),
       wait = FALSE
@@ -127,7 +143,7 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
 
   # initialize client socket
   con <- NULL
-  for (i in seq.int(0,20*timeout)) {
+  for (i in 0:(20*timeout)) {
 
     tryCatch(
       con <- suppressWarnings(
@@ -148,32 +164,20 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
 
   }
 
-  if (is.null(con)) return(invisible(1))
+  if (is.null(con)) return(invisible(1L))
 
-  options(m2_con = con, m2_port = port, m2_timeout = timeout)
-  options(m2_procid = strtoi(m2("processID()")))
-  invisible(0)
+  # set options
+  set_m2r_option(
+    m2_con = con,
+    m2_port = port,
+    m2_timeout = timeout
+  )
+  set_m2r_option(m2_procid = strtoi(m2("processID()")))
+
+  invisible(0L)
 }
 
 
-
-
-
-
-
-start_m2 <- function(port = 27436L, timeout = 10, attempts = 10) {
-
-  for(i in seq.int(0,attempts-1)) {
-    if (do_start_m2(port, timeout) == 0) break
-    if (i == attempts - 1) {
-      message(sprintf("%s attempts made at connecting. Aborting start_m2",attempts))
-    } else {
-      message(sprintf("Unable to connect to M2 on port %s. Attempting to connect on port %s", port, port + 1))
-      port = port + 1
-    }
-  }
-
-}
 
 
 
@@ -183,20 +187,18 @@ start_m2 <- function(port = 27436L, timeout = 10, attempts = 10) {
 
 stop_m2 <- function() {
 
-  # grab connection
-  m2_con <- getOption("m2_con")
-  m2_procid <- getOption("m2_procid")
+  if (!is.null(get_m2_con())) { # for detaching when m2 never run
 
-  # send kill code
-  if (!is.null(m2_con)) {
-    writeLines("", m2_con)
-    close(m2_con)
+    # send kill code
+    writeLines("", get_m2_con())
+    close(get_m2_con())
 
     # not elegant, but a necessary safety measure
     Sys.sleep(0.01)
-    tools::pskill(m2_procid)
+    tools::pskill(get_m2_procid())
 
-    options(m2_con = NULL, m2_procid = NULL)
+    set_m2r_option(m2_con = NULL, m2_procid = NULL)
+
   }
 
 }
@@ -246,18 +248,14 @@ m2. <- function(code, timeout = -1) {
   # preempt m2 kill code
   if (code == "") return("")
 
-  # grab connection
-  m2_con <- getOption("m2_con")
-  m2_procid <- getOption("m2_procid")
-
   # write to connection
-  writeLines(code, m2_con)
+  writeLines(code, get_m2_con())
 
   i <- 0
   outinfo <- NULL
   repeat {
     # read output info
-    outinfo <- readLines(m2_con, 1)
+    outinfo <- readLines(get_m2_con(), 1)
 
     if (length(outinfo) > 0) break
 
@@ -280,14 +278,14 @@ m2. <- function(code, timeout = -1) {
     m2_class_class <- info[5]
   } else {
     # cancel command if needed
-    tools::pskill(m2_procid, tools::SIGINT)
+    tools::pskill(get_m2_procid(), tools::SIGINT)
     Sys.sleep(0.01)
 
     retcode <- -1L
     numlines <- -1L
   }
 
-  output <- paste(readLines(m2_con, numlines), collapse = "\n")
+  output <- paste(readLines(get_m2_con(), numlines), collapse = "\n")
 
   if (retcode == -1L) {
     # timeout occurred, kill M2 instance and stop
