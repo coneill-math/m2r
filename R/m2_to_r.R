@@ -229,28 +229,28 @@ m2_parse_internal <- function(tokens, start = 1) {
     ret <- list(key, val)
     class(ret) <- c("m2_option","m2")
 
-    # } else if (i <= length(tokens) && tokens[i] == "..") {
-    #   # sequence: (a..c) = (a, b, c)
-    #
-    #   start <- ret
-    #
-    #   elem <- m2_parse_internal(tokens, start = i+1)
-    #   end <- elem$result
-    #   i <- elem$nIndex
-    #
-    #   if (start %in% letters && end %in% letters) {
-    #
-    #   } else if (all(c(start,end) %in% toupper(letters))) {
-    #
-    #   } else if () {
-    #     ret <- as.list(start:end)
-    #   } else {
-    #     stop("Parsing error: Invalid .. parameters")
-    #   }
-    #   ret <- list(key, val)
-    #   class(ret) <- c("m2_sequence","m2")
+  } else if (i <= length(tokens) && tokens[i] == "..") {
+    # sequence: (a..c) = (a, b, c)
 
-    } else if (i <= length(tokens) && tokens[i] %in% c("+","-","*","^")) {
+    start <- ret
+
+    elem <- m2_parse_internal(tokens, start = i+1)
+    end <- elem$result
+    i <- elem$nIndex
+
+    if (all(c(start,end) %in% letters) && start <= end) {
+
+    } else if (all(c(start,end) %in% toupper(letters)) && start <= end) {
+
+    } else if (is.integer(start) && is.integer(end) && start <= end) {
+      ret <- as.list(start:end)
+    } else {
+      ret <- list()
+    }
+
+    class(ret) <- c("m2_sequence","m2")
+
+  } else if (i <= length(tokens) && tokens[i] %in% c("+","-","*","^")) {
     # start of an expression, consume rest of expression
     # TODO: parse mpoly here!
 
@@ -338,7 +338,7 @@ m2_parse_new <- function(tokens, start = 1) {
   ret <- elem$result
   i <- elem$nIndex
 
-  class(ret) <- c(paste0("m2_",tolower(tokens[start+2])),"m2")
+  class(ret) <- c(paste0("m2_",tolower(tokens[start+1])),"m2")
 
   m2_parse_class(ret)
 
@@ -402,7 +402,7 @@ m2_parse_list <- function(tokens, start = 1, open_char = "{", close_char = "}", 
     repeat {
 
       elem <- m2_parse_internal(tokens, start = i)
-      ret <- append(ret, elem$result)
+      ret <- append(ret, list(elem$result))
       i <- elem$nIndex + 1
 
       if (tokens[i-1] == close_char) {
