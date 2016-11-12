@@ -239,9 +239,11 @@ m2_parse_internal <- function(tokens, start = 1) {
     i <- elem$nIndex
 
     if (all(c(start,end) %in% letters) && start <= end) {
-
+      ret <- as.list(start %:% end)
+      ret <- lapply(ret, `class<-`, c("m2_symbol","m2"))
     } else if (all(c(start,end) %in% toupper(letters)) && start <= end) {
-
+      ret <- as.list(start %:% end)
+      ret <- lapply(ret, `class<-`, c("m2_symbol","m2"))
     } else if (is.integer(start) && is.integer(end) && start <= end) {
       ret <- as.list(start:end)
     } else {
@@ -249,6 +251,26 @@ m2_parse_internal <- function(tokens, start = 1) {
     }
 
     class(ret) <- c("m2_sequence","m2")
+
+  } else if (class(ret)[1] %in% c("m2_ring","m2_symbol") &&
+             (tokens[i] %notin% c(m2_operators(),",") ||
+              tokens[i] %in% c("(","{","["))) {
+    # function call
+
+    elem <- m2_parse_internal(tokens, start = i)
+    params <- elem$result
+    i <- elem$nIndex
+
+    if (class(ret)[1] == "m2_symbol") {
+      fname <- ret
+      params = list(params)
+      class(params) <- c(paste0("m2_",tolower(fname)),"m2")
+
+      ret <- m2_parse_function(params)
+    } else {
+      # this is a ring, create
+
+    }
 
   } else if (i <= length(tokens) && tokens[i] %in% c("+","-","*","^")) {
     # start of an expression, consume rest of expression
@@ -263,9 +285,11 @@ m2_parse_internal <- function(tokens, start = 1) {
 
     ret <- paste0(lhs, operand, rhs)
 
-    if (class(lhs)[1] %in% c("m2_expression", "m2_symbol") && class(rhs)[1] %in% c("m2_expression", "m2_symbol")) {
+    if ((is.integer(lhs) || class(lhs)[1] %in% c("m2_expression", "m2_symbol")) &&
+        (is.integer(rhs) || class(rhs)[1] %in% c("m2_expression", "m2_symbol"))) {
       class(ret) <- c("m2_expression", "m2")
     }
+
   }
 
   list(result = ret, nIndex = i)
@@ -301,8 +325,10 @@ m2_parse_function.default <- function(x) stop(paste0("Unsupported function ", cl
 
 
 m2_parse_function.m2_symbol <- function(x) {
+
   class(x[[1]]) <- c("m2_symbol","m2")
   x[[1]]
+
 }
 
 
@@ -310,6 +336,7 @@ m2_parse_function.m2_monoid <- function(x) {
 
   class(x[[1]]) <- c("m2_monoid","m2")
   x[[1]]
+
 }
 
 
@@ -323,6 +350,13 @@ m2_parse_function.m2_verticallist <- m2_parse_function.m2_hashtable
 
 
 
+
+m2_parse_object_as_function <- function(x) UseMethod("m2_parse_object_as_function")
+m2_parse_object_as_function.default <- function(x) stop(paste0("Unsupported object ", class(x)[1], " used as function"))
+
+m2_parse_object_as_function.m2_ring <- function(x) {
+
+}
 
 
 
@@ -356,7 +390,7 @@ m2_parse_symbol <- function(tokens, start = 1) {
 
   # TODO: handle ring case here
 
-  while (tokens[i] == "_") {
+  while (i <= length(tokens) && tokens[i] == "_") {
     ret <- paste0(ret,"_",tokens[i+1])
     i <- i + 2
   }
@@ -367,18 +401,8 @@ m2_parse_symbol <- function(tokens, start = 1) {
     ret <- FALSE
   } else if (ret == "null") {
     ret <- NULL
-  } else if (tokens[i] %notin% c(m2_operators(),",") || tokens[i] %in% c("(","{","[")) {
-    fname <- ret
-    elem <- m2_parse_internal(tokens, start = i)
-    params <- elem$result
-    i <- elem$nIndex
-
-    params = list(params)
-    class(params) <- c(paste0("m2_",tolower(fname)),"m2")
-
-    ret <- m2_parse_function(params)
   } else {
-    # this is an actual symbol, treat as expression by default
+    # this is an actual symbol
     class(ret) <- c("m2_symbol","m2")
   }
 
