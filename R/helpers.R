@@ -74,17 +74,23 @@ delistify <- function (string, f, collapse, ...) {
 mpolyList_to_m2_str <- function(mpolyList) {
 
   # allow for character vectors
-  if (class(mpolyList) == "mpoly") {
-    mpolyList <- mpolyList(mpolyList)
-  }
+  if (class(mpolyList) == "mpoly") mpolyList <- mpolyList(mpolyList)
 
   # parse it if it's a character string
   if(is.character(mpolyList)) mpolyList <- mp(mpolyList)
 
   # convert mpolylist to strings readable by m2
-  paste0( lapply(mpolyList, print, silent = TRUE), collapse=", ")
+  vec <- vapply(mpolyList, print, character(1),
+    silent = TRUE, stars = TRUE
+  )
+  vec <- str_replace_all(vec, "[\\s]+", "")
+  vec <- str_replace_all(vec, "\\*\\*", "^")
 
+  # return
+  vec
 }
+# mpolyList_to_m2_str( mp(c("x^3","x + y z")) )
+
 
 
 
