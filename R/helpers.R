@@ -87,3 +87,9 @@ mpolyList_to_m2_str <- function(mpolyList) {
 }
 
 
+
+
+
+`%notin%` <- function(x, y) { !(x %in% y) }
+# 2 %notin% 1:5
+# 2 %notin% (1:5)[-2]
