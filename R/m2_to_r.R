@@ -43,10 +43,15 @@ m2_to_r.default <- function(x, ...) x$ext_str
 
 # m2 symbol name character
 m2_symbol_chars <- function() {
-  unlist(
-    c(letters, toupper(letters), seq(10)-1, c("'"))
-  )
+  c(letters, toupper(letters), 0:9, "'")
 }
+
+
+
+
+
+
+
 
 # m2 operators, sorted by length for easier tokenizing
 m2_operators <- function() {
@@ -57,9 +62,16 @@ m2_operators <- function() {
     "^*", "#?", "//", "**", "@@", "..", ".?", "!=", ":=", "->", "_*",
     "~", "|", ">", "=", "<", "+", "^", "%", "#", "&", "\\", "/", "*",
     "@", ".", "?", "!", ":", ";", ",", "-", "_",
-    "[", "]", "{", "}"
+    "[", "]", "{", "}", "(", ")"
   )
 }
+
+
+
+
+
+
+
 
 # splits a string containing M2 code into tokens to ease parsing
 # places an empty string between each line
@@ -122,21 +134,45 @@ m2_tokenize <- function(s) {
 }
 
 
-m2_parse <- function(tokens, start = 1, retnextindex = FALSE) {
+
+
+
+
+
+
+
+
+
+
+m2_parse <- function(tokens, start = 1) {
+  ret <- m2_parse_internal(tokens, start)
+  ret$result
+}
+
+
+
+m2_parse_internal <- function(tokens, start = 1) {
 
   i <- start
 
   if (tokens[i] == "{") {
     # list: {A, A2 => B2, A3 => B3, C, ...}
 
-    elem <- m2_parse_list(tokens, start = i, retnextindex = TRUE)
+    elem <- m2_parse_list(tokens, start = i)
     ret <- elem$result
     i <- elem$nIndex
 
   } else if (tokens[i] == "[") {
     # array: [A, B, ...]
 
-    elem <- m2_parse_array(tokens, start = i, retnextindex = TRUE)
+    elem <- m2_parse_array(tokens, start = i)
+    ret <- elem$result
+    i <- elem$nIndex
+
+  } else if (tokens[i] == "(") {
+    # sequence: (A, B, ...) returned as classed list OR (A) returned as A
+
+    elem <- m2_parse_sequence(tokens, start = i)
     ret <- elem$result
     i <- elem$nIndex
 
@@ -153,36 +189,26 @@ m2_parse <- function(tokens, start = 1, retnextindex = FALSE) {
     ret <- strtoi(tokens[i])
     i <- i + 1
 
+  } else if (tokens[i] == "-") {
+    # -expression
+
+    elem <- -m2_parse_internal(tokens,start = i+1)
+    ret <- -elem$result
+    i <- elem$nIndex
+
   } else if (tokens[i] == "new") {
     # object creation: new TYPENAME from DATA
 
-    elem <- m2_parse_new_object(tokens, start = i, retnextindex = TRUE)
+    elem <- m2_parse_new(tokens, start = i)
     ret <- elem$result
     i <- elem$nIndex
 
-  } else if (tokens[i] == "symbol") {
-    # symbol name
-
-    ret <- tokens[i+1]
-    class(ret) <- c("M2","Symbol")
-    i <- i + 2
-
   } else if (substr(tokens[i], 1, 1) %in% m2_symbol_chars()) {
-    # symbol, must be final case
-    # TODO: implement wrapper support (where possible)
+    # symbol, must be final case handled
 
-    ret <- tokens[i]
-    i <- i + 1
-
-    if (ret == "true") {
-      ret <- TRUE
-    } else if (ret == "false") {
-      ret <- FALSE
-    } else if (ret == "null") {
-      ret <- NULL
-    } else {
-      class(ret) <- c("M2","Symbol")
-    }
+    elem <- m2_parse_symbol(tokens, start = i)
+    ret <- elem$result
+    i <- elem$nIndex
 
   } else {
     # we can't handle this input
@@ -194,125 +220,265 @@ m2_parse <- function(tokens, start = 1, retnextindex = FALSE) {
   if (i <= length(tokens) && tokens[i] == "=>") {
     # option: A => B
 
-    ret1 <- ret
+    key <- ret
 
-    elem <- m2_parse(tokens, start = i+1, retnextindex = TRUE)
-    ret2 <- elem$result
+    elem <- m2_parse_internal(tokens, start = i+1)
+    val <- elem$result
     i <- elem$nIndex
 
-    ret <- list(ret1, ret2)
-    class(ret) <- c("M2","Option")
+    ret <- list(key, val)
+    class(ret) <- c("m2_option","m2")
+
+    # } else if (i <= length(tokens) && tokens[i] == "..") {
+    #   # sequence: (a..c) = (a, b, c)
+    #
+    #   start <- ret
+    #
+    #   elem <- m2_parse_internal(tokens, start = i+1)
+    #   end <- elem$result
+    #   i <- elem$nIndex
+    #
+    #   if (start %in% letters && end %in% letters) {
+    #
+    #   } else if (all(c(start,end) %in% toupper(letters))) {
+    #
+    #   } else if () {
+    #     ret <- as.list(start:end)
+    #   } else {
+    #     stop("Parsing error: Invalid .. parameters")
+    #   }
+    #   ret <- list(key, val)
+    #   class(ret) <- c("m2_sequence","m2")
+
+    } else if (i <= length(tokens) && tokens[i] %in% c("+","-","*","^")) {
+    # start of an expression, consume rest of expression
+    # TODO: parse mpoly here!
+
+    lhs <- ret
+    operand <- tokens[i]
+
+    elem <- m2_parse_internal(tokens, start = i + 1)
+    rhs <- elem$result
+    i <- elem$nIndex
+
+    ret <- paste0(lhs, operand, rhs)
+
+    if (class(lhs)[1] %in% c("m2_expression", "m2_symbol") && class(rhs)[1] %in% c("m2_expression", "m2_symbol")) {
+      class(ret) <- c("m2_expression", "m2")
+    }
   }
 
-  parse_return(retnextindex, ret, i)
+  list(result = ret, nIndex = i)
 
 }
 
-m2_parse_new_object <- function(tokens, start = 1, retnextindex = FALSE) {
+
+
+
+
+
+
+# x is a list interpreted as a M2 list
+# class name is m2_M2CLASSNAME in all lower case
+# example: x = list(1,2,3), class(x) = c("m2_verticallist","m2")
+m2_parse_class <- function(x) UseMethod("m2_parse_class")
+
+m2_parse_class.default <- function(x) x
+
+m2_parse_class.m2_hashtable <- m2_parse_class.default
+m2_parse_class.m2_optiontable <- m2_parse_class.default
+m2_parse_class.m2_verticallist <- m2_parse_class.default
+
+
+
+
+
+# x is a list of function parameters
+# class name is m2_M2FUNCTIONNAME in all lower case
+# example: x = list(mpoly("x")), class(x) = c("m2_symbol","m2")
+m2_parse_function <- function(x) UseMethod("m2_parse_function")
+m2_parse_function.default <- function(x) stop(paste0("Unsupported function ", class(x)[1]))
+
+
+m2_parse_function.m2_symbol <- function(x) {
+  class(x[[1]]) <- c("m2_symbol","m2")
+  x[[1]]
+}
+
+
+m2_parse_function.m2_monoid <- function(x) {
+
+  class(x[[1]]) <- c("m2_monoid","m2")
+  x[[1]]
+}
+
+
+
+m2_parse_function.m2_hashtable <- function(x) {
+  x[[1]]
+}
+
+m2_parse_function.m2_optiontable <- m2_parse_function.m2_hashtable
+m2_parse_function.m2_verticallist <- m2_parse_function.m2_hashtable
+
+
+
+
+
+
+
+m2_parse_new <- function(tokens, start = 1) {
+
+  i <- start
+
+  error_on_fail(tokens[i] == "new", "Parsing error: malformed new object")
+  error_on_fail(tokens[i+2] == "from", "Parsing error: malformed new object")
+
+  elem <- m2_parse_internal(tokens, start = i+3)
+  ret <- elem$result
+  i <- elem$nIndex
+
+  class(ret) <- c(paste0("m2_",tolower(tokens[start+2])),"m2")
+
+  m2_parse_class(ret)
+
+  list(result = ret, nIndex = i)
+
+}
+
+
+
+
+m2_parse_symbol <- function(tokens, start = 1) {
 
   i <- start + 1
+  ret <- tokens[i-1]
 
-  error_on_fail(tokens[i-1] == "new", "Parsing error: malformed new object")
+  # TODO: handle ring case here
 
-  if (tokens[i] %in% c("OptionTable", "HashTable", "MutableHashTable", "VerticalList")) {
-
-    error_on_fail(tokens[i+1] == "from", "Parsing error: malformed OptionTable.")
-
-    elem <- m2_parse(tokens, start = i+2, retnextindex = TRUE)
-    ret <- elem$result
-    class(ret) <- c("M2",tokens[i])
-    i <- elem$nIndex
-
-  } else {
-
-    stop(paste(tokens[i], "not yet supported"))
-
+  while (tokens[i] == "_") {
+    ret <- paste0(ret,"_",tokens[i+1])
+    i <- i + 2
   }
 
-  parse_return(retnextindex, ret, i)
+  if (ret == "true") {
+    ret <- TRUE
+  } else if (ret == "false") {
+    ret <- FALSE
+  } else if (ret == "null") {
+    ret <- NULL
+  } else if (tokens[i] %notin% c(m2_operators(),",") || tokens[i] %in% c("(","{","[")) {
+    fname <- ret
+    elem <- m2_parse_internal(tokens, start = i)
+    params <- elem$result
+    i <- elem$nIndex
+
+    params = list(params)
+    class(params) <- c(paste0("m2_",tolower(fname)),"m2")
+
+    ret <- m2_parse_function(params)
+  } else {
+    # this is an actual symbol, treat as expression by default
+    class(ret) <- c("m2_symbol","m2")
+  }
+
+  list(result = ret, nIndex = i)
 
 }
 
-# [A, B, ...]
-m2_parse_array <- function(tokens, start = 1, retnextindex = FALSE) {
+
+
+# {A1 => B1, A2 => B2, ...}
+m2_parse_list <- function(tokens, start = 1, open_char = "{", close_char = "}", type_name = "list") {
 
   ret <- list()
   i <- start + 1
 
-  error_on_fail(tokens[i-1] == "[", "Parsing error: malformed array.")
+  error_on_fail(tokens[i-1] == open_char, paste0("Parsing error: malformed ", type_name))
 
-  if (tokens[i] == "]") {
+  if (tokens[i] == close_char) {
     i <- i + 1
   } else {
     repeat {
 
-      elem <- m2_parse(tokens, start = i, retnextindex = TRUE)
+      elem <- m2_parse_internal(tokens, start = i)
       ret <- append(ret, elem$result)
       i <- elem$nIndex + 1
 
-      if (tokens[i-1] == "]") {
+      if (tokens[i-1] == close_char) {
         break()
       }
 
-      error_on_fail(tokens[i-1] == ",", "Parsing error: malformed array")
-      error_on_fail(i <= length(tokens), "Parsing error: malformed array")
+      error_on_fail(tokens[i-1] == ",", paste0("Parsing error: malformed ", type_name))
+      error_on_fail(i <= length(tokens), paste0("Parsing error: malformed ", type_name))
 
     }
   }
 
-  class(ret) <- c("M2","Array")
+  class(ret) <- c(paste0("m2_",type_name),"m2")
 
-  parse_return(retnextindex, ret, i)
+  list(result = ret, nIndex = i)
 
 }
 
-# {A1 => B1, A2 => B2, ...}
-m2_parse_list <- function(tokens, start = 1, retnextindex = FALSE) {
 
-  ret <- list()
-  i <- start + 1
 
-  error_on_fail(tokens[i-1] == "{", "Parsing error: malformed list")
 
-  if (tokens[i] == "}") {
-    i <- i + 1
-  } else {
-    repeat {
 
-      elem <- m2_parse(tokens, start = i, retnextindex = TRUE)
 
-      ret <- append(ret, elem$result);
-      i <- elem$nIndex + 1
 
-      if (tokens[i-1] == "}") break
+# [A, B, ...]
+m2_parse_array <- function(tokens, start = 1) {
 
-      error_on_fail(tokens[i-1] == ",", "Parsing error: malformed list")
-      error_on_fail(i <= length(tokens), "Parsing error: malformed list")
+  m2_parse_list(tokens, start = start, open_char = "[", close_char = "]", type_name = "array")
 
-    }
+}
+
+
+
+
+
+
+
+
+
+# (A, B, ...) as classed list
+# (A1) as A1
+m2_parse_sequence <- function(tokens, start = 1) {
+
+  elem <- m2_parse_list(tokens, start = start, open_char = "(", close_char = ")", type_name = "sequence")
+
+  # if sequence has only one element
+  if (length(elem) == 1) {
+    elem$result <- elem$result[1]
   }
 
-  class(ret) <- c("M2","List")
-
-  parse_return(retnextindex, ret, i)
+  elem
 
 }
+
+
+
+
+
 
 
 error_on_fail <- function(t, e) {
   if (!t) stop(e)
 }
 
-parse_return <- function(retnextindex, ret, i) {
 
-  if (retnextindex) {
-    return(list(result = ret, nIndex = i))
+
+
+
+
+peek <- function(tokens, i) {
+  if (i > length(tokens)) {
+    return(NULL)
   } else {
-    return(ret)
+    return(tokens[i])
   }
-
 }
-
 
 
 
