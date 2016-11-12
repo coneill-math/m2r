@@ -280,11 +280,16 @@ m2_parse_internal <- function(tokens, start = 1) {
     rhs <- elem$result
     i <- elem$nIndex
 
-    ret <- paste0(lhs, operand, rhs)
+    if (class(lhs)[1] == "m2_polynomialring") {
+      ret <- list(lhs, rhs)
+      class(ret) <- c("m2_module","m2")
+    } else {
+      ret <- paste0(lhs, operand, rhs)
 
-    if ((is.integer(lhs) || class(lhs)[1] %in% c("m2_expression", "m2_symbol")) &&
-        (is.integer(rhs) || class(rhs)[1] %in% c("m2_expression", "m2_symbol"))) {
-      class(ret) <- c("m2_expression", "m2")
+      if ((is.integer(lhs) || class(lhs)[1] %in% c("m2_expression", "m2_symbol")) &&
+          (is.integer(rhs) || class(rhs)[1] %in% c("m2_expression", "m2_symbol"))) {
+        class(ret) <- c("m2_expression", "m2")
+      }
     }
 
   }
@@ -303,12 +308,11 @@ m2_parse_internal <- function(tokens, start = 1) {
 # class name is m2_M2CLASSNAME in all lower case
 # example: x = list(1,2,3), class(x) = c("m2_verticallist","m2")
 m2_parse_class <- function(x) UseMethod("m2_parse_class")
-
 m2_parse_class.default <- function(x) x
 
 m2_parse_class.m2_hashtable <- m2_parse_class.default
-m2_parse_class.m2_optiontable <- m2_parse_class.default
-m2_parse_class.m2_verticallist <- m2_parse_class.default
+m2_parse_class.m2_optiontable <- m2_parse_class.m2_hashtable
+m2_parse_class.m2_verticallist <- m2_parse_class.m2_hashtable
 
 
 
@@ -319,6 +323,11 @@ m2_parse_class.m2_verticallist <- m2_parse_class.default
 # example: x = list(mpoly("x")), class(x) = c("m2_symbol","m2")
 m2_parse_function <- function(x) UseMethod("m2_parse_function")
 m2_parse_function.default <- function(x) stop(paste0("Unsupported function ", class(x)[1]))
+
+m2_parse_function.m2_hashtable <- function(x) x[[1]]
+m2_parse_function.m2_optiontable <- m2_parse_function.m2_hashtable
+m2_parse_function.m2_verticallist <- m2_parse_function.m2_hashtable
+
 
 
 m2_parse_function.m2_symbol <- function(x) {
@@ -337,13 +346,6 @@ m2_parse_function.m2_monoid <- function(x) {
 }
 
 
-
-m2_parse_function.m2_hashtable <- function(x) {
-  x[[1]]
-}
-
-m2_parse_function.m2_optiontable <- m2_parse_function.m2_hashtable
-m2_parse_function.m2_verticallist <- m2_parse_function.m2_hashtable
 
 
 
@@ -483,8 +485,8 @@ m2_parse_sequence <- function(tokens, start = 1) {
   elem <- m2_parse_list(tokens, start = start, open_char = "(", close_char = ")", type_name = "sequence")
 
   # if sequence has only one element
-  if (length(elem) == 1) {
-    elem$result <- elem$result[1]
+  if (length(elem$result) == 1) {
+    elem$result <- elem$result[[1]]
   }
 
   elem

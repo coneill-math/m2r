@@ -40,7 +40,28 @@ m2_termorders <- function() {
 
 
 
+
 ring <- function(vars,
+                  coefring = m2_coefrings(),
+                  order = m2_termorders(),
+                  code = FALSE
+) {
+
+  ring <- ring.(vars, coefring, order, code)
+
+  # construct R-side ring, class and return
+  ring <- list(
+    m2name = ring$m2name, coefring = coefring,
+    vars = vars, order = order
+  )
+  class(ring) <- c("m2_polynomialring", "m2")
+  ring
+
+}
+
+
+
+ring. <- function(vars,
   coefring = m2_coefrings(),
   order = m2_termorders(),
   code = FALSE
@@ -80,15 +101,10 @@ ring <- function(vars,
   if(code) message(line)
 
   # run m2
-  m2(line)
+  ret <- m2.(line)
 
-  # construct R-side ring, class and return
-  ring <- list(
-    m2name = ringname, coefring = coefring,
-    vars = sortedvars, order = tolower(order)
-  )
-  class(ring) <- c("m2_polynomialring", "m2")
-  ring
+  ret$m2name <- ringname
+  ret
 }
 
 
