@@ -23,7 +23,7 @@
 	}
 
 	# check that the programs were found
-	startup_check_for_program("m2_path")
+	startup_check_for_program()
 
 	# return
 	invisible(TRUE)
@@ -34,8 +34,14 @@
 
 .onDetach <- function(...) {
 	stop_m2()
+  options(m2r = NULL)
 }
-
+# restart R
+# library(m2r)
+# m2("1+1")
+# getOption("m2r")
+# detach("package:m2r")
+# getOption("m2r")
 
 
 
@@ -61,24 +67,15 @@ unix_find <- function(exec, where){
 	path
 }
 
-startup_check_for_program <- function(optionName){
+startup_check_for_program <- function(){
 
-	longName <- longName(optionName)
-	setFun <- setFun(optionName)
-
-	if(!is.null(getOption(optionName))){
-		psms("  %s found in %s", longName, getOption(optionName))
+	if(!is.null(get_m2_path())){
+		psms("  M2 found in %s", get_m2_path())
 		return(invisible(FALSE))
 	}
 
-	if(is.null(getOption(optionName))){
-		psms("  %s not found. Set the location with %s", longName, setFun)
-		return(invisible(FALSE))
-	}
-
-	if(length(list.files(getOption(optionName))) == 0){
-		psms("  %s appears to be installed, but it's not where it was expected.", longName)
-		psms("  Suggestion : run %s", setFun)
+	if(is.null(get_m2_path())){
+		psms("  M2 not found. Set the location with set_m2_path()")
 		return(invisible(FALSE))
 	}
 
@@ -86,23 +83,8 @@ startup_check_for_program <- function(optionName){
 
 }
 
-longName <- function(optionName){
-  switch(optionName,
-    m2_path = "M2"
-  )
-}
 
-execName <- function(optionName){
-  switch(optionName,
-    m2_path = "count"
-  )
-}
 
-setFun <- function(optionName){
-  switch(optionName,
-    m2_path = "set_m2_path()"
-  )
-}
 
 psm  <- packageStartupMessage
 psms <- function(fmt, ...) packageStartupMessage(sprintf(fmt, ...))
@@ -143,7 +125,7 @@ unix_search_and_set <- function(exec, baseName, optionName){
   if(is.na(found_path)) return()
 
   # set option and exit
-  setOption(optionName, dirname(found_path))
+  set_m2r_option(m2_path = dirname(found_path))
 
   # invisibly return path
   invisible(dirname(found_path))
@@ -164,7 +146,57 @@ win_find <- function(s){
 win_search_and_set <- function(optionName){
 
   # search
-  x <- win_find(execName(optionName))
-  if(stringr::str_detect(x, "/")) setOption(optionName, dirname(x))
+  x <- win_find("m2")
+  if(stringr::str_detect(x, "/")) {
+    set_m2r_option(m2_path = dirname(x))
+  }
 
 }
+
+
+
+
+
+# set_m2r_option both sets options for m2r in the list m2r in options
+# and initialized the list when m2r is attached to the search path
+# (search())
+set_m2r_option <- function(...) {
+
+  # if there is no m2r option (package is being initialized)
+  # create the list with the arguments and return
+  if ("m2r" %notin% names(options())) {
+    options(m2r = list(...))
+    return(invisible())
+  }
+
+  # otherwise, go through arguments sequentially and add/update
+  # them in the list m2r in options
+  m2r <- getOption("m2r")
+  arg_list <- lapply(as.list(match.call())[-1], eval, envir = parent.frame())
+  for (k in seq_along(arg_list)) {
+    if (names(arg_list)[k] %in% names(m2r)) {
+      m2r[names(arg_list)[k]] <- arg_list[k]
+    } else {
+      m2r <- c(m2r, arg_list[k])
+    }
+  }
+
+  # set new m2r
+  options(m2r = m2r)
+
+  # return
+  invisible()
+}
+# (l <- list(a = 1, b = 2, c = 3))
+# l[d] <- 5
+# l
+
+
+
+
+
+
+
+
+
+
