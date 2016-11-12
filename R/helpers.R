@@ -76,7 +76,8 @@ mpolyList_to_m2_str <- function(mpolyList) {
   # allow for character vectors
   if (class(mpolyList) == "mpoly") mpolyList <- mpolyList(mpolyList)
 
-  # parse it if it's a character string
+  # parse it if it's a numeric or character string
+  if(is.numeric(mpolyList)) mpolyList <- as.character(mpolyList)
   if(is.character(mpolyList)) mpolyList <- mp(mpolyList)
 
   # convert mpolylist to strings readable by m2
@@ -89,7 +90,8 @@ mpolyList_to_m2_str <- function(mpolyList) {
   # return
   vec
 }
-# mpolyList_to_m2_str( mp(c("x^3","x + y z")) )
+# mpolyList_to_m2_str( mp(c("x^3","x + y z", "1")) )
+# mpolyList_to_m2_str( c(1, 2, 3) )
 
 
 
