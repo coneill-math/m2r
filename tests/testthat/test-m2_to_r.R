@@ -1,7 +1,7 @@
 context("m2r parser")
 
 m2_parse_test <- function(m2_str, m2_expected_output) {
-  expect_equal(m2_parse(m2_tokenize(m2_str)), m2_expected_output)
+  expect_equal(m2_parse(m2_str), m2_expected_output)
 }
 
 test_that("m2_parse parses basic data structures",{
@@ -14,7 +14,6 @@ test_that("m2_parse parses basic data structures",{
   m2_parse_test(m2_array,m2_array_output)
 
   m2_str <- "\"my string\""
-  str(m2_parse(m2_tokenize(m2_str)))
   m2_str_output <- "my string"
   m2_parse_test(m2_str, m2_str_output)
 
@@ -29,7 +28,7 @@ test_that("m2_parse parses basic data structures",{
   # toExternalString(matrix{{1,2,3},{4,5,6}})
   m2_matrix <- "map((ZZ)^2,(ZZ)^3,{{1, 2, 3}, {4, 5, 6}})"
   m2_matrix_output <- " "
-  #str(m2_parse(m2_tokenize(m2_matrix)))
+  #str(m2_parse(m2_matrix))
   #m2_parse_test(m2_matrix,m2_matrix_output)
 })
 

@@ -144,9 +144,12 @@ m2_tokenize <- function(s) {
 
 
 
-m2_parse <- function(tokens, start = 1) {
-  ret <- m2_parse_internal(tokens, start)
+m2_parse <- function(s) {
+
+  tokens <- m2_tokenize(s)
+  ret <- m2_parse_internal(tokens)
   ret$result
+
 }
 
 
