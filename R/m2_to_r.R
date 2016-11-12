@@ -256,7 +256,7 @@ m2_parse_internal <- function(tokens, start = 1) {
 
     class(ret) <- c("m2_sequence","m2")
 
-  } else if (class(ret)[1] %in% c("m2_ring","m2_symbol") &&
+  } else if (#class(ret)[1] %in% c("m2_ring","m2_symbol") &&
              (tokens[i] %notin% c(m2_operators(),",") ||
               tokens[i] %in% c("(","{","["))) {
     # function call
@@ -265,16 +265,9 @@ m2_parse_internal <- function(tokens, start = 1) {
     params <- elem$result
     i <- elem$nIndex
 
-    if (class(ret)[1] == "m2_symbol") {
-      fname <- ret
-      params = list(params)
-      class(params) <- c(paste0("m2_",tolower(fname)),"m2")
+    params = list(params)
 
-      ret <- m2_parse_function(params)
-    } else {
-      # this is a ring, create
-
-    }
+    ret <- m2_parse_object_as_function(ret, params)
 
   } else if (tokens[i] %in% c("+","-","*","^")) {
     # start of an expression, consume rest of expression
@@ -355,13 +348,20 @@ m2_parse_function.m2_verticallist <- m2_parse_function.m2_hashtable
 
 
 
-m2_parse_object_as_function <- function(x) UseMethod("m2_parse_object_as_function")
-m2_parse_object_as_function.default <- function(x) stop(paste0("Unsupported object ", class(x)[1], " used as function"))
+# x is a list of function parameters
+# class name is m2_M2FUNCTIONNAME in all lower case
+# example: x = list(mpoly("x")), class(x) = c("m2_symbol","m2")
+m2_parse_object_as_function <- function(x, params) UseMethod("m2_parse_object_as_function")
+m2_parse_object_as_function.default <- function(x, params) stop(paste0("Unsupported object ", class(x)[1], " used as function"))
 
-m2_parse_object_as_function.m2_ring <- function(x) {
+
+m2_parse_object_as_function.m2_symbol <- function(x, params) {
+
+  class(params) <- c(paste0("m2_",tolower(x)),"m2")
+
+  ret <- m2_parse_function(params)
 
 }
-
 
 
 
@@ -392,7 +392,13 @@ m2_parse_symbol <- function(tokens, start = 1) {
   i <- start + 1
   ret <- tokens[i-1]
 
-  # TODO: handle ring case here
+  if (ret %in% m2_coefrings()) {
+    ret <- field_as_ring(ret)
+
+    while (i <= length(tokens) && tokens[i] == "_") i <- i + 2
+
+    return(list(result = ret, nIndex = i))
+  }
 
   while (i <= length(tokens) && tokens[i] == "_") {
     ret <- paste0(ret,"_",tokens[i+1])

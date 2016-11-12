@@ -24,9 +24,25 @@
 #' }
 #'
 
+
+# m2 coefficient rings currently supported
+m2_coefrings <- function() {
+  c("CC", "RR", "QQ", "ZZ")
+}
+
+
+
+# m2 term orders currently supported
+m2_termorders <- function() {
+  c("grevlex", "lex", "glex")
+}
+
+
+
+
 ring <- function(vars,
-  coefring = c("CC", "RR", "QQ", "ZZ"),
-  order = c("grevlex", "lex", "glex"),
+  coefring = m2_coefrings(),
+  order = m2_termorders(),
   code = FALSE
 ) {
 
@@ -71,6 +87,57 @@ ring <- function(vars,
     m2name = ringname, coefring = coefring,
     vars = sortedvars, order = tolower(order)
   )
-  class(ring) <- c("PolynomialRing", "m2")
+  class(ring) <- c("m2_polynomialring", "m2")
   ring
 }
+
+
+
+
+
+# m2 coefficient rings currently supported
+field_as_ring <- function(coefring) {
+
+  ring <- list(
+    m2name = coefring, coefring = coefring,
+    vars = NULL, order = "grevlex"
+  )
+  class(ring) <- c("m2_polynomialring", "m2")
+
+  ring
+
+}
+
+
+
+m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
+
+  monoid <- params[[1]][[1]]
+  vars <- append(x$vars, unlist(monoid[[1]]))
+  order <- "grevlex"
+
+  for (i in 2:length(monoid)) {
+    if (class(monoid[[i]])[1] == "m2_option" &&
+        monoid[[i]][[1]] == "MonomialOrder") {
+      for (j in 1:length(monoid[[i]][[2]])) {
+        if (class(monoid[[i]][[2]][[j]])[1] == "m2_option" &&
+            monoid[[i]][[2]][[j]][[1]] %in% c("Lex", "GLex", "GRevLex")) {
+          order <- monoid[[i]][[2]][[j]][[1]]
+          order <- switch(order, Lex = "lex", GLex = "glex", GRevLex = "grevlex")
+        }
+      }
+    }
+  }
+
+  ring <- list(
+    m2name = NULL, coefring = x$coefring,
+    vars = vars, order = order
+  )
+  class(ring) <- c("m2_polynomialring", "m2")
+
+  ring
+
+}
+
+
+
