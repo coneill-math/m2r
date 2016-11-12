@@ -93,3 +93,33 @@ mpolyList_to_m2_str <- function(mpolyList) {
 `%notin%` <- function(x, y) { !(x %in% y) }
 # 2 %notin% 1:5
 # 2 %notin% (1:5)[-2]
+
+
+
+
+
+`%:%` <- function(x, y) {
+  # do type checking
+  stopifnot(
+    is.character(x), length(x) == 1,
+    is.character(y), length(y) == 1
+  )
+
+  # check letters
+  if(all(c(x,y) %in% letters)) { # lower case letters given
+    x_ndx <- which(x == letters)
+    y_ndx <- which(y == letters)
+    letters[x_ndx:y_ndx]
+  } else if (all(c(x,y) %in% LETTERS)) { # upper case letters given
+    x_ndx <- which(x == LETTERS)
+    y_ndx <- which(y == LETTERS)
+    LETTERS[x_ndx:y_ndx]
+  } else {
+    stop("letters must be of the same case")
+  }
+
+}
+
+
+
+
