@@ -19,6 +19,7 @@ SystemRequirements:
     Macaulay2 (\url{http://www.math.uiuc.edu/Macaulay2/})
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
