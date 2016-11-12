@@ -19,22 +19,22 @@
 #'
 #' }
 #'
-
-
 matrix_m2 <- function(mat, ring = NA, code = FALSE) {
 
-  ret <- matrix_m2.(mat, ring,code)
+  if (missing(ring)) {
+    ret <- matrix_m2.(mat, code = code)
+  } else {
+    ret <- matrix_m2.(mat, ring = ring, code = code)
+  }
 
   # construct R-side matrix, class and return
   matrix <- list(
-    m2name = ret$m2name,
+    m2_name = ret$m2_name,
     rmatrix = mat
   )
-  class(matrix) <- c("Matrix", "m2")
+  class(matrix) <- c("m2", "m2_matrix")
   matrix
-
 }
-
 
 matrix_m2. <- function(mat, ring = NA, code = FALSE) {
 
@@ -58,14 +58,13 @@ matrix_m2. <- function(mat, ring = NA, code = FALSE) {
   # run m2
   ret <- m2.(line)
 
-  ret$m2name <- matrix_name
+  ret$m2_name <- matrix_name
   ret
-
 }
 
-
-m2_parse_function.m2_map(x) {
-
+m2_parse_function.m2_map <- function(x) {
+  sprintf(x)
+  browser()
   # TODO: x ---->>>> matrix_name, mat
 
   matrix <- list(
@@ -75,4 +74,3 @@ m2_parse_function.m2_map(x) {
   class(matrix) <- c("m2_matrix", "m2")
   matrix
 }
-
