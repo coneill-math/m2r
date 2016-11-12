@@ -217,7 +217,11 @@ m2_parse_internal <- function(tokens, start = 1) {
 
   }
 
-  if (i <= length(tokens) && tokens[i] == "=>") {
+  if (i > length(tokens)) {
+    return(list(result = ret, nIndex = i))
+  }
+
+  if (tokens[i] == "=>") {
     # option: A => B
 
     key <- ret
@@ -229,7 +233,7 @@ m2_parse_internal <- function(tokens, start = 1) {
     ret <- list(key, val)
     class(ret) <- c("m2_option","m2")
 
-  } else if (i <= length(tokens) && tokens[i] == "..") {
+  } else if (tokens[i] == "..") {
     # sequence: (a..c) = (a, b, c)
 
     start <- ret
@@ -272,7 +276,7 @@ m2_parse_internal <- function(tokens, start = 1) {
 
     }
 
-  } else if (i <= length(tokens) && tokens[i] %in% c("+","-","*","^")) {
+  } else if (tokens[i] %in% c("+","-","*","^")) {
     # start of an expression, consume rest of expression
     # TODO: parse mpoly here!
 
