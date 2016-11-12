@@ -30,6 +30,7 @@
 #'   importantly, the function has the side effect of setting the
 #'   option "m2_path"
 #' @export
+#' @name m2_path
 #' @author David Kahle \email{david.kahle@@gmail.com}
 #' @examples
 #'
@@ -47,21 +48,24 @@
 #'
 #'
 #' }
-#'
+
+
+#' @rdname m2_path
+#' @export
 set_m2_path <- function(path){
 
   if(missing(path) && interactive()){
 
-    set_m2_path <- dirname(file.choose())
-    if(is.win() && str_detect(m2_path,"C:/")){
-      m2_path <- str_replace(dirname(m2_path), "C:/", "/cygdrive/c/")
+    path <- dirname(file.choose())
+    if(is.win() && str_detect(path,"C:/")){
+      mpath <- str_replace(dirname(path), "C:/", "/cygdrive/c/")
     }
-    options(m2_path = m2_path)
-    return(invisible(m2_path))
+    set_m2r_option(m2_path = path)
+    return(invisible(path))
 
   } else if (!missing(path)) {
 
-    options(m2_path = path)
+    set_m2r_option(m2_path = path)
     return(invisible(path))
 
   } else {
@@ -71,3 +75,31 @@ set_m2_path <- function(path){
     )
   }
 }
+
+
+
+
+
+#' @rdname m2_path
+#' @export
+get_m2_path <- function() getOption("m2r")$m2_path
+
+
+
+
+#' @rdname m2_path
+#' @export
+get_m2_con <- function() getOption("m2r")$m2_con
+
+
+
+#' @rdname m2_path
+#' @export
+get_m2_procid <- function() getOption("m2r")$m2_procid
+
+
+
+
+
+
+
