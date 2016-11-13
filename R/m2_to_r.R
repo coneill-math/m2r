@@ -146,6 +146,7 @@ m2_tokenize <- function(s) {
 
 m2_parse <- function(s) {
 
+  if (is.m2_pointer(s)) s <- s$ext_str
   tokens <- m2_tokenize(s)
   ret <- m2_parse_internal(tokens)
   ret$result
@@ -296,7 +297,6 @@ m2_parse_internal <- function(tokens, start = 1) {
 
   } else if (tokens[i] %in% c("+","-","*","^")) {
     # start of an expression, consume rest of expression
-    # TODO: parse mpoly here!
 
     lhs <- ret
     operand <- tokens[i]
