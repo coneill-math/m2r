@@ -4,7 +4,7 @@
 \alias{matrix_m2}
 \title{Create a new matrix in Macaulay2}
 \usage{
-matrix_m2(mat, ring = NA, code = FALSE)
+matrix_m2(mat, ring, code = FALSE)
 }
 \arguments{
 \item{mat}{a matrix}

@@ -2,10 +2,14 @@
 % Please edit documentation in R/ring.R
 \name{ring}
 \alias{ring}
+\alias{ring.}
 \title{Create a new ring in Macaulay2}
 \usage{
-ring(vars, coefring = c("CC", "RR", "QQ", "ZZ"), order = c("grevlex", "lex",
-  "glex"), code = FALSE)
+ring(vars, coefring = m2_coefrings(), order = m2_termorders(),
+  code = FALSE)
+
+ring.(vars, coefring = m2_coefrings(), order = m2_termorders(),
+  code = FALSE)
 }
 \arguments{
 \item{vars}{vector of variable names}

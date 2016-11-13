@@ -5,9 +5,9 @@
 \alias{gb_}
 \title{Compute a Grobner basis with Macaulay2}
 \usage{
-gb(..., ring, code = FALSE)
+gb(..., ring, degreeLimit, code = FALSE)
 
-gb_(mpolyList, ring, code = FALSE)
+gb_(mpolyList, ring, degreeLimit = -1, code = FALSE)
 }
 \arguments{
 \item{...}{a nonstandard evaluation listing of mpoly or vector of
@@ -15,6 +15,9 @@ character strings containing referencing multivariate
 polynomials to pass to \code{\link{mp}}}
 
 \item{ring}{ring}
+
+\item{degreeLimit}{parameter that stops computation after S-polynomials
+have reached a given degree. Only meaningful in homogeneous case.}
 
 \item{code}{message code to user? (default = FALSE)}
 
@@ -74,8 +77,8 @@ gb(ps)
 gb_(mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
 gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
 
-
-
+gb(mp("x y-z^2"),mp("y^2-w^2"))
+gb(mp("x y-z^2"),mp("y^2-w^2"), degreeLimit = 2)
 
 
 }
