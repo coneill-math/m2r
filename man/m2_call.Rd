@@ -51,7 +51,12 @@ m2("a")
 
 m2.("1+1")
 m2("1+1")
+
 m2.("peek(QQ[x,y,z])")
+m2("peek(QQ[x,y,z])")
+
+m2.("new MutableList from {1,2,3}")
+m2("new MutableList from {1,2,3}")
 
 }
 }
