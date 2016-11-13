@@ -19,13 +19,9 @@
 #'
 #' }
 #'
-matrix_m2 <- function(mat, ring = NA, code = FALSE) {
+matrix_m2 <- function(mat, ring, code = FALSE) {
 
-  if (missing(ring)) {
-    ret <- matrix_m2.(mat, code = code)
-  } else {
-    ret <- matrix_m2.(mat, ring = ring, code = code)
-  }
+  ret <- do.call(matrix_m2., as.list(match.call())[-1])
 
   # construct R-side matrix, class and return
   matrix <- list(
@@ -36,7 +32,7 @@ matrix_m2 <- function(mat, ring = NA, code = FALSE) {
   matrix
 }
 
-matrix_m2. <- function(mat, ring = NA, code = FALSE) {
+matrix_m2. <- function(mat, ring, code = FALSE) {
 
   if (missing(ring)) {
     ring_str <- ""
@@ -48,7 +44,11 @@ matrix_m2. <- function(mat, ring = NA, code = FALSE) {
   matrix_name <- name_and_increment("matrix", "m2_matrix_count")
 
   # prepare matrix string
-  matrix_str <- listify( apply(mat, 1, listify) )
+  mat2 <- matrix(
+    lapply(mpolyList_to_m2_str(mat), function(.) paste0("(",. , ")", ring_str)),
+    nrow(mat), ncol(mat)
+  )
+  matrix_str <- listify_mat(mat2)
 
   # construct code and message
   # matrix{{1,2,3},{4,5,6}}
