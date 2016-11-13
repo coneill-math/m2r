@@ -27,6 +27,10 @@
 #' reset_m2()
 #' m2("a")
 #'
+#' m2.("1+1")
+#' m2("1+1")
+#' m2.("peek(QQ[x,y,z])")
+#'
 #' }
 
 
@@ -217,9 +221,6 @@ reset_m2 <- function(port = 27436L, timeout = 10) {
 
 
 
-m2_to_r. <- function(variables) {
-
-}
 
 
 
@@ -229,9 +230,7 @@ m2_to_r. <- function(variables) {
 #' @export
 #' @rdname m2_call
 m2 <- function(code, timeout = -1) {
-  m2_binding <- do.call(m2., as.list(match.call())[-1])
-
-  m2_to_r(m2_binding)
+  do.call(m2., as.list(match.call())[-1])$ext_str
 }
 
 
@@ -327,6 +326,22 @@ m2. <- function(code, timeout = -1) {
 
 
 
+
+
+
+print.m2_pointer <- function (x, ...) {
+  cat("M2 Pointer Object\n")
+  w <- min(c(options()$width, 80), na.rm = TRUE) - 19
+  if(nchar(x$ext_str) > w) {
+    ext_str <- str_c(str_sub(x$ext_str, 1, w-4), "...")
+  } else {
+    ext_str <- x$ext_str
+  }
+  cat(sprintf("  ExternalString : %s\n", ext_str))
+  cat(sprintf("          R Name : %s\n", deparse(substitute(x))))
+  cat(sprintf("         M2 Name : %s\n", x$m2_name))
+  cat(sprintf("        M2 Class : %s (%s)\n", x$m2_class, x$m2_class_class))
+}
 
 
 
