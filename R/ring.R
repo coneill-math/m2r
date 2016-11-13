@@ -161,31 +161,6 @@ m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
 
 
 
-
-m2_ring_list <- function() getOption("m2r")$m2_rings
-
-
-
-update_ring_list <- function() {
-
-  code <- sprintf("
-    apply(userSymbols Ring, mr -> (
-      toString mr, if (class value mr === Ring) then (toExternalString value mr)
-                  else (toString coefficientRing value mr), numgens value mr)) |
-    apply(userSymbols InexactFieldFamily, mr -> (toString mr, value toString mr, 0))
-  ")
-  m2_out <- m2_parse(m2(code))
-  ring_list <- c("R")
-
-  set_m2r_option(m2_rings = ring_list)
-
-}
-
-
-
-
-
-
 # m2 coefficient rings currently supported
 m2_coefrings <- function() c("CC", "RR", "QQ", "ZZ")
 
@@ -196,6 +171,14 @@ m2_coefrings <- function() c("CC", "RR", "QQ", "ZZ")
 m2_termorders <- function() c("grevlex", "lex", "glex")
 
 
+
+
+m2_ring_class_names <- function() {
+  c(
+    "Ring","PolynomialRing","QuotientRing",
+    "InexactFieldFamily","InexactField"
+  )
+}
 
 
 
