@@ -7,7 +7,7 @@
 #' @param order a term order
 #' @param code message code to user? (default = FALSE)
 #' @return a reference to a Macaulay2 ring
-#' @export
+#' @name ring
 #' @examples
 #'
 #' \dontrun{ requires Macaulay2 be installed
@@ -25,22 +25,10 @@
 #'
 
 
-# m2 coefficient rings currently supported
-m2_coefrings <- function() {
-  c("CC", "RR", "QQ", "ZZ")
-}
 
 
-
-# m2 term orders currently supported
-m2_termorders <- function() {
-  c("grevlex", "lex", "glex")
-}
-
-
-
-
-
+#' @rdname ring
+#' @export
 ring <- function(vars,
                   coefring = m2_coefrings(),
                   order = m2_termorders(),
@@ -61,6 +49,8 @@ ring <- function(vars,
 
 
 
+#' @rdname ring
+#' @export
 ring. <- function(vars,
   coefring = m2_coefrings(),
   order = m2_termorders(),
@@ -157,3 +147,20 @@ m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
 
 
 
+
+
+
+
+
+
+# m2 coefficient rings currently supported
+m2_coefrings <- function() {
+  c("CC", "RR", "QQ", "ZZ")
+}
+
+
+
+# m2 term orders currently supported
+m2_termorders <- function() {
+  c("grevlex", "lex", "glex")
+}
