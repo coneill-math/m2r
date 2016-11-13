@@ -30,6 +30,9 @@ Create a new ring in Macaulay2
 
 \dontrun{ requires Macaulay2 be installed
 
+ring(c("x", "y"))
+ring.(c("x", "y"))
+
 (myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 
 myring$m2_name
