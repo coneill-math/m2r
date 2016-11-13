@@ -38,6 +38,13 @@ test_that("m2_parse parses basic data structures",{
   m2_empty_matrix <- "map((ZZ)^1,(ZZ)^0,0)"
   m2_empty_matrix_output <- structure(list(m2_name = NULL, rmatrix = matrix(numeric(0), nrow = 0, ncol = 0)), class = c("m2_matrix", "m2"))
   m2_parse_test(m2_empty_matrix,m2_empty_matrix_output)
+
+
+  m2_ring1 <- m2("R = CC[x]")
+  m2_ring2 <- m2("S = R[y]")
+  m2_second_ring <- "R(monoid[y, Degrees => {1}, Heft => {1}, MonomialOrder => VerticalList{MonomialSize => 32, GRevLex => {1}, Position => Up}, DegreeRank => 1])"
+  m2_parse(m2_second_ring)
+  m2_second_ring_output <- " "
 })
 
 test_that("m2 parses harder data structures", {
