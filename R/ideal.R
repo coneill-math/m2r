@@ -14,24 +14,26 @@
 #' (myring <- ring(c("x","y"), coefring = "QQ", order = "lex"))
 #' (myideal <- ideal(mp(c("x+y", "x^2+y^2")), myring,code=TRUE))
 #'
-#' myideal$m2_name
-#' myideal$ring
-#' myideal$gens
-#' myideal$gbgens
-#'
-#' m2(paste0("class(", myideal$m2_name, ")"))
-#'
 #' }
 
-ideal <- function(mpolyList,
-                 ring,
-                 code = FALSE
-)
-{
+ideal <- function(mpolyList, ring, code = FALSE) {
+  ret <- do.call(ideal., as.list(match.call())[-1])
+
+  # construct R-side ideal, class and return
+  message(str(ret$ext_str))
+  ideal <- list(
+    m2_name = ret$m2_name,
+    rmap = m2_parse(ret$ext_str)
+  )
+  # could also want to parse ideal to polys here.
+  class(ideal) <- c("m2", "m2_ideal")
+  ideal
+}
+
+ideal. <- function(mpolyList,ring, code = FALSE) {
   # make ideal name
   idealname <- name_and_increment("ideal", "m2_ideal_count")
-
-  m2_polys_str <- mpolyList_to_m2_str(mpolyList)
+  m2_polys_str <- paste(mpolyList_to_m2_str(mpolyList), collapse = ",")
 
   # construct code and message
   line <- sprintf(
@@ -41,12 +43,17 @@ ideal <- function(mpolyList,
   if(code) message(line)
 
   # run m2
-  m2(line)
+  ret <- m2.(line)
+  ret$m2_name <- idealname
 
-  # construct R-side ideal, class and return
-  ideal <- list(
-    m2_name = idealname, ring = ring,
-    gens = mpolyList, gbgens = NULL)
-  class(ideal) <- c("Ideal", "m2")
-  ideal
+  ret
+}
+
+m2_parse_function.m2_ideal <- function(x) {
+  ret <- list(
+    m2_name = NULL,
+    rmap = x[[1]]
+  )
+  class(ret) <- c("m2_ideal", "m2")
+  ret
 }
