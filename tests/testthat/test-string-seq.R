@@ -1,4 +1,4 @@
-context("String sequences work correctly")
+context("%:%")
 
 test_that("Lower case forward sequences work", {
   expect_equal("b" %:% "t", letters[2:20])
