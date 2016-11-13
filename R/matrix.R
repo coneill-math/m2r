@@ -70,7 +70,7 @@ m2_parse_function.m2_map <- function(x) {
     stop("Parsing error: map between different rings not supported")
   }
 
-  if (x[[3]] == 0) {
+  if (is.integer(x[[3]]) && x[[3]] == 0) {
     if (is.null(R1$vars)) {
       mat <- matrix(numeric(0), nrow = 0, ncol = 0)
     } else {
