@@ -124,7 +124,7 @@ field_as_ring <- function(coefring) {
 m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
 
   monoid <- params[[c(1)]]
-  vars <- append(x$vars, unlist(monoid[[1]]))
+  vars <- c(x$vars, unlist(monoid[[1]]))
   order <- "grevlex"
 
   if (length(monoid) > 1) {

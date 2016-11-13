@@ -195,8 +195,8 @@ m2_parse_internal <- function(tokens, start = 1) {
   } else if (tokens[i] == "-") {
     # -expression
 
-    elem <- -m2_parse_internal(tokens,start = i+1)
-    ret <- -elem$result
+    elem <- m2_parse_internal(tokens,start = i+1)
+    ret <- paste0("-",elem$result)
     i <- elem$nIndex
 
   } else if (tokens[i] == "new") {
@@ -259,6 +259,18 @@ m2_parse_internal <- function(tokens, start = 1) {
 
     class(ret) <- c("m2_sequence","m2")
 
+  } else if (tokens[i] == ":") {
+    # sequence: (n:x) = (x,...,x)
+
+    num_copies <- ret
+
+    elem <- m2_parse_internal(tokens, start = i+1)
+    item <- elem$result
+    i <- elem$nIndex
+
+    ret <- replicate(num_copies, item, simplify = FALSE)
+    class(ret) <- c("m2_sequence","m2")
+
   } else if (#class(ret)[1] %in% c("m2_ring","m2_symbol") &&
              (tokens[i] %notin% c(m2_operators(),",") ||
               tokens[i] %in% c("(","{","["))) {
@@ -268,10 +280,11 @@ m2_parse_internal <- function(tokens, start = 1) {
       elem <- m2_parse_sequence(tokens, start = i, save_paren = TRUE)
     } else {
       elem <- m2_parse_internal(tokens, start = i)
+      elem$result <- list(elem$result)
     }
+
     params <- elem$result
     i <- elem$nIndex
-
 
     ret <- m2_parse_object_as_function(ret, params)
 
