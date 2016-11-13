@@ -196,8 +196,14 @@ m2_parse_internal <- function(tokens, start = 1) {
     # -expression
 
     elem <- m2_parse_internal(tokens,start = i+1)
-    ret <- paste0("-",elem$result)
+    ret <- elem$result
     i <- elem$nIndex
+
+    if (is.integer(ret)) {
+      ret <- -ret
+    } else {
+      ret <- paste0("-", ret)
+    }
 
   } else if (tokens[i] == "new") {
     # object creation: new TYPENAME from DATA
