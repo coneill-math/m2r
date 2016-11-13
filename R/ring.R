@@ -3,9 +3,9 @@
 #' Create a new ring in Macaulay2
 #'
 #' @param vars vector of variable names
-#' @param coefring coefficient ring
-#' @param order a term order
-#' @param code message code to user? (default = FALSE)
+#' @param coefring coefficient ring (default: \code{"CC"})
+#' @param order a term order (default: \code{"grevlex"})
+#' @param code message code to user? (default: \code{FALSE})
 #' @return a reference to a Macaulay2 ring
 #' @name ring
 #' @examples
@@ -19,7 +19,13 @@
 #' myring$coefring
 #' myring$order
 #'
-#' m2(paste0("class(", myring$m2_name, ")"))
+#' m2_code <- sprintf("class(%s)", myring$m2_name)
+#' m2(m2_code)
+#'
+#'
+#'
+#' r. <- ring.(c("x1","x2","x3","y"), coefring = "QQ", order = "lex")
+#' m2(r.$m2_name) # = r.$ext_str
 #'
 #' }
 #'
@@ -29,10 +35,11 @@
 
 #' @rdname ring
 #' @export
-ring <- function(vars,
-                  coefring = m2_coefrings(),
-                  order = m2_termorders(),
-                  code = FALSE
+ring <- function(
+  vars,
+  coefring = m2_coefrings(),
+  order = m2_termorders(),
+  code = FALSE
 ) {
 
   ring <- ring.(vars, coefring, order, code)
@@ -51,7 +58,8 @@ ring <- function(vars,
 
 #' @rdname ring
 #' @export
-ring. <- function(vars,
+ring. <- function(
+  vars,
   coefring = m2_coefrings(),
   order = m2_termorders(),
   code = FALSE
@@ -104,10 +112,7 @@ ring. <- function(vars,
 # m2 coefficient rings currently supported
 field_as_ring <- function(coefring) {
 
-  ring <- list(
-    m2_name = coefring, coefring = coefring,
-    vars = NULL, order = "grevlex"
-  )
+  ring <- list(m2_name = coefring, coefring = coefring, vars = NULL, order = "grevlex")
   class(ring) <- c("m2_polynomialring", "m2")
 
   ring
@@ -118,27 +123,24 @@ field_as_ring <- function(coefring) {
 
 m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
 
-  monoid <- params[[1]][[1]]
+  monoid <- params[[c(1,1)]]
   vars <- append(x$vars, unlist(monoid[[1]]))
   order <- "grevlex"
 
   for (i in 2:length(monoid)) {
-    if (class(monoid[[i]])[1] == "m2_option" &&
-        monoid[[i]][[1]] == "MonomialOrder") {
-      for (j in 1:length(monoid[[i]][[2]])) {
-        if (class(monoid[[i]][[2]][[j]])[1] == "m2_option" &&
-            monoid[[i]][[2]][[j]][[1]] %in% c("Lex", "GLex", "GRevLex")) {
-          order <- monoid[[i]][[2]][[j]][[1]]
+    if (is.m2_option(monoid[[i]]) && monoid[[c(i,1)]] == "MonomialOrder") {
+      for (j in 1:length(monoid[[c(i,2)]])) {
+        if (
+          is.m2_option(monoid[[c(i,2,j)]]) && monoid[[c(i,2,j,1)]] %in% c("Lex", "GLex", "GRevLex")
+        ) {
+          order <- monoid[[c(i,2,j,1)]]
           order <- switch(order, Lex = "lex", GLex = "glex", GRevLex = "grevlex")
         }
       }
     }
   }
 
-  ring <- list(
-    m2_name = NULL, coefring = x$coefring,
-    vars = vars, order = order
-  )
+  ring <- list(m2_name = NULL, coefring = x$coefring, vars = vars, order = order)
   class(ring) <- c("m2_polynomialring", "m2")
 
   ring
@@ -154,13 +156,10 @@ m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
 
 
 # m2 coefficient rings currently supported
-m2_coefrings <- function() {
-  c("CC", "RR", "QQ", "ZZ")
-}
+m2_coefrings <- function() c("CC", "RR", "QQ", "ZZ")
+
 
 
 
 # m2 term orders currently supported
-m2_termorders <- function() {
-  c("grevlex", "lex", "glex")
-}
+m2_termorders <- function() c("grevlex", "lex", "glex")

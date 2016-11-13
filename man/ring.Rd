@@ -14,11 +14,11 @@ ring.(vars, coefring = m2_coefrings(), order = m2_termorders(),
 \arguments{
 \item{vars}{vector of variable names}
 
-\item{coefring}{coefficient ring}
+\item{coefring}{coefficient ring (default: \code{"CC"})}
 
-\item{order}{a term order}
+\item{order}{a term order (default: \code{"grevlex"})}
 
-\item{code}{message code to user? (default = FALSE)}
+\item{code}{message code to user? (default: \code{FALSE})}
 }
 \value{
 a reference to a Macaulay2 ring
@@ -37,7 +37,13 @@ myring$vars
 myring$coefring
 myring$order
 
-m2(paste0("class(", myring$m2_name, ")"))
+m2_code <- sprintf("class(\%s)", myring$m2_name)
+m2(m2_code)
+
+
+
+r. <- ring.(c("x1","x2","x3","y"), coefring = "QQ", order = "lex")
+m2(r.$m2_name) # = r.$ext_str
 
 }
 
