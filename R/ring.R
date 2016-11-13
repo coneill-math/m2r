@@ -131,7 +131,8 @@ m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
     if (is.m2_option(monoid[[i]]) && monoid[[c(i,1)]] == "MonomialOrder") {
       for (j in 1:length(monoid[[c(i,2)]])) {
         if (
-          is.m2_option(monoid[[c(i,2,j)]]) && monoid[[c(i,2,j,1)]] %in% c("Lex", "GLex", "GRevLex")
+          is.m2_option(monoid[[c(i,2,j)]]) &&
+          monoid[[c(i,2,j,1)]] %in% c("Lex", "GLex", "GRevLex")
         ) {
           order <- monoid[[c(i,2,j,1)]]
           order <- switch(order, Lex = "lex", GLex = "glex", GRevLex = "grevlex")

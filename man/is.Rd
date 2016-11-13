@@ -3,12 +3,30 @@
 \name{is}
 \alias{is}
 \alias{is.m2}
+\alias{is.m2_array}
+\alias{is.m2_list}
+\alias{is.m2_matrix}
+\alias{is.m2_option}
+\alias{is.m2_polynomialring}
+\alias{is.m2_sequence}
 \alias{is.ring}
 \title{Macaulay2 object tests}
 \usage{
 is.m2(x)
 
 is.ring(x)
+
+is.m2_polynomialring(x)
+
+is.m2_option(x)
+
+is.m2_list(x)
+
+is.m2_matrix(x)
+
+is.m2_array(x)
+
+is.m2_sequence(x)
 }
 \arguments{
 \item{x}{an object}

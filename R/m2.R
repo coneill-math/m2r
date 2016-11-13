@@ -338,7 +338,7 @@ print.m2_pointer <- function (x, ...) {
     ext_str <- x$ext_str
   }
   cat(sprintf("  ExternalString : %s\n", ext_str))
-  cat(sprintf("          R Name : %s\n", deparse(substitute(x))))
+  # cat(sprintf("          R Name : %s\n", deparse(substitute(x))))
   cat(sprintf("         M2 Name : %s\n", x$m2_name))
   cat(sprintf("        M2 Class : %s (%s)\n", x$m2_class, x$m2_class_class))
 }
