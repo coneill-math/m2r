@@ -7,12 +7,15 @@
 \alias{is.m2_list}
 \alias{is.m2_matrix}
 \alias{is.m2_option}
+\alias{is.m2_pointer}
 \alias{is.m2_polynomialring}
 \alias{is.m2_sequence}
 \alias{is.ring}
 \title{Macaulay2 object tests}
 \usage{
 is.m2(x)
+
+is.m2_pointer(x)
 
 is.ring(x)
 

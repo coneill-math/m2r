@@ -29,7 +29,12 @@
 #'
 #' m2.("1+1")
 #' m2("1+1")
+#'
 #' m2.("peek(QQ[x,y,z])")
+#' m2("peek(QQ[x,y,z])")
+#'
+#' m2.("new MutableList from {1,2,3}")
+#' m2("new MutableList from {1,2,3}")
 #'
 #' }
 
@@ -331,6 +336,7 @@ m2. <- function(code, timeout = -1) {
 
 print.m2_pointer <- function (x, ...) {
   cat("M2 Pointer Object\n")
+  if(is.null(x$ext_str)) x$ext_str <- ""
   w <- min(c(options()$width, 80), na.rm = TRUE) - 19
   if(nchar(x$ext_str) > w) {
     ext_str <- str_c(str_sub(x$ext_str, 1, w-4), "...")

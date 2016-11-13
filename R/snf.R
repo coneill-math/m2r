@@ -7,8 +7,8 @@
 #'
 #' @param mat a matrix (integer entries)
 #' @param code logical; message code to user? (default = FALSE)
+#' @name snf
 #' @return a list of integer matrices D, P, and Q
-#' @export
 #' @examples
 #'
 #' \dontrun{ requires Macaulay2 be installed and an interactive session
@@ -19,6 +19,8 @@
 #'   10, -4, -16
 #' ), nrow = 3, byrow = TRUE)
 #'
+#' snf.(M)
+#' snf.(M, code = TRUE)
 #' (mats <- snf(M))
 #' P <- mats$P; D <- mats$D; Q <- mats$Q
 #'
@@ -28,29 +30,62 @@
 #' det(P)
 #' det(Q)
 #'
+#' snf.(matrix_m2.(M), code = TRUE)
+#' snf(matrix_m2.(M), code = TRUE)
+#'
+#'
 #' }
 #'
+
+
+
+
+
+
+#' @rdname snf
+#' @export
 snf <- function (mat, code = FALSE) {
 
-  if(!is.integer(mat)) stopifnot(all(mat == as.integer(mat)))
+  # run m2
+  pointer <- do.call(snf., as.list(match.call())[-1])
 
-  # create code and run
-  m2_code <- sprintf("smithNormalForm matrix%s", listify_mat(mat))
-  if(code) message(m2_code)
-  char <- m2(m2_code)
+  # parse output
+  parsed_out <- m2_parse(pointer$ext_str)
 
-  # clean output:
-  # "(matrix {{12, 0, 0}, {0, 6, 0}, {0, 0, 2}},matrix {{2, 0, -1}, {1, 1, 0}, {1, 0, 0}},matrix {{-3, -1, 2}, {4, 3, -3}, {3, 2, -2}})"
-  char <- str_sub(char, 9, -2)
-  char <- str_split(char, ",matrix ")[[1]]
-
-  # make into list and return
+  # list and out
   list(
-    D = delistify(char[1], as.integer, rbind), # as.bigz crashes for some reason...
-    Q = t(delistify(char[2], as.integer, rbind)),
-    P = t(delistify(char[3], as.integer, rbind))
+    D = parsed_out[[1]]$rmatrix,
+    Q = t(parsed_out[[2]]$rmatrix),
+    P = t(parsed_out[[3]]$rmatrix)
   )
+
 }
+
+
+
+
+
+#' @rdname snf
+#' @export
+snf. <- function (mat, code = FALSE) {
+
+  # arg checking
+  if (is.m2_matrix(mat)) mat <- mat$rmatrix
+  if (is.m2_pointer(mat)) {
+    param <- mat$m2_name
+  } else {
+    if (!is.integer(mat)) stopifnot(all(mat == as.integer(mat)))
+    param <- paste0("matrix", listify_mat(mat))
+  }
+
+  # create code and message
+  m2_code <- sprintf("smithNormalForm %s", param)
+  if(code) message(m2_code)
+
+  # run m2 and return pointer
+  m2.(m2_code)
+}
+
 
 
 
