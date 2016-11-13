@@ -2,9 +2,12 @@
 % Please edit documentation in R/snf.R
 \name{snf}
 \alias{snf}
+\alias{snf.}
 \title{Smith normal form}
 \usage{
 snf(mat, code = FALSE)
+
+snf.(mat, code = FALSE)
 }
 \arguments{
 \item{mat}{a matrix (integer entries)}
@@ -30,6 +33,8 @@ M <- matrix(c(
   10, -4, -16
 ), nrow = 3, byrow = TRUE)
 
+snf.(M)
+snf.(M, code = TRUE)
 (mats <- snf(M))
 P <- mats$P; D <- mats$D; Q <- mats$Q
 
@@ -38,6 +43,10 @@ solve(P) \%*\% D \%*\% solve(Q)  # = M
 
 det(P)
 det(Q)
+
+snf.(matrix_m2.(M), code = TRUE)
+snf(matrix_m2.(M), code = TRUE)
+
 
 }
 

@@ -26,6 +26,12 @@ is.m2 <- function (x) inherits(x, "m2")
 
 #' @export
 #' @rdname is
+is.m2_pointer <- function (x) inherits(x, "m2_pointer")
+
+
+
+#' @export
+#' @rdname is
 is.ring <- function (x) inherits(x, "m2_polynomialring")
 
 #' @export
