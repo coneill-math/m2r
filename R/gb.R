@@ -120,7 +120,7 @@ gb_ <- function(mpolyList, ring, degreeLimit = -1, code = FALSE) {
       paste0(vars(mpolyList), collapse = ",")
     )
   } else {
-    ring_str <- paste0("use ", ring$m2name, "\n")
+    ring_str <- paste0("use ", ring$m2_name, "\n")
   }
 
   # aggregate m2 code, message if wanted, run m2

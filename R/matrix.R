@@ -13,9 +13,9 @@
 #'
 #' (mymatrix <- matrix_m2(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
 #'
-#' mymatrix$m2name
-#' m2(mymatrix$m2name)
-#' m2(paste0("class(", mymatrix$m2name, ")"))
+#' mymatrix$m2_name
+#' m2(mymatrix$m2_name)
+#' m2(paste0("class(", mymatrix$m2_name, ")"))
 #'
 #' }
 #'
@@ -37,7 +37,7 @@ matrix_m2. <- function(mat, ring, code = FALSE) {
   if (missing(ring)) {
     ring_str <- ""
   } else {
-    ring_str <- paste0("*1_", ring$m2name)
+    ring_str <- paste0("*1_", ring$m2_name)
   }
 
   # make matrix name
@@ -63,12 +63,12 @@ matrix_m2. <- function(mat, ring, code = FALSE) {
 }
 
 m2_parse_function.m2_map <- function(x) {
-  sprintf(x)
-  browser()
-  # TODO: x ---->>>> matrix_name, mat
+
+  # TODO: x ---->>>> mat
+
 
   matrix <- list(
-    m2name = matrix_name,
+    m2_name = NULL,
     rmatrix = mat
   )
   class(matrix) <- c("m2_matrix", "m2")

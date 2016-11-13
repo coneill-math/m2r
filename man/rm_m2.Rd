@@ -20,11 +20,11 @@ Clears a Macaulay2 variable
 \dontrun{ requires Macaulay2 be installed
 
 R <- ring(c("x1", "x2", "x3"))
-m2(paste("class", R$m2name))
+m2(paste("class", R$m2_name))
 
 rm_m2(R)
 
-m2(paste("class", R$m2name))
+m2(paste("class", R$m2_name))
 
 }
 

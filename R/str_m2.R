@@ -27,7 +27,7 @@ str_m2.default <- function(object, ...) {
   cat("M2 Object\n")
   cat(sprintf("    Type : %s\n", class(object)[1]))
   cat(sprintf("  R Name : %s\n", deparse(substitute(object))))
-  cat(sprintf(" M2 Name : %s\n", object$m2name))
+  cat(sprintf(" M2 Name : %s\n", object$m2_name))
 }
 
 
@@ -38,7 +38,7 @@ str_m2.PolynomialRing <- function(object, ...){
   cat("M2 Object\n")
   cat(sprintf("    Type : %s\n", class(object)[1]))
   cat(sprintf("  R Name : %s\n", deparse(substitute(object))))
-  cat(sprintf(" M2 Name : %s\n", object$m2name))
+  cat(sprintf(" M2 Name : %s\n", object$m2_name))
   cat(sprintf("    Vars : %s\n", paste(object$vars, collapse = ", ")))
   cat(sprintf("   Order : %s\n", object$order))
 

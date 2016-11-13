@@ -25,9 +25,9 @@ Create a new matrix in Macaulay2
 
 (mymatrix <- matrix_m2(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
 
-mymatrix$m2name
-m2(mymatrix$m2name)
-m2(paste0("class(", mymatrix$m2name, ")"))
+mymatrix$m2_name
+m2(mymatrix$m2_name)
+m2(paste0("class(", mymatrix$m2_name, ")"))
 
 }
 

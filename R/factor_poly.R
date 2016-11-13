@@ -26,7 +26,7 @@ factor_poly <- function (mpoly, ring, code = FALSE) {
     stop("factor_poly only supports rings with coefficient in ZZ or QQ")
   }
   m2_mpoly <- mpolyList_to_m2_str(mpoly)
-  m2_code <- sprintf("use %s; factor (%s)", ring$m2name, m2_mpoly)
+  m2_code <- sprintf("use %s; factor (%s)", ring$m2_name, m2_mpoly)
 
   if(code) message(m2_code)
   m2_out <- m2(m2_code)

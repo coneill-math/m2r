@@ -14,12 +14,12 @@
 #'
 #' (myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 #'
-#' myring$m2name
+#' myring$m2_name
 #' myring$vars
 #' myring$coefring
 #' myring$order
 #'
-#' m2(paste0("class(", myring$m2name, ")"))
+#' m2(paste0("class(", myring$m2_name, ")"))
 #'
 #' }
 #'
@@ -39,7 +39,7 @@ ring <- function(vars,
 
   # construct R-side ring, class and return
   ring <- list(
-    m2name = ring$m2name, coefring = coefring,
+    m2_name = ring$m2_name, coefring = coefring,
     vars = vars, order = order
   )
   class(ring) <- c("m2_polynomialring", "m2")
@@ -93,7 +93,7 @@ ring. <- function(vars,
   # run m2
   ret <- m2.(line)
 
-  ret$m2name <- ringname
+  ret$m2_name <- ringname
   ret
 }
 
@@ -105,7 +105,7 @@ ring. <- function(vars,
 field_as_ring <- function(coefring) {
 
   ring <- list(
-    m2name = coefring, coefring = coefring,
+    m2_name = coefring, coefring = coefring,
     vars = NULL, order = "grevlex"
   )
   class(ring) <- c("m2_polynomialring", "m2")
@@ -136,7 +136,7 @@ m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
   }
 
   ring <- list(
-    m2name = NULL, coefring = x$coefring,
+    m2_name = NULL, coefring = x$coefring,
     vars = vars, order = order
   )
   class(ring) <- c("m2_polynomialring", "m2")

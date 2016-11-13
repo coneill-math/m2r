@@ -14,12 +14,12 @@
 #' (myring <- ring(c("x","y"), coefring = "QQ", order = "lex"))
 #' (myideal <- ideal(mp(c("x+y", "x^2+y^2")), myring,code=TRUE))
 #'
-#' myideal$m2name
+#' myideal$m2_name
 #' myideal$ring
 #' myideal$gens
 #' myideal$gbgens
 #'
-#' m2(paste0("class(", myideal$m2name, ")"))
+#' m2(paste0("class(", myideal$m2_name, ")"))
 #'
 #' }
 
@@ -36,7 +36,7 @@ ideal <- function(mpolyList,
   # construct code and message
   line <- sprintf(
     "use %s; %s = ideal {%s}",
-    ring$m2name, idealname, m2_polys_str
+    ring$m2_name, idealname, m2_polys_str
   )
   if(code) message(line)
 
@@ -45,7 +45,7 @@ ideal <- function(mpolyList,
 
   # construct R-side ideal, class and return
   ideal <- list(
-    m2name = idealname, ring = ring,
+    m2_name = idealname, ring = ring,
     gens = mpolyList, gbgens = NULL)
   class(ideal) <- c("Ideal", "m2")
   ideal
