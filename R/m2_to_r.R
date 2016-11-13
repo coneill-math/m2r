@@ -264,11 +264,14 @@ m2_parse_internal <- function(tokens, start = 1) {
               tokens[i] %in% c("(","{","["))) {
     # function call
 
-    elem <- m2_parse_internal(tokens, start = i)
+    if (tokens[i] == "(") {
+      elem <- m2_parse_sequence(tokens, start = i, save_paren = TRUE)
+    } else {
+      elem <- m2_parse_internal(tokens, start = i)
+    }
     params <- elem$result
     i <- elem$nIndex
 
-    params = list(params)
 
     ret <- m2_parse_object_as_function(ret, params)
 
@@ -483,12 +486,12 @@ m2_parse_array <- function(tokens, start = 1) {
 
 # (A, B, ...) as classed list
 # (A1) as A1
-m2_parse_sequence <- function(tokens, start = 1) {
+m2_parse_sequence <- function(tokens, start = 1, save_paren = FALSE) {
 
   elem <- m2_parse_list(tokens, start = start, open_char = "(", close_char = ")", type_name = "sequence")
 
   # if sequence has only one element
-  if (length(elem$result) == 1) {
+  if (length(elem$result) == 1 && !save_paren) {
     elem$result <- elem$result[[1]]
   }
 

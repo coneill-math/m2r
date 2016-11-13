@@ -64,8 +64,35 @@ matrix_m2. <- function(mat, ring, code = FALSE) {
 
 m2_parse_function.m2_map <- function(x) {
 
-  # TODO: x ---->>>> mat
+  R1 <- x[[c(1,1)]]
+  R2 <- x[[c(2,1)]]
+  if (!identical(R1, R2)) {
+    stop("Parsing error: map between different rings not supported")
+  }
 
+  if (x[[3]] == 0) {
+    if (is.null(R1$vars)) {
+      mat <- matrix(numeric(0), nrow = 0, ncol = 0)
+    } else {
+      mat <- matrix(character(0), nrow = 0, ncol = 0)
+    }
+  } else {
+    if (!is.list(x[[3]]) || !is.list(x[[c(3,1)]])) {
+      stop("Parsing error: unsupported map format")
+    }
+
+    if (!is.null(R1$vars)) {
+      # convert to mpolys
+      for (i in 1:length(x[[3]])) {
+        x[[c(3,i)]] = lapply(x[[c(3,i)]], function(.) mp(.))
+      }
+    }
+
+    nrow <- length(x[[3]])
+    ncol <- length(x[[c(3,1)]])
+    mat <- t(matrix(unlist(x[[3]]), nrow = ncol, ncol = nrow))
+
+  }
 
   matrix <- list(
     m2_name = NULL,
