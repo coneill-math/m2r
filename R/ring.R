@@ -12,6 +12,9 @@
 #'
 #' \dontrun{ requires Macaulay2 be installed
 #'
+#' ring(c("x", "y"))
+#' ring.(c("x", "y"))
+#'
 #' (myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 #'
 #' myring$m2_name
@@ -42,11 +45,16 @@ ring <- function(
   code = FALSE
 ) {
 
-  ring <- ring.(vars, coefring, order, code)
+  # arg checking
+  coefring <- match.arg(coefring)
+  order <- match.arg(order)
+
+  # run ring.
+  pointer <- ring.(vars, coefring, order, code)
 
   # construct R-side ring, class and return
   ring <- list(
-    m2_name = ring$m2_name, coefring = coefring,
+    m2_name = pointer$m2_name, coefring = coefring,
     vars = vars, order = order
   )
   class(ring) <- c("m2_polynomialring", "m2")
@@ -153,11 +161,6 @@ m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
 
 
 
-
-
-
-
-
 # m2 coefficient rings currently supported
 m2_coefrings <- function() c("CC", "RR", "QQ", "ZZ")
 
@@ -166,3 +169,26 @@ m2_coefrings <- function() c("CC", "RR", "QQ", "ZZ")
 
 # m2 term orders currently supported
 m2_termorders <- function() c("grevlex", "lex", "glex")
+
+
+
+
+m2_ring_class_names <- function() {
+  c(
+    "Ring","PolynomialRing","QuotientRing",
+    "InexactFieldFamily","InexactField"
+  )
+}
+
+
+
+print.m2_polynomialring <- function(x, ...){
+
+  s <- sprintf(
+    "M2 PolynomialRing: %s[%s], %s order",
+    x$coefring, paste(x$vars, collapse = ","), x$order
+  )
+  cat(s)
+
+  invisible(s)
+}

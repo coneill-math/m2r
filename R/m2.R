@@ -267,7 +267,7 @@ m2. <- function(code, timeout = -1) {
     if (timeout > 0 && i >= timeout * 20) {
       break
     } else {
-      Sys.sleep(0.05)
+      Sys.sleep(0.0005)
     }
   }
 

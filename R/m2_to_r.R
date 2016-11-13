@@ -142,12 +142,25 @@ m2_tokenize <- function(s) {
 
 
 
+# only used for ring parsing!  Don't get greedy!!!!
+mem_m2. <- memoise(function(x) m2.(x))
+mem_m2_parse <- memoize(function(x) m2_parse(x))
+
 
 
 m2_parse <- function(s) {
 
+  if (is.m2_pointer(s)) s <- s$ext_str
+
+  forget(mem_m2.)
+  forget(mem_m2_parse)
+
   tokens <- m2_tokenize(s)
   ret <- m2_parse_internal(tokens)
+
+  forget(mem_m2.)
+  forget(mem_m2_parse)
+
   ret$result
 
 }
@@ -296,7 +309,6 @@ m2_parse_internal <- function(tokens, start = 1) {
 
   } else if (tokens[i] %in% c("+","-","*","^")) {
     # start of an expression, consume rest of expression
-    # TODO: parse mpoly here!
 
     lhs <- ret
     operand <- tokens[i]
@@ -375,13 +387,15 @@ m2_parse_function.m2_monoid <- function(x) {
 
 
 
-# x is a list of function parameters
-# class name is m2_M2FUNCTIONNAME in all lower case
-# example: x = list(mpoly("x")), class(x) = c("m2_symbol","m2")
+# x is an object being applied (as a function) to params
+# example: x = monoid, params = [x,y,z]
+# example: x = QQ, params = monoid [x..z]
 m2_parse_object_as_function <- function(x, params) UseMethod("m2_parse_object_as_function")
 m2_parse_object_as_function.default <- function(x, params) stop(paste0("Unsupported object ", class(x)[1], " used as function"))
 
 
+# x is a function name
+# dispatch for function call
 m2_parse_object_as_function.m2_symbol <- function(x, params) {
 
   class(params) <- c(paste0("m2_",tolower(x)),"m2")
@@ -413,18 +427,25 @@ m2_parse_new <- function(tokens, start = 1) {
 
 
 
-
 m2_parse_symbol <- function(tokens, start = 1) {
 
   i <- start + 1
   ret <- tokens[i-1]
 
-  if (ret %in% m2_coefrings()) {
-    ret <- field_as_ring(ret)
+  ptr <- mem_m2.(ret)
+
+  if (ptr$m2_class %in% m2_ring_class_names()) {
+
+    if (ret %in% m2_coefrings()) {
+      ret <- field_as_ring(ret)
+    } else {
+      ret <- mem_m2_parse(ptr)
+    }
 
     while (i <= length(tokens) && tokens[i] == "_") i <- i + 2
 
     return(list(result = ret, nIndex = i))
+
   }
 
   while (i <= length(tokens) && tokens[i] == "_") {
