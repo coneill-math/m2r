@@ -7,9 +7,11 @@
 factor_poly(mpoly, ring, code = FALSE)
 }
 \arguments{
-\item{mpoly}{of class mpoly}
+\item{mpoly}{a character parseable by \link{\code{mp}}, an
+\code{mpoly} object, or a pointer to a polynomial in M2}
 
-\item{ring}{of class PolynomialRing}
+\item{ring}{a \link{\code{ring}} object or a pointer to such an
+object}
 
 \item{code}{logical; message code to user? (default = FALSE)}
 }
@@ -23,16 +25,23 @@ Factor a polynomial
 
 \dontrun{ requires Macaulay2 be installed and an interactive session
 
-(xy <- ring(c("x","y"), "QQ", "lex"))
+(QQxy <- ring(c("x","y"), "QQ"))
+factor_poly("x^4 - y^4", QQxy)
+
 p <- mp("x^4 - y^4")
-factor_poly(p, xy)
+factor_poly.(p, QQxy)
+factor_poly(p, QQxy)
+factor_poly(p, QQxy, code = TRUE)
+mp("(x-y) (x+y) (x^2+y^2)")
 
 
-p <- mp("(x^4 - y^2) (x + y)^2 (x - z)^2")
-factor_poly(p, xy)
+(QQxyz <- ring(c("x","y", "z"), "QQ", "lex"))
+(p <- mp("(x^2 - y) (x^2 + y) (x + y)^2 (x - z)^2"))
+factor_poly.(p, QQxyz)
+factor_poly(p, QQxyz)
 
-(xyz <- ring(c("x","y", "z"), "QQ", "lex"))
-p <- mp("(x-1)^3 - (y-1)^3")
+(p <- mp("(x-1)^3 (y-1)^3"))
+factor_poly.(p, QQxyz)
 factor_poly(p, xyz)
 
 }
