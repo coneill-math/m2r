@@ -16,9 +16,22 @@
 #'
 #' \dontrun{ requires Macaulay2 be installed
 #'
+#' ##### basic usage
+#' ########################################
+#'
 #' 2^2 * 3^7 * 5^2 # = 218700
 #' factor_n(218700)
 #' factor_n.(218700)
+#'
+#'
+#' ##### other input types
+#' ########################################
+#' (m2_pointer <- m2.("218700"))
+#' factor_n(m2_pointer)
+#' factor_n.(m2_pointer)
+#'
+#'
+#'
 #'
 #' factor_n(3234432540)
 #' factor_n(323443254223453)
