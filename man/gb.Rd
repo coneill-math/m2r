@@ -19,7 +19,7 @@ polynomials to pass to \code{\link{mp}}}
 \item{degreeLimit}{parameter that stops computation after S-polynomials
 have reached a given degree. Only meaningful in homogeneous case.}
 
-\item{code}{message code to user? (default = FALSE)}
+\item{code}{return only the M2 code? (default: \code{FALSE})}
 
 \item{mpolyList}{an mpolyList object}
 }

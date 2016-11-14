@@ -12,7 +12,7 @@
 #' @param ring ring
 #' @param degreeLimit parameter that stops computation after S-polynomials
 #'   have reached a given degree. Only meaningful in homogeneous case.
-#' @param code message code to user? (default = FALSE)
+#' @param code return only the M2 code? (default: \code{FALSE})
 #' @return an mpolyList object
 #' @seealso \code{\link{mp}}
 #' @name gb
@@ -130,7 +130,7 @@ gb_ <- function(mpolyList, ring, degreeLimit = -1, code = FALSE) {
   } else {
     m2_code <- paste0(m2_code, "I")
   }
-  if(code) message(m2_code)
+  if(code) { message(m2_code); return(invisible(m2_code)) }
   m2_out <- m2(m2_code)
 
   # comb code, mpoly parse, and out

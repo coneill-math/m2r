@@ -11,7 +11,7 @@ ideal(mpolyList, ring, code = FALSE)
 
 \item{ring}{the referent ring in Macaulay2}
 
-\item{code}{logical; message code to user? (default = FALSE)}
+\item{code}{return only the M2 code? (default: \code{FALSE})}
 }
 \value{
 a reference to a Macaulay2 ideal

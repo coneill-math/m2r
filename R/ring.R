@@ -5,15 +5,18 @@
 #' @param vars vector of variable names
 #' @param coefring coefficient ring (default: \code{"CC"})
 #' @param order a term order (default: \code{"grevlex"})
-#' @param code message code to user? (default: \code{FALSE})
+#' @param code return only the M2 code? (default: \code{FALSE})
 #' @return a reference to a Macaulay2 ring
 #' @name ring
 #' @examples
 #'
 #' \dontrun{ requires Macaulay2 be installed
 #'
+#' ##### basic usage
+#' ########################################
+#'
 #' ring(c("x", "y"))
-#' ring.(c("x", "y"))
+#' ring(c("x", "y"), code = TRUE)
 #'
 #' (myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 #'
@@ -22,13 +25,11 @@
 #' myring$coefring
 #' myring$order
 #'
-#' m2_code <- sprintf("class(%s)", myring$m2_name)
-#' m2(m2_code)
+#' ##### other options
+#' ########################################
 #'
-#'
-#'
-#' r. <- ring.(c("x1","x2","x3","y"), coefring = "QQ", order = "lex")
-#' m2(r.$m2_name) # = r.$ext_str
+#' ring.(c("x", "y"))
+#' ring.(c("x", "y"), code = TRUE)
 #'
 #' }
 #'
@@ -51,6 +52,7 @@ ring <- function(
 
   # run ring.
   pointer <- ring.(vars, coefring, order, code)
+  if(code) return(invisible(pointer))
 
   # construct R-side ring, class and return
   ring <- list(
@@ -104,7 +106,7 @@ ring. <- function(
     "%s = %s[%s,MonomialOrder=>%s]",
     ringname, coefring, paste(sortedvars, collapse = ","), m2order
   )
-  if(code) message(line)
+  if(code) { message(line); return(invisible(line)) }
 
   # run m2
   ret <- m2.(line)

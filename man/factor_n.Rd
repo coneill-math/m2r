@@ -9,7 +9,7 @@ factor_n(n, code = FALSE, gmp = FALSE)
 \arguments{
 \item{n}{an integer or a polynomial}
 
-\item{code}{logical; message code to user? (default: \code{FALSE})}
+\item{code}{return only the M2 code? (default: \code{FALSE})}
 
 \item{gmp}{logical; use multiple precision arithmetic? see
 \code{\link{as.bigz}}}
@@ -36,10 +36,15 @@ factor_n(218700)
 factor_n.(218700)
 
 
-##### other input types
+factor_n(218700, code = TRUE)
+
+##### other options
 ########################################
+
 (m2_pointer <- m2.("218700"))
+factor_n(m2_pointer, code = TRUE)
 factor_n(m2_pointer)
+m2("m2o2")
 factor_n.(m2_pointer)
 
 

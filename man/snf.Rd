@@ -12,7 +12,7 @@ snf.(mat, code = FALSE)
 \arguments{
 \item{mat}{a matrix (integer entries)}
 
-\item{code}{logical; message code to user? (default = FALSE)}
+\item{code}{return only the M2 code? (default: \code{FALSE})}
 }
 \value{
 a list of integer matrices D, P, and Q
@@ -27,14 +27,17 @@ Q are unimodular (have determinants +- 1).
 
 \dontrun{ requires Macaulay2 be installed and an interactive session
 
+##### basic usage
+########################################
+
 M <- matrix(c(
    2,  4,   4,
   -6,  6,  12,
   10, -4, -16
 ), nrow = 3, byrow = TRUE)
 
-snf.(M)
-snf.(M, code = TRUE)
+snf(M)
+
 (mats <- snf(M))
 P <- mats$P; D <- mats$D; Q <- mats$Q
 
@@ -44,8 +47,15 @@ solve(P) \%*\% D \%*\% solve(Q)  # = M
 det(P)
 det(Q)
 
-snf.(matrix_m2.(M), code = TRUE)
-snf(matrix_m2.(M), code = TRUE)
+
+
+##### other options
+########################################
+
+snf.(M)
+snf(M, code = TRUE)
+
+
 
 
 }

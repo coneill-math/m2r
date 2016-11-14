@@ -4,7 +4,7 @@
 #'
 #' @param mpolyList list of mpolys
 #' @param ring the referent ring in Macaulay2
-#' @param code logical; message code to user? (default = FALSE)
+#' @param code return only the M2 code? (default: \code{FALSE})
 #' @return a reference to a Macaulay2 ideal
 #' @export
 #' @examples
@@ -40,7 +40,7 @@ ideal. <- function(mpolyList,ring, code = FALSE) {
     "use %s; %s = ideal {%s}",
     ring$m2_name, idealname, m2_polys_str
   )
-  if(code) message(line)
+  if(code) { message(line); return(invisible(line)) }
 
   # run m2
   ret <- m2.(line)

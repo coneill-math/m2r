@@ -18,7 +18,7 @@ ring.(vars, coefring = m2_coefrings(), order = m2_termorders(),
 
 \item{order}{a term order (default: \code{"grevlex"})}
 
-\item{code}{message code to user? (default: \code{FALSE})}
+\item{code}{return only the M2 code? (default: \code{FALSE})}
 }
 \value{
 a reference to a Macaulay2 ring
@@ -30,8 +30,11 @@ Create a new ring in Macaulay2
 
 \dontrun{ requires Macaulay2 be installed
 
+##### basic usage
+########################################
+
 ring(c("x", "y"))
-ring.(c("x", "y"))
+ring(c("x", "y"), code = TRUE)
 
 (myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 
@@ -40,13 +43,11 @@ myring$vars
 myring$coefring
 myring$order
 
-m2_code <- sprintf("class(\%s)", myring$m2_name)
-m2(m2_code)
+##### other options
+########################################
 
-
-
-r. <- ring.(c("x1","x2","x3","y"), coefring = "QQ", order = "lex")
-m2(r.$m2_name) # = r.$ext_str
+ring.(c("x", "y"))
+ring.(c("x", "y"), code = TRUE)
 
 }
 

@@ -13,7 +13,7 @@ factor_poly(mpoly, ring, code = FALSE)
 \item{ring}{a \link{\code{ring}} object or a pointer to such an
 object}
 
-\item{code}{logical; message code to user? (default = FALSE)}
+\item{code}{return only the M2 code? (default: \code{FALSE})}
 }
 \value{
 a string representation of the factored polynomial.
@@ -24,6 +24,9 @@ Factor a polynomial
 \examples{
 
 \dontrun{ requires Macaulay2 be installed and an interactive session
+
+##### basic usage
+########################################
 
 (QQxy <- ring(c("x","y"), "QQ"))
 factor_poly("x^4 - y^4", QQxy)
@@ -42,7 +45,7 @@ factor_poly(p, QQxyz)
 
 (p <- mp("(x-1)^3 (y-1)^3"))
 factor_poly.(p, QQxyz)
-factor_poly(p, xyz)
+factor_poly(p, QQxyz)
 
 }
 
