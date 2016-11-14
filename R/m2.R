@@ -54,7 +54,7 @@ m2_listen_code <- function (port, timeout) {
       m2rintoutvalsucceeded = false;
       m2rintoutlinesucceeded = false;
       try (
-        m2rintoutval = value(m2rintinline);
+        m2rintoutval := value(m2rintinline);
         m2rintoutvalsucceeded = true;
 
         m2rintoutclass = class m2rintoutval;
