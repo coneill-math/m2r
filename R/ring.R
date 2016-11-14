@@ -164,12 +164,16 @@ m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
 
 
 # m2 coefficient rings currently supported
+#' @rdname ring
+#' @export
 m2_coefrings <- function() c("CC", "RR", "QQ", "ZZ")
 
 
 
 
 # m2 term orders currently supported
+#' @rdname ring
+#' @export
 m2_termorders <- function() c("grevlex", "lex", "glex")
 
 
@@ -183,7 +187,8 @@ m2_ring_class_names <- function() {
 }
 
 
-
+#' @rdname ring
+#' @export
 print.m2_polynomialring <- function(x, ...){
 
   s <- sprintf(

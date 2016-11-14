@@ -69,8 +69,7 @@ Apart from the basic connection to M2, __m2r__ has basic data structures and met
 __m2r__ currently has basic support for [rings](https://en.wikipedia.org/wiki/Ring_(mathematics)):
 
 ```{r ring_definition}
-R <- ring(c("x", "y", "z"))
-R
+(R <- ring(c("x", "y", "z")))
 str_m2(R)
 ```
 
@@ -134,7 +133,86 @@ det(Q)
 ```
 
 
+## Creating your own __m2r__ wrapper
 
+To create your own wrapper function of something in Macaulay2, you'll need to create an R file that looks like the one below.  This will create both value (e.g. `f`) and reference/pointer (e.g. `f.`) versions of the function. As a good example of these at work, see the scripts for [`factor_n()`](https://github.com/musicman3320/m2r/blob/master/R/factor_n.R) or [`factor_poly()`](https://github.com/musicman3320/m2r/blob/master/R/factor_poly.R).
+
+```{r creating-your-own, eval=FALSE}
+#' Function documentation header
+#'
+#' Function header explanation, can run several lines. Function
+#' header explanation, can run several lines. Function header
+#' explanation, can run several lines.
+#'
+#' @param esntl_parm_1 esntl_parm_1 description
+#' @param esntl_parm_2 esntl_parm_2 description
+#' @param code return only the M2 code? (default: \code{FALSE})
+#' @param parse_parm_1 parse_parm_1 description
+#' @param parse_parm_2 parse_parm_2 description
+#' @param ... ...
+#' @name f
+#' @return (value version) parsed output or (reference/dot version)
+#'   \code{m2_pointer}
+#' @examples
+#'
+#' \dontrun{ requires Macaulay2 be installed
+#'
+#' # put examples here
+#' 1 + 1
+#'
+#' }
+#'
+
+
+
+
+
+# value version of f (standard user version)
+#' @rdname f
+#' @export
+f <- function(esntl_parm_1, esntl_parm_2, code = FALSE, parse_parm_1, parse_parm_2, ...) {
+
+  # run m2
+  pointer <- do.call(f., as.list(match.call())[-1])
+  if(code) return(invisible(pointer))
+
+  # parse output
+  parsed_out <- m2_parse(pointer)
+
+  # more parsing
+  TRUE
+
+  # return
+  TRUE
+
+}
+
+
+
+
+# reference version of f (returns pointer to m2 object)
+#' @rdname f
+#' @export
+f. <- function(esntl_parm_1, esntl_parm_2, code = FALSE, ...) {
+
+  # basic arg checking
+  TRUE
+
+  # create essential parameters to pass to m2 this step regularizes input to m2, so it
+  # is the one that deals with pointers, chars, rings, ideals, mpolyLists, etc.
+  TRUE
+
+  # construct m2_code from regularized essential parameters
+  TRUE
+
+  # message
+  if(code) { message(m2_code); return(invisible(m2_code)) }
+
+  # run m2 and return pointer
+  m2.(m2_code)
+
+}
+```
 
 
 ## Acknowledgements
