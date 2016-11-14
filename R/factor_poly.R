@@ -6,7 +6,7 @@
 #'   \code{mpoly} object, or a pointer to a polynomial in M2
 #' @param ring a \link{\code{ring}} object or a pointer to such an
 #'   object
-#' @param code logical; message code to user? (default = FALSE)
+#' @param code return only the M2 code? (default: \code{FALSE})
 #' @return a string representation of the factored polynomial.
 #' @export
 #' @examples
@@ -92,7 +92,7 @@ factor_poly. <- function (mpoly, ring, code = FALSE, ...) {
   }
 
   # message
-  if(code) message(m2_code)
+  if(code) { message(m2_code); return(invisible(m2_code)) }
 
   # run m2 and return pointer
   m2.(m2_code)

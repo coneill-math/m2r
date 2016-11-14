@@ -5,7 +5,7 @@
 #' @param vars vector of variable names
 #' @param coefring coefficient ring (default: \code{"CC"})
 #' @param order a term order (default: \code{"grevlex"})
-#' @param code message code to user? (default: \code{FALSE})
+#' @param code return only the M2 code? (default: \code{FALSE})
 #' @return a reference to a Macaulay2 ring
 #' @name ring
 #' @examples
@@ -104,7 +104,7 @@ ring. <- function(
     "%s = %s[%s,MonomialOrder=>%s]",
     ringname, coefring, paste(sortedvars, collapse = ","), m2order
   )
-  if(code) message(line)
+  if(code) { message(line); return(invisible(line)) }
 
   # run m2
   ret <- m2.(line)

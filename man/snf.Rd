@@ -12,7 +12,7 @@ snf.(mat, code = FALSE)
 \arguments{
 \item{mat}{a matrix (integer entries)}
 
-\item{code}{logical; message code to user? (default = FALSE)}
+\item{code}{return only the M2 code? (default: \code{FALSE})}
 }
 \value{
 a list of integer matrices D, P, and Q

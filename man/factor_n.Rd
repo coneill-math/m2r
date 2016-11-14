@@ -9,7 +9,7 @@ factor_n(n, code = FALSE, gmp = FALSE)
 \arguments{
 \item{n}{an integer or a polynomial}
 
-\item{code}{logical; message code to user? (default: \code{FALSE})}
+\item{code}{return only the M2 code? (default: \code{FALSE})}
 
 \item{gmp}{logical; use multiple precision arithmetic? see
 \code{\link{as.bigz}}}

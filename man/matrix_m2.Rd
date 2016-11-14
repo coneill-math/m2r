@@ -11,7 +11,7 @@ matrix_m2(mat, ring, code = FALSE)
 
 \item{ring}{a ring containing the matrix entries}
 
-\item{code}{message code to user? (default = FALSE)}
+\item{code}{return only the M2 code? (default: \code{FALSE})}
 }
 \value{
 a reference to a Macaulay2 ring

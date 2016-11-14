@@ -6,6 +6,7 @@
 \alias{is.m2_array}
 \alias{is.m2_list}
 \alias{is.m2_matrix}
+\alias{is.m2_module}
 \alias{is.m2_option}
 \alias{is.m2_pointer}
 \alias{is.m2_polynomialring}
@@ -21,11 +22,13 @@ is.ring(x)
 
 is.m2_polynomialring(x)
 
+is.m2_module(x)
+
 is.m2_option(x)
 
-is.m2_list(x)
-
 is.m2_matrix(x)
+
+is.m2_list(x)
 
 is.m2_array(x)
 

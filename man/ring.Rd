@@ -18,7 +18,7 @@ ring.(vars, coefring = m2_coefrings(), order = m2_termorders(),
 
 \item{order}{a term order (default: \code{"grevlex"})}
 
-\item{code}{message code to user? (default: \code{FALSE})}
+\item{code}{return only the M2 code? (default: \code{FALSE})}
 }
 \value{
 a reference to a Macaulay2 ring

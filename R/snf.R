@@ -6,7 +6,7 @@
 #' Q are unimodular (have determinants +- 1).
 #'
 #' @param mat a matrix (integer entries)
-#' @param code logical; message code to user? (default = FALSE)
+#' @param code return only the M2 code? (default: \code{FALSE})
 #' @name snf
 #' @return a list of integer matrices D, P, and Q
 #' @examples
@@ -80,7 +80,7 @@ snf. <- function (mat, code = FALSE) {
 
   # create code and message
   m2_code <- sprintf("smithNormalForm %s", param)
-  if(code) message(m2_code)
+  if(code) { message(m2_code); return(invisible(m2_code)) }
 
   # run m2 and return pointer
   m2.(m2_code)

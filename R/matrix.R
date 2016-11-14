@@ -4,7 +4,7 @@
 #'
 #' @param mat a matrix
 #' @param ring a ring containing the matrix entries
-#' @param code message code to user? (default = FALSE)
+#' @param code return only the M2 code? (default: \code{FALSE})
 #' @return a reference to a Macaulay2 ring
 #' @export
 #' @examples
@@ -53,7 +53,7 @@ matrix_m2. <- function(mat, ring, code = FALSE) {
   # construct code and message
   # matrix{{1,2,3},{4,5,6}}
   line <- sprintf("%s = matrix%s", matrix_name, matrix_str)
-  if(code) message(line)
+  if(code) { message(line); return(invisible(line)) }
 
   # run m2
   ret <- m2.(line)

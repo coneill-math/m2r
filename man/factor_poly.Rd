@@ -13,7 +13,7 @@ factor_poly(mpoly, ring, code = FALSE)
 \item{ring}{a \link{\code{ring}} object or a pointer to such an
 object}
 
-\item{code}{logical; message code to user? (default = FALSE)}
+\item{code}{return only the M2 code? (default: \code{FALSE})}
 }
 \value{
 a string representation of the factored polynomial.
