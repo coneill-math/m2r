@@ -26,13 +26,6 @@ Create a new ideal in Macaulay2
 (myring <- ring(c("x","y"), coefring = "QQ", order = "lex"))
 (myideal <- ideal(mp(c("x+y", "x^2+y^2")), myring,code=TRUE))
 
-myideal$m2_name
-myideal$ring
-myideal$gens
-myideal$gbgens
-
-m2(paste0("class(", myideal$m2_name, ")"))
-
 }
 }
 

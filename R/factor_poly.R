@@ -2,8 +2,10 @@
 #'
 #' Factor a polynomial
 #'
-#' @param mpoly of class mpoly
-#' @param ring of class PolynomialRing
+#' @param mpoly a character parseable by \link{\code{mp}}, an
+#'   \code{mpoly} object, or a pointer to a polynomial in M2
+#' @param ring a \link{\code{ring}} object or a pointer to such an
+#'   object
 #' @param code logical; message code to user? (default = FALSE)
 #' @return a string representation of the factored polynomial.
 #' @export
@@ -11,10 +13,13 @@
 #'
 #' \dontrun{ requires Macaulay2 be installed and an interactive session
 #'
-#' (QQxy <- ring(c("x","y"), "QQ", "lex"))
+#' (QQxy <- ring(c("x","y"), "QQ"))
+#' factor_poly("x^4 - y^4", QQxy)
+#'
 #' p <- mp("x^4 - y^4")
 #' factor_poly.(p, QQxy)
 #' factor_poly(p, QQxy)
+#' factor_poly(p, QQxy, code = TRUE)
 #' mp("(x-y) (x+y) (x^2+y^2)")
 #'
 #'
@@ -53,24 +58,37 @@ factor_poly <- function (mpoly, ring, code = FALSE) {
 factor_poly. <- function (mpoly, ring, code = FALSE, ...) {
 
   # basic arg checking
-  if (ring$coefring != "QQ" & ring$coefring != "ZZ") {
+  if (!is.m2_pointer(ring) && ring$coefring != "QQ" && ring$coefring != "ZZ") {
     stop("factor_poly only supports coefficent rings ZZ or QQ")
   }
 
-  # preparing param
-  # if(is.m2_pointer(mpoly)) {
-  #
-  # } else {
-  #
-  # }
+  # prepare mpoly param
+  if (is.m2_pointer(mpoly)) {
+    mpoly_param <- mpoly$m2_name
+  } else if (is.character(mpoly)) {
+    mpoly_param <- mpoly
+  } else if (is.mpoly(mpoly) || is.mpolyList(mpoly)) {
+    mpoly_param <- mpolyList_to_m2_str(mpoly)
+  }
+
+  # prepare ring param (if present)
+  if (!missing(ring)) {
+    # prepare mpoly param
+    if (is.m2_pointer(ring)) {
+      ring_param <- ring$m2_name
+    } else if (is.character(ring)) {
+      ring_param <- ring
+    } else if (is.ring(ring)) {
+      ring_param <- ring$m2_name
+    }
+  }
 
   # create code
-  m2_mpoly <- mpolyList_to_m2_str(mpoly)
-  m2_code <- sprintf("factor(%s)", m2_mpoly)
+  m2_code <- sprintf("factor(%s)", mpoly_param)
 
   # add ring name if desired
   if(!missing(ring)) {
-    m2_code <- paste0(sprintf("use %s; ", ring$m2_name), m2_code)
+    m2_code <- paste0(sprintf("use %s; ", ring_param), m2_code)
   }
 
   # message
@@ -79,16 +97,4 @@ factor_poly. <- function (mpoly, ring, code = FALSE, ...) {
   # run m2 and return pointer
   m2.(m2_code)
 
-
-  # m2_out <- str_replace_all(m2_out, "\\*", " ")
-  # m2_out <- str_split(m2_out, " ")[[1]]
-  # m2_out <- lapply(m2_out, function(p) {
-  #   if(str_sub(p, nchar(p)) == ")") return(c(p, "1"))
-  #   str_split(str_sub(p, 2), ")\\^")[[1]]
-  # })
-  #
-  # list(
-  #   poly  = mp(vapply(m2_out, `[`, character(1), 1)),
-  #   power = as.integer(vapply(m2_out, `[`, character(1), 2))
-  # )
 }
