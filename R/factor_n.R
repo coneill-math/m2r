@@ -39,7 +39,7 @@ factor_n <- function (n, code = FALSE, gmp = FALSE) {
   pointer <- do.call(factor_n., as.list(match.call())[-1])
 
   # parse output
-  parsed_out <- m2_parse(pointer$ext_str)
+  parsed_out <- m2_parse(pointer)
 
   # reformat
   mat <- matrix(unlist(parsed_out), ncol = 2, byrow = TRUE)
