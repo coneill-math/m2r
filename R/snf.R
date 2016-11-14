@@ -50,7 +50,7 @@ snf <- function (mat, code = FALSE) {
   pointer <- do.call(snf., as.list(match.call())[-1])
 
   # parse output
-  parsed_out <- m2_parse(pointer$ext_str)
+  parsed_out <- m2_parse(pointer)
 
   # list and out
   list(

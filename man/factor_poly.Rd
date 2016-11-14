@@ -27,6 +27,10 @@ Factor a polynomial
 p <- mp("x^4 - y^4")
 factor_poly(p, xy)
 
+
+p <- mp("(x^4 - y^2) (x + y)^2 (x - z)^2")
+factor_poly(p, xy)
+
 (xyz <- ring(c("x","y", "z"), "QQ", "lex"))
 p <- mp("(x-1)^3 - (y-1)^3")
 factor_poly(p, xyz)
