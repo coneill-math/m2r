@@ -25,6 +25,9 @@ Factor a polynomial
 
 \dontrun{ requires Macaulay2 be installed and an interactive session
 
+##### basic usage
+########################################
+
 (QQxy <- ring(c("x","y"), "QQ"))
 factor_poly("x^4 - y^4", QQxy)
 
@@ -42,7 +45,7 @@ factor_poly(p, QQxyz)
 
 (p <- mp("(x-1)^3 (y-1)^3"))
 factor_poly.(p, QQxyz)
-factor_poly(p, xyz)
+factor_poly(p, QQxyz)
 
 }
 

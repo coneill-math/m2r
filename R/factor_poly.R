@@ -13,6 +13,9 @@
 #'
 #' \dontrun{ requires Macaulay2 be installed and an interactive session
 #'
+#' ##### basic usage
+#' ########################################
+#'
 #' (QQxy <- ring(c("x","y"), "QQ"))
 #' factor_poly("x^4 - y^4", QQxy)
 #'
@@ -30,7 +33,7 @@
 #'
 #' (p <- mp("(x-1)^3 (y-1)^3"))
 #' factor_poly.(p, QQxyz)
-#' factor_poly(p, xyz)
+#' factor_poly(p, QQxyz)
 #'
 #' }
 #'
@@ -38,6 +41,7 @@ factor_poly <- function (mpoly, ring, code = FALSE) {
 
   # run m2
   pointer <- do.call(factor_poly., as.list(match.call())[-1])
+  if(code) return(invisible(pointer))
 
   # parse output
   parsed_out <- m2_parse(pointer)

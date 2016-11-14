@@ -36,10 +36,15 @@ factor_n(218700)
 factor_n.(218700)
 
 
-##### other input types
+factor_n(218700, code = TRUE)
+
+##### other options
 ########################################
+
 (m2_pointer <- m2.("218700"))
+factor_n(m2_pointer, code = TRUE)
 factor_n(m2_pointer)
+m2("m2o2")
 factor_n.(m2_pointer)
 
 

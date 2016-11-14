@@ -13,14 +13,17 @@
 #'
 #' \dontrun{ requires Macaulay2 be installed and an interactive session
 #'
+#' ##### basic usage
+#' ########################################
+#'
 #' M <- matrix(c(
 #'    2,  4,   4,
 #'   -6,  6,  12,
 #'   10, -4, -16
 #' ), nrow = 3, byrow = TRUE)
 #'
-#' snf.(M)
-#' snf.(M, code = TRUE)
+#' snf(M)
+#'
 #' (mats <- snf(M))
 #' P <- mats$P; D <- mats$D; Q <- mats$Q
 #'
@@ -30,8 +33,15 @@
 #' det(P)
 #' det(Q)
 #'
-#' snf.(matrix_m2.(M), code = TRUE)
-#' snf(matrix_m2.(M), code = TRUE)
+#'
+#'
+#' ##### other options
+#' ########################################
+#'
+#' snf.(M)
+#' snf(M, code = TRUE)
+#'
+#'
 #'
 #'
 #' }
@@ -48,6 +58,7 @@ snf <- function (mat, code = FALSE) {
 
   # run m2
   pointer <- do.call(snf., as.list(match.call())[-1])
+  if(code) return(invisible(pointer))
 
   # parse output
   parsed_out <- m2_parse(pointer)

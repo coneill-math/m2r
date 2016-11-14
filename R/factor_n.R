@@ -24,10 +24,15 @@
 #' factor_n.(218700)
 #'
 #'
-#' ##### other input types
+#' factor_n(218700, code = TRUE)
+#'
+#' ##### other options
 #' ########################################
+#'
 #' (m2_pointer <- m2.("218700"))
+#' factor_n(m2_pointer, code = TRUE)
 #' factor_n(m2_pointer)
+#' m2("m2o2")
 #' factor_n.(m2_pointer)
 #'
 #'
@@ -50,6 +55,7 @@ factor_n <- function (n, code = FALSE, gmp = FALSE) {
 
   # run m2
   pointer <- do.call(factor_n., as.list(match.call())[-1])
+  if(code) return(invisible(pointer))
 
   # parse output
   parsed_out <- m2_parse(pointer)
