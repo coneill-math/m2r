@@ -47,11 +47,11 @@ test_that("m2_parse parses basic data structures",{
   m2_parse_test(m2_second_ring,m2_second_ring_output)
 
   # map(S,R,{s^3-t^2, s^3-t, s-t})
-  m2_ring1 <- m2("R = QQ[a,b,c]")
-  m2_ring2 <- m2("S = QQ[s,t]")
-  m2_ring_map <- "map(S,R,{s^3-t^2, s^3-t, s-t})"
-  m2_parse(m2_ring_map)
-  m2_ring_map_output <- " "
+  # m2_ring1 <- m2("R = QQ[a,b,c]")
+  # m2_ring2 <- m2("S = QQ[s,t]")
+  # m2_ring_map <- "map(S,R,{s^3-t^2, s^3-t, s-t})"
+  # m2_parse(m2_ring_map)
+  # m2_ring_map_output <- " "
 })
 
 test_that("m2 parses harder data structures", {

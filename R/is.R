@@ -39,22 +39,24 @@ is.ring <- function (x) inherits(x, "m2_polynomialring")
 is.m2_polynomialring <- function (x) inherits(x, "m2_polynomialring")
 
 
+#' @export
+#' @rdname is
+is.m2_module <- function (x) inherits(x, "m2_module")
+
 
 #' @export
 #' @rdname is
 is.m2_option <- function (x) inherits(x, "m2_option")
 
 
+#' @export
+#' @rdname is
+is.m2_matrix <- function (x) inherits(x, "m2_matrix")
 
 
 #' @export
 #' @rdname is
 is.m2_list <- function (x) inherits(x, "m2_list")
-
-
-#' @export
-#' @rdname is
-is.m2_matrix <- function (x) inherits(x, "m2_matrix")
 
 
 #' @export

@@ -317,7 +317,7 @@ m2_parse_internal <- function(tokens, start = 1) {
     rhs <- elem$result
     i <- elem$nIndex
 
-    if (class(lhs)[1] == "m2_polynomialring") {
+    if (is.m2_polynomialring(lhs)) {
       ret <- list(lhs, rhs)
       class(ret) <- c("m2_module","m2")
     } else {
