@@ -1,6 +1,7 @@
 context("factor_n")
 
 test_that("factor_n obtains correct result", {
+
   expect_equal(
     factor_n(218700),
     structure(
