@@ -333,7 +333,8 @@ m2. <- function(code, timeout = -1) {
 
 
 
-
+#' @export
+#' @rdname m2_call
 print.m2_pointer <- function (x, ...) {
   cat("M2 Pointer Object\n")
   if(is.null(x$ext_str)) x$ext_str <- ""
