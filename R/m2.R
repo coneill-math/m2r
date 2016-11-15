@@ -53,7 +53,7 @@
 m2_listen_code <- function (port, timeout) {
   sprintf("
     m2rintinout = openInOut \"$:%d\";
-    m2rintruncount = 1;
+    m2rintruncount = 0;
     while true do (
       m2rintinline = read m2rintinout;
       if m2rintinline == \"\" then break;
@@ -61,18 +61,19 @@ m2_listen_code <- function (port, timeout) {
       m2rintretcode = 0;
       m2rintoutvalsucceeded = false;
       m2rintoutlinesucceeded = false;
+      m2rintruncount = m2rintruncount + 1;
+
       try (
-        m2rintoutval := value(m2rintinline);
+        m2rintoutval_m2rintruncount = value(m2rintinline);
         m2rintoutvalsucceeded = true;
 
-        m2rintoutclass = class m2rintoutval;
+        m2rintoutclass = class m2rintoutval_m2rintruncount;
         m2rintoutclassclass = class m2rintoutclass;
 
         m2rintvarname = \"m2o\" | toString(m2rintruncount);
-        value(m2rintvarname | \" = m2rintoutval;\");
-        m2rintruncount = m2rintruncount + 1;
+        value(m2rintvarname | \" = m2rintoutval_m2rintruncount;\");
 
-        m2rintoutline = toExternalString m2rintoutval;
+        m2rintoutline = toExternalString m2rintoutval_m2rintruncount;
         m2rintoutlinesucceeded = true;
       );
 
