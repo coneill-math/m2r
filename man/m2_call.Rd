@@ -5,6 +5,7 @@
 \alias{m2.}
 \alias{m2_call}
 \alias{m2_listen_code}
+\alias{print.m2_pointer}
 \alias{reset_m2}
 \title{Call and reset a Macaulay2 process}
 \usage{
@@ -15,6 +16,8 @@ reset_m2(port = 27436L, timeout = 10)
 m2(code, timeout = -1)
 
 m2.(code, timeout = -1)
+
+\method{print}{m2_pointer}(x, ...)
 }
 \arguments{
 \item{port}{port for Macaulay2 socket}
