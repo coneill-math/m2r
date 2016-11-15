@@ -25,6 +25,10 @@ m2.(code, timeout = -1)
 \item{timeout}{number of seconds before aborting}
 
 \item{code}{Macaulay2 code}
+
+\item{x}{formal argument for print method}
+
+\item{...}{...}
 }
 \value{
 m2 return value

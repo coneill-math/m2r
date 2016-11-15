@@ -9,10 +9,10 @@
 \title{Create a new ring in Macaulay2}
 \usage{
 ring(vars, coefring = m2_coefrings(), order = m2_termorders(),
-  code = FALSE)
+  code = FALSE, ...)
 
 ring.(vars, coefring = m2_coefrings(), order = m2_termorders(),
-  code = FALSE)
+  code = FALSE, ...)
 
 m2_coefrings()
 
@@ -28,6 +28,10 @@ m2_termorders()
 \item{order}{a term order (default: \code{"grevlex"})}
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
+
+\item{...}{...}
+
+\item{x}{formal argument for print method}
 }
 \value{
 a reference to a Macaulay2 ring

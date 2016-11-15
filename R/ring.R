@@ -6,6 +6,8 @@
 #' @param coefring coefficient ring (default: \code{"CC"})
 #' @param order a term order (default: \code{"grevlex"})
 #' @param code return only the M2 code? (default: \code{FALSE})
+#' @param x formal argument for print method
+#' @param ... ...
 #' @return a reference to a Macaulay2 ring
 #' @name ring
 #' @examples
@@ -43,7 +45,8 @@ ring <- function(
   vars,
   coefring = m2_coefrings(),
   order = m2_termorders(),
-  code = FALSE
+  code = FALSE,
+  ...
 ) {
 
   # arg checking
@@ -72,7 +75,8 @@ ring. <- function(
   vars,
   coefring = m2_coefrings(),
   order = m2_termorders(),
-  code = FALSE
+  code = FALSE,
+  ...
 ) {
 
   # check args
