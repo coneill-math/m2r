@@ -8,7 +8,7 @@
 #'   object
 #' @param code return only the M2 code? (default: \code{FALSE})
 #' @return a string representation of the factored polynomial.
-#' @export
+#' @name factor_poly
 #' @examples
 #'
 #' \dontrun{ requires Macaulay2 be installed and an interactive session
@@ -36,7 +36,11 @@
 #' factor_poly(p, QQxyz)
 #'
 #' }
-#'
+
+
+
+#' @rdname factor_poly
+#' @export
 factor_poly <- function (mpoly, ring, code = FALSE) {
 
   # run m2
@@ -58,7 +62,8 @@ factor_poly <- function (mpoly, ring, code = FALSE) {
 
 
 
-
+#' @rdname factor_poly
+#' @export
 factor_poly. <- function (mpoly, ring, code = FALSE, ...) {
 
   # basic arg checking
