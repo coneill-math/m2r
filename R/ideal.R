@@ -5,55 +5,66 @@
 #' @param mpolyList list of mpolys
 #' @param ring the referent ring in Macaulay2
 #' @param code return only the M2 code? (default: \code{FALSE})
+#' @param ... ...
 #' @return a reference to a Macaulay2 ideal
-#' @export
+#' @name ideal
 #' @examples
 #'
 #' \dontrun{ requires Macaulay2 be installed
 #'
-#' (myring <- ring(c("x","y"), coefring = "QQ", order = "lex"))
-#' (myideal <- ideal(mp(c("x+y", "x^2+y^2")), myring,code=TRUE))
+#' (QQxy <- ring(c("x","y"), coefring = "QQ"))
+#' ideal(mp(c("x+y", "x^2+y^2")), QQxy)
+#' ideal(mp(c("x+y", "x^2+y^2")), QQxy, code = TRUE)
 #'
 #' }
 
-ideal <- function(mpolyList, ring, code = FALSE) {
-  ret <- do.call(ideal., as.list(match.call())[-1])
+
+
+
+#' @rdname ideal
+#' @export
+ideal <- function(mpolyList, ring, code = FALSE, ...) {
+
+  # run ideal.
+  pointer <- do.call(ideal., as.list(match.call())[-1])
+  if(code) return(invisible(pointer))
 
   # construct R-side ideal, class and return
-  message(str(ret$ext_str))
-  ideal <- list(
-    m2_name = ret$m2_name,
-    rmap = m2_parse(ret$ext_str)
-  )
-  # could also want to parse ideal to polys here.
-  class(ideal) <- c("m2", "m2_ideal")
-  ideal
+  return(m2_parse(pointer))
+  ideal <- list(m2_name = pointer$m2_name, rmap = m2_parse(pointer))
+
+  # could also want to parse ideal to polys here
+  structure(ideal, class = c("m2_ideal", "m2"))
+
 }
 
-ideal. <- function(mpolyList,ring, code = FALSE) {
+
+#' @rdname ideal
+#' @export
+ideal. <- function(mpolyList, ring, code = FALSE, ...) {
+
   # make ideal name
-  idealname <- name_and_increment("ideal", "m2_ideal_count")
+  ideal_name <- name_and_increment("ideal", "m2_ideal_count")
   m2_polys_str <- paste(mpolyList_to_m2_str(mpolyList), collapse = ",")
 
   # construct code and message
-  line <- sprintf(
+  m2_code <- sprintf(
     "use %s; %s = ideal {%s}",
-    ring$m2_name, idealname, m2_polys_str
+    ring$m2_name, ideal_name, m2_polys_str
   )
-  if(code) { message(line); return(invisible(line)) }
+  if(code) { message(m2_code); return(invisible(m2_code)) }
 
   # run m2
-  ret <- m2.(line)
-  ret$m2_name <- idealname
+  out <- m2.(m2_code)
 
-  ret
+  # change name and return
+  out$m2_name <- ideal_name
+  out
 }
 
+
+
 m2_parse_function.m2_ideal <- function(x) {
-  ret <- list(
-    m2_name = NULL,
-    rmap = x[[1]]
-  )
-  class(ret) <- c("m2_ideal", "m2")
-  ret
+  out <- list(m2_name = NULL, rmap = x[[1]])
+  structure(out, class = c("m2_ideal", "m2"))
 }
