@@ -5,7 +5,7 @@
 \alias{factor_n.}
 \title{Factor an integer into primes}
 \usage{
-factor_n(n, code = FALSE, gmp = FALSE)
+factor_n(n, code = FALSE, gmp = FALSE, ...)
 
 factor_n.(n, code = FALSE, ...)
 }
@@ -14,15 +14,15 @@ factor_n.(n, code = FALSE, ...)
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 
-\item{gmp}{logical; use multiple precision arithmetic? see
-\code{\link{as.bigz}}}
+\item{gmp}{(broken) logical; use multiple precision arithmetic?
+see \code{\link{as.bigz}}}
+
+\item{...}{...}
 }
 \value{
-if \code{gmp = FALSE}, a character or integer matrix with
-  columns named \code{prime} and \code{power}. if all the numbers
-  have fewer than 10 digits, the matrix returned contains
-  integers; otherwise it contains characters. if \code{gmp =
-  TRUE}, a big integer matrix.
+a data frame with integer columns \code{prime} and
+  \code{power} or \code{m2_pointer} referencing the factorization
+  in M2.
 }
 \description{
 Factor an integer into primes
@@ -38,18 +38,22 @@ Factor an integer into primes
 factor_n(218700)
 factor_n.(218700)
 
+(df <- factor_n(218700))
+df$prime
+df$power
+str(df)
+
 
 factor_n(218700, code = TRUE)
+
 
 ##### other options
 ########################################
 
-(m2_pointer <- m2.("218700"))
-factor_n(m2_pointer, code = TRUE)
-factor_n(m2_pointer)
-m2("m2o2")
-factor_n.(m2_pointer)
-
+(integer_pointer <- m2.("218700"))
+integer_pointer$m2_name
+factor_n(integer_pointer, code = TRUE)
+factor_n(integer_pointer)
 
 
 
@@ -57,9 +61,38 @@ factor_n(3234432540)
 factor_n(323443254223453)
 factor_n(rpois(1, 1e4))
 
-# notes on big integers
-factor_n("32344325422364353453") # parses improperly; int too big
-m2_parse(factor_n.("32344325422364353453")$ext_str)
+
+##### known issues
+########################################
+
+# R doesn't handle big ints well. note in the following
+# the m2 code number is different than the supplied number
+factor_n(32344325422364353453, code = TRUE)
+
+# this can be circumvented by passing a string instead
+factor_n("32344325422364353453", code = TRUE)
+
+# but if the factors are large, R can't handle the parsing well
+factor_n("32344325422364353453")
+
+# here's a workaround:
+factor_pointer <- factor_n.("32344325422364353453")
+factor_pointer$ext_str
+extract_factors <- function(pointer) {
+  require(stringr)
+  str <- pointer$ext_str
+  str <- str_sub(str, 19, -2)
+  str <- str_extract_all(str, "\\\\{[0-9]+,[0-9]+\\\\}")[[1]]
+  str <- str_sub(str, 2, -2)
+  str <- str_split(str, ",")
+  df <- as.data.frame(t(simplify2array(str)))
+  names(df) <- c("prime", "power")
+  df
+}
+(df <- extract_factors(factor_pointer))
+
+
+# using gmp (currently broken)
 # factor_n("32344325422364353453", gmp = TRUE)
 m2("11 * 479 * 6138607975396537")
 11 * 479 * 6138607975396537
