@@ -12,27 +12,35 @@
 #' \dontrun{ requires Macaulay2 be installed
 #'
 #' m2("1 + 1")
+#' m2.("1 + 1")
 #'
 #' m2("factor 32004")
 #'
-#' # compute a grobner basis of a polynomial ideal
+#' # run a chunk of m2 code, only pulling the end value back into R
 #' m2("
 #'   R = QQ[a..d]
 #'   I = ideal(a^3-b^2*c, b*c^2-c*d^2, c^3)
 #'   G = gens gb I
 #' ")
 #'
+#' # illustrate the persistent connection
 #' m2("a = 1 + 1")
 #' m2("a")
 #' reset_m2()
 #' m2("a")
 #'
-#' m2.("1+1")
-#' m2("1+1")
+#'
 #'
 #' m2.("peek(QQ[x,y,z])")
 #' m2("peek(QQ[x,y,z])")
 #'
+#' # m2 returns in its ext_str position the result of running
+#' # toExternalString on the return value of the chunk of code
+#' # you run. in principle, toExternalString provides the code
+#' # needed to recreate the m2 object of interest. however,
+#' # does not work for all objects represtable in the m2 language.
+#' # in particular, mutable objects are not supported.
+#' # this is what happens when you look at those:
 #' m2.("new MutableList from {1,2,3}")
 #' m2("new MutableList from {1,2,3}")
 #'
