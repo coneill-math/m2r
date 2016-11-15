@@ -10,13 +10,15 @@ factor_poly(mpoly, ring, code = FALSE)
 factor_poly.(mpoly, ring, code = FALSE, ...)
 }
 \arguments{
-\item{mpoly}{a character parseable by \link{\code{mp}}, an
+\item{mpoly}{a character parseable by \code{\link{mp}}, an
 \code{mpoly} object, or a pointer to a polynomial in M2}
 
-\item{ring}{a \link{\code{ring}} object or a pointer to such an
+\item{ring}{a \code{\link{ring}} object or a pointer to such an
 object}
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
+
+\item{...}{...}
 }
 \value{
 a string representation of the factored polynomial.

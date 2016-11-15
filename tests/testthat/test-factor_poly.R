@@ -2,39 +2,33 @@ context("factor_poly")
 
 
 # define objects common to the tests
-expected_output <- list(
-  mpolyList = mp(c("x-y", "x+y", "x^2+y^2")),
-  power = c(1L, 1L, 1L)
-)
-
-QQxy <- ring(c("x","y"), "QQ")
-QQxy_pointer <- ring.(c("x","y"), "QQ")
+expected_output <- list(mpolyList = mp(c("x-y", "x+y", "x^2+y^2")), power = c(1L, 1L, 1L))
 
 
 # run tests
 test_that("factor_poly(char, m2_polynomialring)", {
-  expect_equal(factor_poly("x^4 - y^4", QQxy), expected_output)
+  expect_equal(factor_poly("x^4 - y^4", ring(c("x","y"), "QQ")), expected_output)
 })
 
 test_that("factor_poly(mpoly, m2_polynomialring)", {
-  expect_equal(factor_poly(mp("x^4 - y^4"), QQxy), expected_output)
+  expect_equal(factor_poly(mp("x^4 - y^4"), ring(c("x","y"), "QQ")), expected_output)
 })
 
 test_that("factor_poly(m2_pointer, m2_polynomialring)", {
-  expect_equal(factor_poly(m2.("x^4 - y^4"), QQxy), expected_output)
+  expect_equal(factor_poly(m2.("x^4 - y^4"), ring(c("x","y"), "QQ")), expected_output)
 })
 
 test_that("factor_poly(char, m2_pointer)", {
-  expect_equal(factor_poly("x^4 - y^4", QQxy_pointer), expected_output)
+  expect_equal(factor_poly("x^4 - y^4", ring.(c("x","y"), "QQ")), expected_output)
 })
 
 
 test_that("factor_poly(mpoly, m2_pointer)", {
-  expect_equal(factor_poly(mp("x^4 - y^4"), QQxy_pointer), expected_output)
+  expect_equal(factor_poly(mp("x^4 - y^4"), ring.(c("x","y"), "QQ")), expected_output)
 })
 
 test_that("factor_poly(m2_pointer, m2_pointer)", {
-  expect_equal(factor_poly(m2.("x^4 - y^4"), QQxy_pointer), expected_output)
+  expect_equal(factor_poly(m2.("x^4 - y^4"), ring.(c("x","y"), "QQ")), expected_output)
 })
 
 
@@ -48,6 +42,10 @@ context("factor_poly.")
 
 
 # define objects common to the tests
+# for some reason moving the next two lines to the top of this file doesn't work
+QQxy <- ring(c("x","y"), "QQ")
+QQxy_pointer <- ring.(c("x","y"), "QQ")
+
 expected_output <- structure(
   list(
     ext_str = "new Product from {new Power from {x-y,1},new Power from {x+y,1},new Power from {x^2+y^2,1}}",
