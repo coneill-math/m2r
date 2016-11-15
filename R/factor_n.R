@@ -11,7 +11,7 @@
 #'   have fewer than 10 digits, the matrix returned contains
 #'   integers; otherwise it contains characters. if \code{gmp =
 #'   TRUE}, a big integer matrix.
-#' @export
+#' @name factor_n
 #' @examples
 #'
 #' \dontrun{ requires Macaulay2 be installed
@@ -51,6 +51,12 @@
 #'
 #' }
 #'
+
+
+
+
+#' @rdname factor_n
+#' @export
 factor_n <- function (n, code = FALSE, gmp = FALSE) {
 
   # run m2
@@ -81,7 +87,8 @@ factor_n <- function (n, code = FALSE, gmp = FALSE) {
 }
 
 
-
+#' @rdname factor_n
+#' @export
 factor_n. <- function (n, code = FALSE, ...) {
 
   # arg checking

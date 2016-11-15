@@ -2,9 +2,12 @@
 % Please edit documentation in R/factor_n.R
 \name{factor_n}
 \alias{factor_n}
+\alias{factor_n.}
 \title{Factor an integer into primes}
 \usage{
 factor_n(n, code = FALSE, gmp = FALSE)
+
+factor_n.(n, code = FALSE, ...)
 }
 \arguments{
 \item{n}{an integer or a polynomial}

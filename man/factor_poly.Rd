@@ -2,9 +2,12 @@
 % Please edit documentation in R/factor_poly.R
 \name{factor_poly}
 \alias{factor_poly}
+\alias{factor_poly.}
 \title{Factor a polynomial}
 \usage{
 factor_poly(mpoly, ring, code = FALSE)
+
+factor_poly.(mpoly, ring, code = FALSE, ...)
 }
 \arguments{
 \item{mpoly}{a character parseable by \link{\code{mp}}, an
@@ -48,6 +51,5 @@ factor_poly.(p, QQxyz)
 factor_poly(p, QQxyz)
 
 }
-
 }
 
