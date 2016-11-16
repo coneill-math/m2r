@@ -3,6 +3,7 @@
 S3method(print,Ideal)
 S3method(print,Matrix)
 S3method(print,PolynomialRing)
+S3method(print,m2_ideal)
 S3method(print,m2_pointer)
 S3method(print,m2_polynomialring)
 S3method(str_m2,PolynomialRing)

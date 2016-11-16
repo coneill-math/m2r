@@ -5,6 +5,7 @@
 #' @param mpolyList list of mpolys
 #' @param ring the referent ring in Macaulay2
 #' @param code return only the M2 code? (default: \code{FALSE})
+#' @param x (for \code{print}) x
 #' @param ... ...
 #' @return a reference to a Macaulay2 ideal
 #' @name ideal
@@ -18,7 +19,9 @@
 #'
 #' }
 
-#-------------------------------------------------------------------------------
+
+
+
 #' @rdname ideal
 #' @export
 ideal <- function(mpolyList, ring, code = FALSE, ...) {
@@ -27,21 +30,24 @@ ideal <- function(mpolyList, ring, code = FALSE, ...) {
   pointer <- do.call(ideal., as.list(match.call())[-1])
   if(code) return(invisible(pointer))
 
+  # parse output
+  parsed_out <- m2_parse(pointer)
+
   # construct R-side ideal, class and return
-  routput <- m2_parse(pointer)
-  polys <- lapply(routput$rmap$rmatrix, function(.) mp(.))
   ideal <- list(
-    m2_name = pointer$m2_name
-    , ring = routput$rmap$ring
-    , polys = polys
-    )
+    m2_name = pointer$m2_name,
+    ring = parsed_out$rmap$ring,
+    gens = structure(parsed_out$rmap$rmatrix[,1], class = "mpolyList")
+  )
 
   # could also want to parse ideal to polys here
   structure(ideal, class = c("m2_ideal", "m2"))
 
 }
 
-#-------------------------------------------------------------------------------
+
+
+
 #' @rdname ideal
 #' @export
 ideal. <- function(mpolyList, ring, code = FALSE, ...) {
@@ -65,8 +71,34 @@ ideal. <- function(mpolyList, ring, code = FALSE, ...) {
   out
 }
 
-#-------------------------------------------------------------------------------
+
+
+
 m2_parse_function.m2_ideal <- function(x) {
   out <- list(m2_name = NULL, rmap = x[[1]])
   structure(out, class = c("m2_ideal", "m2"))
 }
+
+
+
+#' @rdname ideal
+#' @export
+print.m2_ideal <- function(x, ...) {
+
+  # from print.m2_polynomialring
+  s <- sprintf(
+    "M2 PolynomialRing %s[%s] (%s)",
+    x$ring$coefring, paste(x$ring$vars, collapse = ","), x$ring$order
+  )
+
+  # ideal stuff
+  cat("Ideal of", s, "with generators:", "\n")
+  gens_strings <- print(x$gens, silent = TRUE)
+  cat(paste("<", paste(gens_strings, collapse = ",  "), ">"))
+  # cat(str_pad(gens_strings, nchar(gens_strings)+2, side = "left"), sep = "\n")
+  invisible(x)
+}
+
+
+
+
