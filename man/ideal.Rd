@@ -3,11 +3,14 @@
 \name{ideal}
 \alias{ideal}
 \alias{ideal.}
+\alias{print.m2_ideal}
 \title{Create a new ideal in Macaulay2}
 \usage{
 ideal(mpolyList, ring, code = FALSE, ...)
 
 ideal.(mpolyList, ring, code = FALSE, ...)
+
+\method{print}{m2_ideal}(x, ...)
 }
 \arguments{
 \item{mpolyList}{list of mpolys}
@@ -17,6 +20,8 @@ ideal.(mpolyList, ring, code = FALSE, ...)
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 
 \item{...}{...}
+
+\item{x}{(for \code{print}) x}
 }
 \value{
 a reference to a Macaulay2 ideal
