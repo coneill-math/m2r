@@ -69,7 +69,6 @@ m2_parse_function.m2_map <- function(x) {
 
   if (is.m2_module(R1)) R1 <- R1[[1]]
   if (is.m2_module(R2)) R2 <- R2[[1]]
-
   if (!identical(R1, R2)) {
     stop("Parsing error: map between different rings not supported")
   }
@@ -100,7 +99,8 @@ m2_parse_function.m2_map <- function(x) {
 
   matrix <- list(
     m2_name = NULL,
-    rmatrix = mat
+    rmatrix = mat,
+    ring = R1
   )
   class(matrix) <- c("m2_matrix", "m2")
   matrix

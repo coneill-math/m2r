@@ -18,9 +18,7 @@
 #'
 #' }
 
-
-
-
+#-------------------------------------------------------------------------------
 #' @rdname ideal
 #' @export
 ideal <- function(mpolyList, ring, code = FALSE, ...) {
@@ -30,15 +28,20 @@ ideal <- function(mpolyList, ring, code = FALSE, ...) {
   if(code) return(invisible(pointer))
 
   # construct R-side ideal, class and return
-  return(m2_parse(pointer))
-  ideal <- list(m2_name = pointer$m2_name, rmap = m2_parse(pointer))
+  routput <- m2_parse(pointer)
+  polys <- lapply(routput$rmap$rmatrix, function(.) mp(.))
+  ideal <- list(
+    m2_name = pointer$m2_name
+    , ring = routput$rmap$ring
+    , polys = polys
+    )
 
   # could also want to parse ideal to polys here
   structure(ideal, class = c("m2_ideal", "m2"))
 
 }
 
-
+#-------------------------------------------------------------------------------
 #' @rdname ideal
 #' @export
 ideal. <- function(mpolyList, ring, code = FALSE, ...) {
@@ -62,8 +65,7 @@ ideal. <- function(mpolyList, ring, code = FALSE, ...) {
   out
 }
 
-
-
+#-------------------------------------------------------------------------------
 m2_parse_function.m2_ideal <- function(x) {
   out <- list(m2_name = NULL, rmap = x[[1]])
   structure(out, class = c("m2_ideal", "m2"))
