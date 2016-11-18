@@ -31,7 +31,7 @@ name_and_increment <- function(prefix, option) {
 
 listify <- function (strings) paste0("{", paste(strings, collapse = ","), "}")
 
-listify_mat <- function (mat) listify(apply(t(mat), 1, listify))
+listify_mat <- function (mat) listify(apply(mat, 1, listify))
 # (mat <- matrix(1:9, nrow = 3))
 # listify_mat(mat)
 
