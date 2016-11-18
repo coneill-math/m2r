@@ -14,7 +14,7 @@
 #' s <- print(R)
 #' s
 #'
-#' m <- matrix_m2(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2))
+#' m <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2))
 #' s <- print(m)
 #' s
 #'
