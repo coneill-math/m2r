@@ -124,7 +124,12 @@ m2_parse_function.m2_map <- function(x) {
 
     nrow <- length(x[[3]])
     ncol <- length(x[[c(3,1)]])
-    mat <- matrix(unlist(x[[3]], recursive=FALSE), nrow = ncol, ncol = nrow)
+
+    if (is.null(R1$vars)) {
+      mat <- t(matrix(unlist(x[[3]]), nrow = ncol, ncol = nrow))
+    } else {
+      mat <- t(matrix(unlist(x[[3]], recursive=FALSE), nrow = ncol, ncol = nrow))
+    }
 
   }
 

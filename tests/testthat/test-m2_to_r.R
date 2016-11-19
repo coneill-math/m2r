@@ -31,12 +31,12 @@ test_that("m2_parse parses basic data structures",{
 
   # toExternalString(matrix{{1,2,3},{4,5,6}})
   m2_matrix <- "map((ZZ)^2,(ZZ)^3,{{1, 2, 3}, {4, 5, 6}})"
-  m2_matrix_output <- structure(list(m2_name = NULL, rmatrix = matrix(c(1,4,2,5,3,6),nrow = 2, ncol = 3)), class = c("m2_matrix", "m2"))
+  m2_matrix_output <- structure(list(m2_name = NULL, rmatrix = matrix(c(1,4,2,5,3,6), nrow = 2, ncol = 3), ring = field_as_ring("ZZ")), class = c("m2_matrix", "m2"))
   m2_parse_test(m2_matrix,m2_matrix_output)
 
   # toExternalString(matrix{{}})
   m2_empty_matrix <- "map((ZZ)^1,(ZZ)^0,0)"
-  m2_empty_matrix_output <- structure(list(m2_name = NULL, rmatrix = matrix(numeric(0), nrow = 0, ncol = 0)), class = c("m2_matrix", "m2"))
+  m2_empty_matrix_output <- structure(list(m2_name = NULL, rmatrix = matrix(numeric(0), nrow = 0, ncol = 0), ring = field_as_ring("ZZ")), class = c("m2_matrix", "m2"))
   m2_parse_test(m2_empty_matrix,m2_empty_matrix_output)
 
   # Test case where one ring has another ring as a prefix
