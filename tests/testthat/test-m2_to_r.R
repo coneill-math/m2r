@@ -68,10 +68,11 @@ test_that("m2 parses harder data structures", {
   m2_compound_test_output <- structure(list(structure(list(structure("Headline",class=c("m2_symbol", "m2")),"test"),class = c("m2_option","m2")), structure(list(structure("Configuration",class = c("m2_symbol", "m2")),structure(list(),class=c("m2_optiontable","m2"))), class = c("m2_option", "m2"))), class = c("m2_optiontable", "m2"))
   m2_parse_test(m2_compound_test, m2_compound_test_output)
 
-  # toExternalString(ideal(a*b*c-d*e*f,a*c*e-b*d*f,a*d*f-b*c*e))
-  # This test cheats and uses QQ to work instead of actually using some anonymous ring it should
-  m2_ideal <- "map((QQ)^1,(QQ)^{1},{{a*b*c-d*e*f, a*c*e-b*d*f, -b*c*e+a*d*f}})"
-  m2_ideal_output <- structure(list(m2_name = NULL, rmatrix = matrix(c("a*b*c-d*e*f", "a*c*e-b*d*f", "-b*c*e+a*d*f"),nrow = 1, ncol = 3)),class = c("m2_matrix", "m2"))
+  # R = QQ[a,b,c,d,e,f]
+  # toExternalString(ideal(a*b*c-d*e*f,a*c*e-b*d*f))
+  m2("R = QQ[a,b,c,e,d,f]")
+  m2_ideal <- "map((R)^1,(R)^{1},{{a*b*c-d*e*f, a*c*e-b*d*f}})"
+  m2_ideal_output <- structure(list(m2_name = NULL,rmatrix = structure(list(structure(list(c("a"=1,"b"=1,"c"=1,"coef"=1), c("d"=1,"e"=1,"f"=1,"coef"=-1)),class=c("mpoly")), structure(list(c("a"=1,"c"=1,"e"=1,"coef"=1), c("b"=1,"d"=1,"f"=1,"coef"=-1)),class=c("mpoly"))),dim=c(1,2)),ring = structure(list(m2_name = NULL, coefring = "QQ", vars = c("a","b","c","e","d","f"),order="grevlex"),class = c("m2_polynomialring","m2"))),class=c("m2_matrix","m2"))
   m2_parse_test(m2_ideal, m2_ideal_output)
 
   # toExternalString(CC[x,y])
