@@ -75,7 +75,7 @@ test_that("m2 parses harder data structures", {
   m2_parse_test(m2_ideal, m2_ideal_output)
 
   # toExternalString(CC[x,y])
-  m2_ring <- "CC_53(monoid[x..y, Degrees => {2:1}, Heft => {1}, MonomialOrder => VerticalList{MonomialSize => 32, GRevLex => {2:1}, Position => Up},DegreeRank => 1])"
-  m2_ring_output <- structure(list(m2_name = NULL, coefring = "CC", vars = c("x", "y"), order = "grevlex"),class = c("m2_polynomialring", "m2"))
+  m2_ring <- "CC_53(monoid[x..z, a..d, Degrees => {2:1}, Heft => {1}, MonomialOrder => VerticalList{MonomialSize => 32, GRevLex => {2:1}, Position => Up},DegreeRank => 1])"
+  m2_ring_output <- structure(list(m2_name = NULL, coefring = "CC", vars = c("x", "y", "z", "a", "b", "c", "d"), order = "grevlex"),class = c("m2_polynomialring", "m2"))
   m2_parse_test(m2_ring, m2_ring_output)
 })

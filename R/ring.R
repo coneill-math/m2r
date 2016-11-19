@@ -138,20 +138,20 @@ field_as_ring <- function(coefring) {
 m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
 
   monoid <- params[[c(1)]]
-  vars <- c(x$vars, unlist(monoid[[1]]))
+  vars <- c(x$vars)
   order <- "grevlex"
 
-  if (length(monoid) > 1) {
-    for (i in 2:length(monoid)) {
-      if (is.m2_option(monoid[[i]]) && monoid[[c(i,1)]] == "MonomialOrder") {
-        for (j in 1:length(monoid[[c(i,2)]])) {
-          if (
-            is.m2_option(monoid[[c(i,2,j)]]) &&
-            monoid[[c(i,2,j,1)]] %in% c("Lex", "GLex", "GRevLex")
-          ) {
-            order <- monoid[[c(i,2,j,1)]]
-            order <- switch(order, Lex = "lex", GLex = "glex", GRevLex = "grevlex")
-          }
+  for (i in 1:length(monoid)) {
+    if (!is.m2_option(monoid[[i]])) {
+      vars <- c(vars, unlist(monoid[[i]]))
+    } else if (monoid[[c(i,1)]] == "MonomialOrder") {
+      for (j in 1:length(monoid[[c(i,2)]])) {
+        if (
+          is.m2_option(monoid[[c(i,2,j)]]) &&
+          monoid[[c(i,2,j,1)]] %in% c("Lex", "GLex", "GRevLex")
+        ) {
+          order <- monoid[[c(i,2,j,1)]]
+          order <- switch(order, Lex = "lex", GLex = "glex", GRevLex = "grevlex")
         }
       }
     }
