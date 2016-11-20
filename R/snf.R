@@ -34,6 +34,16 @@
 #' det(Q)
 #'
 #'
+#' M <- matrix(c(
+#'      1,    2,    3,
+#'      1,   34,   45,
+#'   2213, 1123, 6543,
+#'      0,    0,    0
+#' ), nrow = 4, byrow = TRUE)
+#' (mats <- snf(M))
+#' P <- mats$P; D <- mats$D; Q <- mats$Q
+#' P %*% M %*% Q                # = D
+#'
 #'
 #' ##### other options
 #' ########################################
@@ -66,10 +76,9 @@ snf <- function (mat, code = FALSE) {
   # list and out
   list(
     D = parsed_out[[1]]$rmatrix,
-    Q = t(parsed_out[[2]]$rmatrix),
-    P = t(parsed_out[[3]]$rmatrix)
+    P = parsed_out[[2]]$rmatrix,
+    Q = parsed_out[[3]]$rmatrix
   )
-
 }
 
 
