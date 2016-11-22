@@ -20,16 +20,45 @@
 #'
 #' (mpolyList <- mp(c("t^4 - x", "t^3 - y", "t^2 - z", "x+y+z")))
 #' solve_system(mpolyList)
-#' mixed_volume(mpolyList,startsystem=TRUE)
+#' mixed_volume(mpolyList)
 #' }
 #'
 
+m2_pts_str_to_list <-function(m2_out) {
+  m2_out <- str_sub(m2_out,2,-2)
+  m2_out <- str_replace_all(m2_out, "p53", "")
+  m2_out <- str_replace_all(m2_out, "\"", "")
+  m2_out <- str_replace_all(m2_out, "toCC\\(", "complex(real=")
+  m2_out <- str_replace_all(m2_out, ",complex", "Dcomplex")
+  m2_out <- str_replace_all(m2_out, "\\},", "\\}")
+  m2_out <- str_replace_all(m2_out, ",",",imaginary=")
+  m2_out <- str_replace_all(m2_out, "Dcomplex", ",complex")
+  m2_out <- str_replace_all(m2_out, "\\{", "c\\(")
+  m2_out <- str_replace_all(m2_out, "\\}", "\\),")
+  m2_out <- paste0("list(",str_sub(m2_out,0,-2),")")
+  m2_out <- eval(parse(text=m2_out))
+  m2_out
+}
+
+#' @rdname solve_system
+#' @export
 solve_system <- function (mpolyList) {
+  pointer <- solve_system.(mpolyList)
 
-  poly_str <- mpolyList_to_m2_str(mpolyList)
+  solutions <- list(
+    m2_name = pointer$m2_name,
+    sols = m2_pts_str_to_list(pointer$ext_str)
+  )
+  class(solutions) <- c("m2", "m2_solutions")
+  solutions
+}
 
+#' @rdname solve_system.
+#' @export
+solve_system. <- function (mpolyList) {
+
+  poly_str <- paste(mpolyList_to_m2_str(mpolyList), collapse = ",")
   var_str <- suppressMessages(paste0(vars(mpolyList),collapse=","))
-  # TODO: rename
   m2_code <- sprintf('
     needsPackage "PHCpack"
     R := CC[%s];
@@ -37,43 +66,21 @@ solve_system <- function (mpolyList) {
     for i in 0..(#pts-1) list (toExternalString pts#i#Coordinates)
   ', var_str, poly_str)
 
-  m2_pts_str_to_list(m2(m2_code))
+  m2.(m2_code)
 }
 
-track_paths <- function (targetsystem, startsystem, solutions, gamma = 0, tdegree = 2) {
-# TODO
-  m2("")
-}
-
-mixed_volume <- function (mpolyList, startsystem = FALSE) {
-
-  poly_str <- mpolyList_to_m2_str(mpolyList)
-
+#' @rdname mixed_volume
+#' @export
+mixed_volume <- function (mpolyList) {
+  # If mpoly supported complex coefficients, then this should be modified to
+  # support a start system
+  poly_str <- paste(mpolyList_to_m2_str(mpolyList), collapse = ",")
   var_str <- suppressMessages(paste0(vars(mpolyList),collapse=","))
-  if (!startsystem) {
-    m2_code <- sprintf('
-      needsPackage "PHCpack"
-      R := CC[%s];
-      mixedVolume( {%s})
-    ', var_str, poly_str)
-    m2_out <- m2(m2_code)
-    m2_out
-  } else {
-    m2_code <- sprintf('
-      needsPackage "PHCpack"
-      R := CC[%s];
-      (mixedVolVal, startSystemVal, solPtsVal) = mixedVolume( {%s}, StartSystem => true);
-      ', var_str, poly_str)
-    m2_out <- m2(m2_code)
+  m2_code <- sprintf('
+    needsPackage "PHCpack"
+    R := CC[%s];
+    mixedVolume( {%s})
+  ', var_str, poly_str)
 
-    mixed_volume_value <- strtoi(m2("mixedVolVal"))
-
-    # TODO: figure out a way to represent the start system with coefficients over C
-    # m2_out <- m2("startSystemVal")
-    # m2_out <- str_sub(m2_out, 1, -1)
-    # m2_out <- str_replace_all(m2_out, "\\*", " ")
-    # mp(str_split(m2_out, ", ")[[1]])
-
-    pts_value <- m2_pts_str_to_list(m2("for i in 0..(#solPtsVal-1) list (toExternalString solPtsVal#i#Coordinates)"))
-  }
+  m2.(m2_code)$ext_str
 }
