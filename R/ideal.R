@@ -15,6 +15,7 @@
 #'
 #' (QQxy <- ring(c("x","y"), coefring = "QQ"))
 #' ideal(mp(c("x+y", "x^2+y^2")), QQxy)
+#' (QQxy <- ring(c("x","y"), coefring = "QQ", code = TRUE))
 #' ideal(mp(c("x+y", "x^2+y^2")), QQxy, code = TRUE)
 #'
 #' }
@@ -37,7 +38,7 @@ ideal <- function(mpolyList, ring, code = FALSE, ...) {
   ideal <- list(
     m2_name = pointer$m2_name,
     ring = parsed_out$rmap$ring,
-    gens = structure(parsed_out$rmap$rmatrix[,1], class = "mpolyList")
+    gens = structure(parsed_out$rmap$rmatrix[1,], class = "mpolyList")
   )
 
   # could also want to parse ideal to polys here
@@ -54,12 +55,12 @@ ideal. <- function(mpolyList, ring, code = FALSE, ...) {
 
   # make ideal name
   ideal_name <- name_and_increment("ideal", "m2_ideal_count")
-  m2_polys_str <- paste(mpolyList_to_m2_str(mpolyList), collapse = ",")
+  mpoly_strings_for_m2 <- mpolyList_to_m2_str(mpolyList)
 
   # construct code and message
   m2_code <- sprintf(
-    "use %s; %s = ideal {%s}",
-    ring$m2_name, ideal_name, m2_polys_str
+    "use %s; %s = ideal(%s)",
+    ring$m2_name, ideal_name, listify(mpoly_strings_for_m2)
   )
   if(code) { message(m2_code); return(invisible(m2_code)) }
 

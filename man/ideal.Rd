@@ -35,6 +35,7 @@ Create a new ideal in Macaulay2
 
 (QQxy <- ring(c("x","y"), coefring = "QQ"))
 ideal(mp(c("x+y", "x^2+y^2")), QQxy)
+(QQxy <- ring(c("x","y"), coefring = "QQ", code = TRUE))
 ideal(mp(c("x+y", "x^2+y^2")), QQxy, code = TRUE)
 
 }
