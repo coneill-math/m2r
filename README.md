@@ -148,6 +148,20 @@ factor_n(x)
 Factor polynomials
 ------------------
 
+``` r
+QQxy <- ring(c("x","y"), "QQ")
+factor_poly("x^4 - y^4", QQxy)
+#  $mpolyList
+#  x  -  y
+#  x  +  y
+#  x^2  +  y^2
+#  
+#  $power
+#  [1] 1 1 1
+mp("x-y") * mp("x+y") * mp("x^2+y^2")
+#  x^4  -  y^4
+```
+
 Smith normal form of a matrix
 -----------------------------
 
@@ -212,7 +226,7 @@ For example, we've seen that `factor_n()` computes the prime decomposition of a 
 factor_n.(x)
 #  M2 Pointer Object
 #    ExternalString : new Product from {new Power from {2,5},new Power fro...
-#           M2 Name : m2o164
+#           M2 Name : m2o168
 #          M2 Class : Product (WrapperType)
 factor_n.(x)$ext_str
 #  [1] "new Product from {new Power from {2,5},new Power from {3,4},new Power from {5,3},new Power from {7,2},new Power from {11,1}}"

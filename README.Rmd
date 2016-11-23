@@ -132,6 +132,11 @@ factor_n(x)
 
 ## Factor polynomials
 
+```{r factor_poly}
+QQxy <- ring(c("x","y"), "QQ")
+factor_poly("x^4 - y^4", QQxy)
+mp("x-y") * mp("x+y") * mp("x^2+y^2")
+```
 
 ## Smith normal form of a matrix
 
