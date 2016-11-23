@@ -6,22 +6,21 @@
 \alias{print.m2_ideal}
 \title{Create a new ideal in Macaulay2}
 \usage{
-ideal(mpolyList, ring, code = FALSE, ...)
+ideal(x, ring, code = FALSE, ...)
 
-ideal.(mpolyList, ring, code = FALSE, ...)
+ideal.(x, ring, code = FALSE, ...)
 
 \method{print}{m2_ideal}(x, ...)
 }
 \arguments{
-\item{mpolyList}{list of mpolys}
+\item{x}{a listing of polynomials. several formats are accepted,
+see examples.}
 
 \item{ring}{the referent ring in Macaulay2}
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 
 \item{...}{...}
-
-\item{x}{(for \code{print}) x}
 }
 \value{
 a reference to a Macaulay2 ideal
@@ -35,6 +34,7 @@ Create a new ideal in Macaulay2
 
 (QQxy <- ring(c("x","y"), coefring = "QQ"))
 ideal(mp(c("x+y", "x^2+y^2")), QQxy)
+
 (QQxy <- ring(c("x","y"), coefring = "QQ", code = TRUE))
 ideal(mp(c("x+y", "x^2+y^2")), QQxy, code = TRUE)
 
