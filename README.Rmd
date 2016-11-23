@@ -272,7 +272,7 @@ f. <- function(esntl_parm_1, esntl_parm_2, code = FALSE, ...) {
 
 ## Installation
 
-Here's how you can install this _very developmental_ version of __m2r__.  Remember you need to have [Macaulay2](http://www.math.uiuc.edu/Macaulay2/) downloaded; __m2r__ will look for it in your path variable (in the terminal, `echo $PATH`) as set by `~/.bash_profile` or, if nonexistent, then `~/.bashrc`, then `~/.profile`.
+Here's how you can install the current _developmental_ version of __m2r__.  Remember you need to have [Macaulay2](http://www.math.uiuc.edu/Macaulay2/) downloaded; __m2r__ will look for it in your path variable (in the terminal, `echo $PATH`) as set by `~/.bash_profile` or, if nonexistent, then `~/.bashrc`, then `~/.profile`.
 
 ```R
 # install.packages("devtools")

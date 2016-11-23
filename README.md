@@ -349,7 +349,7 @@ This material is based upon work supported by the National Science Foundation un
 Installation
 ------------
 
-Here's how you can install this *very developmental* version of **m2r**. Remember you need to have [Macaulay2](http://www.math.uiuc.edu/Macaulay2/) downloaded; **m2r** will look for it in your path variable (in the terminal, `echo $PATH`) as set by `~/.bash_profile` or, if nonexistent, then `~/.bashrc`, then `~/.profile`.
+Here's how you can install the current *developmental* version of **m2r**. Remember you need to have [Macaulay2](http://www.math.uiuc.edu/Macaulay2/) downloaded; **m2r** will look for it in your path variable (in the terminal, `echo $PATH`) as set by `~/.bash_profile` or, if nonexistent, then `~/.bashrc`, then `~/.profile`.
 
 ``` r
 # install.packages("devtools")
