@@ -113,19 +113,25 @@ test_that("gb_(list o mpolys, ring = char",{
 
 test_that("gb_(c'd mpolys, ring = m2_polynomialring",{
   R <- ring(c("x","y","z"), "QQ")
-  out <- gb_(c(mp("x y"), mp("x z"), mp("x")), ring = R)
-  expect_equal(out, mpolyList(mp("x")))
+  expect_error(
+    gb_(c(mp("x y"), mp("x z"), mp("x")), ring = R),
+    "you appear to have used c*"
+  )
 })
 
 test_that("gb_(c'd mpolys, ring = m2_polynomialring_pointer",{
   R. <- ring.(c("x","y","z"), "QQ")
-  out <- gb_(c(mp("x y"), mp("x z"), mp("x")), ring = R.)
-  expect_equal(out, mpolyList(mp("x")))
+  expect_error(
+    gb_(c(mp("x y"), mp("x z"), mp("x")), ring = R.),
+    "you appear to have used c*"
+  )
 })
 
 test_that("gb_(c'd mpolys, ring = char",{
-  out <- gb_(c(mp("x y"), mp("x z"), mp("x")), ring = "QQ[z,y,x]")
-  expect_equal(out, mpolyList(mp("x")))
+  expect_error(
+    gb_(c(mp("x y"), mp("x z"), mp("x")), ring = "QQ[z,y,x]"),
+    "you appear to have used c*"
+  )
 })
 
 
@@ -169,10 +175,10 @@ test_that("gb_(m2_ideal, ring = m2_polynomialring_pointer",{
 
 context("gb_.")
 
-test_that("gb_.(... = chars, ring = m2_polynomialring",{
-
-})
-
-test_that("gb_.(... = chars, ring = m2_polynomialring_pointer",{
-
-})
+# test_that("gb_.(... = chars, ring = m2_polynomialring",{
+#
+# })
+#
+# test_that("gb_.(... = chars, ring = m2_polynomialring_pointer",{
+#
+# })

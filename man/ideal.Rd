@@ -6,9 +6,9 @@
 \alias{print.m2_ideal}
 \title{Create a new ideal in Macaulay2}
 \usage{
-ideal(x, ring, code = FALSE, ...)
+ideal(x, ring, raw_chars = FALSE, code = FALSE, ...)
 
-ideal.(x, ring, code = FALSE, ...)
+ideal.(x, ring, raw_chars = FALSE, code = FALSE, ...)
 
 \method{print}{m2_ideal}(x, ...)
 }
@@ -17,6 +17,13 @@ ideal.(x, ring, code = FALSE, ...)
 see examples.}
 
 \item{ring}{the referent ring in Macaulay2}
+
+\item{raw_chars}{if \code{TRUE}, the character vector will not be
+parsed by \code{\link{mp}}, saving time (default:
+\code{FALSE}). the down-side is that the strings must be
+formated for M2 use directly, as opposed to for
+\code{\link{mp}}. (e.g. \code{"x*y+3"} instead of \code{"x y +
+3"})}
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 

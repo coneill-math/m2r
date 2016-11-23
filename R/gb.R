@@ -35,6 +35,7 @@
 #' # the last ring evaluated is the one used in the computation
 #' (QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
 #' gb("t^4 - x", "t^3 - y", "t^2 - z")
+#' gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 #'
 #' # standard evaluation version
 #' gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
@@ -210,11 +211,10 @@ gb_. <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
       )
     } else if (is.list(x) && all(vapply(x, is.numeric, logical(1)))) {
       # this is like c(mp("x y"), mp("x z"), mp("x"))
-      x <- lapply(x, function(.) mpoly(list(.)))
-      class(x) <- "mpolyList"
-      ideal_param <- sprintf(
-        "ideal(%s)",
-        listify(mpolyList_to_m2_str(   x ))
+      stop(
+        "you appear to have used c() on mpolys.\n",
+        "  this input format is not accepted, use list() instead.",
+        call. = FALSE
       )
     } else if (is.mpolyList(x)) {
       ideal_param <- sprintf(
@@ -247,18 +247,14 @@ gb_. <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
 
 
   # construct m2_code from regularized essential parameters
-  m2_code <- paste(
-    if(missing(ring) && !(is.m2_ideal(x) || is.m2_ideal_pointer(x))) {
-      ""
-    } else {
-      sprintf("use %s;", ring_param)
-    },
-    sprintf(
-      "gens gb(%s, DegreeLimit => %s)",
-      ideal_param,
-      if(missing(degree_limit)) "{}" else as.character(degree_limit)
-    )
+  m2_code <- sprintf(
+    "gens gb(%s, DegreeLimit => %s)",
+    ideal_param,
+    if(missing(degree_limit)) "{}" else as.character(degree_limit)
   )
+  if(!missing(ring) || (is.m2_ideal(x) || is.m2_ideal_pointer(x))) {
+    m2_code <- paste0(sprintf("use %s; ", ring_param), m2_code)
+  }
 
   # message
   if(code) { message(m2_code); return(invisible(m2_code)) }
