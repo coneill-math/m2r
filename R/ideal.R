@@ -88,12 +88,12 @@ print.m2_ideal <- function(x, ...) {
 
   # from print.m2_polynomialring
   s <- sprintf(
-    "M2 PolynomialRing %s[%s] (%s)",
+    "ring %s[%s] (%s)",
     x$ring$coefring, paste(x$ring$vars, collapse = ","), x$ring$order
   )
 
   # ideal stuff
-  cat("Ideal of", s, "with generators:", "\n")
+  cat("M2 Ideal of", s, "with generators:", "\n")
   gens_strings <- print(x$gens, silent = TRUE)
   cat(paste("<", paste(gens_strings, collapse = ",  "), ">"))
   # cat(str_pad(gens_strings, nchar(gens_strings)+2, side = "left"), sep = "\n")

@@ -62,7 +62,7 @@ You can also check if variables exist with `m2_exists()`:
 m2_exists("a")
 m2_exists(c("a","b"))
 ```
-Notice that there are many variables returned by `m2_ls()` that we didn't make.  Most of those are created internally by __m2r__ in order to facilitate the connection, so you won't want to access them.  Others, however are ok to access directly:
+Notice that there are many variables returned by `m2_ls()` that we didn't make.  Most of those are created internally by __m2r__ in order to facilitate the connection, so you won't want to access them.  Others, however, are ok to access directly:
 ```{r m2o3}
 m2("m2o3")
 ```
@@ -82,10 +82,13 @@ Apart from the basic connection to M2, __m2r__ has basic data structures and met
 
 ## Rings, ideals, and Grobner bases
 
-__m2r__ currently has basic support for [rings](https://en.wikipedia.org/wiki/Ring_(mathematics)):
-
-```{r ring_definition}
+__m2r__ currently has basic support for [rings](https://en.wikipedia.org/wiki/Ring_(mathematics)) (think: [polynomial rings](https://en.wikipedia.org/wiki/Polynomial_ring)):
+```{r ring}
 (R <- ring(c("t", "x", "y", "z"), "QQ"))
+```
+and [ideals](https://en.wikipedia.org/wiki/Ideal_(ring_theory)) of rings:
+```{r ideal}
+(I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), R))
 ```
 
 You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well.  The basic function to do this is `gb()`:

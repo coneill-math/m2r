@@ -62,7 +62,7 @@ m2_exists(c("a","b"))
 #  [1]  TRUE FALSE
 ```
 
-Notice that there are many variables returned by `m2_ls()` that we didn't make. Most of those are created internally by **m2r** in order to facilitate the connection, so you won't want to access them. Others, however are ok to access directly:
+Notice that there are many variables returned by `m2_ls()` that we didn't make. Most of those are created internally by **m2r** in order to facilitate the connection, so you won't want to access them. Others, however, are ok to access directly:
 
 ``` r
 m2("m2o3")
@@ -74,11 +74,19 @@ Apart from the basic connection to M2, **m2r** has basic data structures and met
 Rings, ideals, and Grobner bases
 --------------------------------
 
-**m2r** currently has basic support for [rings](https://en.wikipedia.org/wiki/Ring_(mathematics)):
+**m2r** currently has basic support for [rings](https://en.wikipedia.org/wiki/Ring_(mathematics)) (think: [polynomial rings](https://en.wikipedia.org/wiki/Polynomial_ring)):
 
 ``` r
 (R <- ring(c("t", "x", "y", "z"), "QQ"))
-#  M2 PolynomialRing: QQ[t,x,y,z], grevlex order
+#  M2 Ring: QQ[t,x,y,z], grevlex order
+```
+
+and [ideals](https://en.wikipedia.org/wiki/Ideal_(ring_theory)) of rings:
+
+``` r
+(I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), R))
+#  M2 Ideal of ring QQ[t,x,y,z] (grevlex) with generators: 
+#  < t^4  -  x,  t^3  -  y,  t^2  -  z >
 ```
 
 You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well. The basic function to do this is `gb()`:
@@ -205,7 +213,7 @@ For example, we've seen that `factor_n()` computes the prime decomposition of a 
 factor_n.(x)
 #  M2 Pointer Object
 #    ExternalString : new Product from {new Power from {2,5},new Power fro...
-#           M2 Name : m2o127
+#           M2 Name : m2o164
 #          M2 Class : Product (WrapperType)
 factor_n.(x)$ext_str
 #  [1] "new Product from {new Power from {2,5},new Power from {3,4},new Power from {5,3},new Power from {7,2},new Power from {11,1}}"
