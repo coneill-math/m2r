@@ -69,13 +69,12 @@ Apart from the basic connection to M2, __m2r__ has basic data structures and met
 __m2r__ currently has basic support for [rings](https://en.wikipedia.org/wiki/Ring_(mathematics)):
 
 ```{r ring_definition}
-(R <- ring(c("x", "y", "z")))
-str_m2(R)
+(R <- ring(c("t", "x", "y", "z"), "QQ"))
 ```
 
 You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well.  The basic function to do this is `gb()`:
 ```{r basic_grobner}
-gb("t^4 - x", "t^3 - y", "t^2 - z")
+gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
 ```
 The result is an `mpolyList` object, from the [__mpoly__ package](https://github.com/dkahle/mpoly).  You can see the M2 code by adding `code = TRUE`:
 ```{r grobner_code}

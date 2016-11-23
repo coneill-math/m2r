@@ -46,22 +46,14 @@ Rings, ideals, and Grobner bases
 **m2r** currently has basic support for [rings](https://en.wikipedia.org/wiki/Ring_(mathematics)):
 
 ``` r
-R <- ring(c("x", "y", "z"))
-R
-#  M2 PolynomialRing: CC[x,y,z], grevlex order
-str_m2(R)
-#  M2 Object
-#      Type : PolynomialRing
-#    R Name : R
-#   M2 Name : m2rintring00000001
-#      Vars : x, y, z
-#     Order : grevlex
+(R <- ring(c("t", "x", "y", "z"), "QQ"))
+#  M2 PolynomialRing: QQ[t,x,y,z], grevlex order
 ```
 
 You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well. The basic function to do this is `gb()`:
 
 ``` r
-gb("t^4 - x", "t^3 - y", "t^2 - z")
+gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
 #  z^2  -  x
 #  z t  -  y
 #  -1 z x  +  y^2
@@ -74,15 +66,7 @@ The result is an `mpolyList` object, from the [**mpoly** package](https://github
 
 ``` r
 gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
-#  R := QQ[t,x,y,z]
-#  I := ideal(t^4  -  x, t^3  -  y, t^2  -  z)
-#  gens gb I
-#  z^2  -  x
-#  z t  -  y
-#  -1 z x  +  y^2
-#  -1 x  +  t y
-#  -1 z y  +  x t
-#  -1 z  +  t^2
+#   gens gb(ideal({t^4-x,t^3-y,t^2-z}), DegreeLimit => {})
 ```
 
 You can compute the basis respective of different orders as follows. The default ordering is the [grevlex order](https://en.wikipedia.org/wiki/Monomial_order) on the variables given by `mpoly::vars()` applied to the `mpolyList` given by the polynomials.
@@ -103,12 +87,9 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
 #  t^3  -  y
 #  t^2  -  z
 gb_(ps)
-#  z^2  -  x
-#  z t  -  y
-#  -1 z x  +  y^2
-#  -1 x  +  t y
-#  -1 z y  +  x t
-#  -1 z  +  t^2
+#  t^2  -  z
+#  -1 t z  +  y
+#  -1 z^2  +  x
 ```
 
 Additional features
@@ -120,12 +101,12 @@ Additional features
 (x <- 2^5 * 3^4 * 5^3 * 7^2 * 11^1)
 #  [1] 174636000
 factor_n(x)
-#       prime power
-#  [1,]     2     5
-#  [2,]     3     4
-#  [3,]     5     3
-#  [4,]     7     2
-#  [5,]    11     1
+#    prime power
+#  1     2     5
+#  2     3     4
+#  3     5     3
+#  4     7     2
+#  5    11     1
 ```
 
 ### Smith normal form of a matrix
@@ -146,17 +127,17 @@ M <- matrix(c(
 #  [2,]    0    6    0
 #  [3,]    0    0    2
 #  
-#  $Q
-#       [,1] [,2] [,3]
-#  [1,]    2    1    1
-#  [2,]    0    1    0
-#  [3,]   -1    0    0
-#  
 #  $P
 #       [,1] [,2] [,3]
-#  [1,]   -3    4    3
-#  [2,]   -1    3    2
-#  [3,]    2   -3   -2
+#  [1,]    1    0    1
+#  [2,]    0    1    0
+#  [3,]    0    0    1
+#  
+#  $Q
+#       [,1] [,2] [,3]
+#  [1,]    4   -2   -1
+#  [2,]   -2    3    1
+#  [3,]    3   -2   -1
 P <- mats$P; D <- mats$D; Q <- mats$Q
 
 P %*% M %*% Q                # = D
@@ -171,9 +152,93 @@ solve(P) %*% D %*% solve(Q)  # = M
 #  [3,]   10   -4  -16
 
 det(P)
-#  [1] -1
-det(Q)
 #  [1] 1
+det(Q)
+#  [1] -1
+```
+
+Creating your own **m2r** wrapper
+---------------------------------
+
+To create your own wrapper function of something in Macaulay2, you'll need to create an R file that looks like the one below. This will create both value (e.g. `f`) and reference/pointer (e.g. `f.`) versions of the function. As a good example of these at work, see the scripts for [`factor_n()`](https://github.com/musicman3320/m2r/blob/master/R/factor_n.R) or [`factor_poly()`](https://github.com/musicman3320/m2r/blob/master/R/factor_poly.R).
+
+``` r
+#' Function documentation header
+#'
+#' Function header explanation, can run several lines. Function
+#' header explanation, can run several lines. Function header
+#' explanation, can run several lines.
+#'
+#' @param esntl_parm_1 esntl_parm_1 description
+#' @param esntl_parm_2 esntl_parm_2 description
+#' @param code return only the M2 code? (default: \code{FALSE})
+#' @param parse_parm_1 parse_parm_1 description
+#' @param parse_parm_2 parse_parm_2 description
+#' @param ... ...
+#' @name f
+#' @return (value version) parsed output or (reference/dot version)
+#'   \code{m2_pointer}
+#' @examples
+#'
+#' \dontrun{ requires Macaulay2 be installed
+#'
+#' # put examples here
+#' 1 + 1
+#'
+#' }
+#'
+
+
+
+
+
+# value version of f (standard user version)
+#' @rdname f
+#' @export
+f <- function(esntl_parm_1, esntl_parm_2, code = FALSE, parse_parm_1, parse_parm_2, ...) {
+
+  # run m2
+  args <- as.list(match.call())[-1]
+  eargs <- lapply(args, eval, envir = parent.frame())
+  pointer <- do.call(f., eargs)
+  if(code) return(invisible(pointer))
+
+  # parse output
+  parsed_out <- m2_parse(pointer)
+
+  # more parsing
+  TRUE
+
+  # return
+  TRUE
+
+}
+
+
+
+
+# reference version of f (returns pointer to m2 object)
+#' @rdname f
+#' @export
+f. <- function(esntl_parm_1, esntl_parm_2, code = FALSE, ...) {
+
+  # basic arg checking
+  TRUE
+
+  # create essential parameters to pass to m2 this step regularizes input to m2, so it
+  # is the one that deals with pointers, chars, rings, ideals, mpolyLists, etc.
+  TRUE
+
+  # construct m2_code from regularized essential parameters
+  TRUE
+
+  # message
+  if(code) { message(m2_code); return(invisible(m2_code)) }
+
+  # run m2 and return pointer
+  m2.(m2_code)
+
+}
 ```
 
 Acknowledgements
