@@ -83,7 +83,7 @@ gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = "QQ[t,x,y,z]", code = TRUE)
 gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = QQtxyz., code = TRUE)
 
 I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
-gb_(I, ring = QQtxyz.)
+gb_(I)
 
 
 ##### still broken
@@ -91,8 +91,9 @@ gb_(I, ring = QQtxyz.)
 
 gb("x*y", "x*z", "x", raw_chars = TRUE)
 
-I. <- ideal.(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
-gb_(I., ring = QQtxyz.)
+(QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
+I. <- ideal.(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz)
+gb_(I.)
 
 
 
@@ -102,7 +103,7 @@ gb_(mp(c("x y - z^2", "y^2 - w^2")))
 
 gb(c("x y-z^2", "y^2-w^2"), ring = "QQ[w,x,y,z]")
 gb(mp("x y-z^2"), mp("y^2-w^2"), ring = "QQ[w,x,y,z]")
-gb(mp("x y-z^2"), mp("y^2-w^2"), degreeLimit = 2)
+gb(mp("x y-z^2"), mp("y^2-w^2"), degree_limit = 2)
 
 
 

@@ -1,4 +1,4 @@
-context("factor_n")
+context("factor_n ")
 
 test_that("factor_n(int)", {
 

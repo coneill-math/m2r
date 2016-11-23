@@ -1,4 +1,4 @@
-context("factor_poly")
+context("factor_poly ")
 
 
 # define objects common to the tests
