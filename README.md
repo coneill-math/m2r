@@ -3,7 +3,7 @@
 **m2r**
 =======
 
-**m2r** is a very new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2](http://www.math.uiuc.edu/Macaulay2/).
+**m2r** is a new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2](http://www.math.uiuc.edu/Macaulay2/).
 
 The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16), funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page).
 
@@ -35,6 +35,37 @@ You can see the persistence by setting variables and accessing them across diffe
 m2("a = 1")
 #  [1] "1"
 m2("a")
+#  [1] "1"
+```
+
+You can check the variables defined in the M2 session with `m2_ls()`:
+
+``` r
+m2_ls()
+#   [1] "a"                      "m2o1"                  
+#   [3] "m2o2"                   "m2o3"                  
+#   [5] "m2o4"                   "m2rintoutline"         
+#   [7] "m2rintretcode"          "m2rintruncount"        
+#   [9] "m2rintoutclassclass"    "m2rintoutvalsucceeded" 
+#  [11] "m2rintinout"            "m2rintinline"          
+#  [13] "m2rintoutval"           "m2rintoutlinesucceeded"
+#  [15] "m2rintvarname"          "m2rintoutclass"        
+#  [17] "m2rintnumlines"
+```
+
+You can also check if variables exist with `m2_exists()`:
+
+``` r
+m2_exists("a")
+#  [1] TRUE
+m2_exists(c("a","b"))
+#  [1]  TRUE FALSE
+```
+
+Notice that there are many variables returned by `m2_ls()` that we didn't make. Most of those are created internally by **m2r** in order to facilitate the connection, so you won't want to access them. Others, however are ok to access directly:
+
+``` r
+m2("m2o3")
 #  [1] "1"
 ```
 
@@ -92,10 +123,8 @@ gb_(ps)
 #  -1 z^2  +  x
 ```
 
-Additional features
--------------------
-
-### Factor integers
+Factor integers
+---------------
 
 ``` r
 (x <- 2^5 * 3^4 * 5^3 * 7^2 * 11^1)
@@ -109,7 +138,11 @@ factor_n(x)
 #  5    11     1
 ```
 
-### Smith normal form of a matrix
+Factor polynomials
+------------------
+
+Smith normal form of a matrix
+-----------------------------
 
 The Smith normal form of a matrix *M* here refers to the decomposition of an integer matrix *D = PMQ*, where *D*, *P*, and *Q* are integer matrices and *D* is diagonal. *P* and *Q* are unimodular matrices (their determinants are -1 or 1), so they are invertible. This is somewhat like a singular value decomposition for integer matrices.
 
@@ -155,6 +188,52 @@ det(P)
 #  [1] 1
 det(Q)
 #  [1] -1
+```
+
+**m2r** internals: pointers and pointer functions
+-------------------------------------------------
+
+At a basic level, **m2r** works by passing strings between R and M2. Originating at the R side, these strings are properly formated M2 code constructed from the inputs to the R functions. That code goes to M2, is evaluated there, and then "exported" with M2's function `toExternalString()`. The resulting string often, but not always, produces the M2 code needed to recreate the object resulting from the evaluation, and in that sense is M2's version of R's `dput()`. That string is passed back into R and parsed there into R-style data structures, typically S3-classed lists.
+
+The R-side parsing of the external string from M2 is an expensive process because it is currently implemented in R (as opposed to C++). Consequently (and for other reasons, too!), in some cases you'll want to do a M2 computation from R, but leave the output in M2. Since you will ultimately want something in R referring to the result, nearly every **m2r** function that performs M2 computations as a pointer version. As a simple naming convention, the function that returns the pointer, called the reference function, is determined by the ordinary function, called the value function, by appending a `.`.
+
+For example, we've seen that `factor_n()` computes the prime decomposition of a number. The corresponding reference function is `factor_n.()`:
+
+``` r
+(x <- 2^5 * 3^4 * 5^3 * 7^2 * 11^1)
+#  [1] 174636000
+factor_n.(x)
+#  M2 Pointer Object
+#    ExternalString : new Product from {new Power from {2,5},new Power fro...
+#           M2 Name : m2o127
+#          M2 Class : Product (WrapperType)
+factor_n.(x)$ext_str
+#  [1] "new Product from {new Power from {2,5},new Power from {3,4},new Power from {5,3},new Power from {7,2},new Power from {11,1}}"
+```
+
+All value functions simply wrap reference functions and parse the output with `m2_parse()`, a general M2 parser, often with little more parsing:
+
+``` r
+factor_n
+#  function (n, code = FALSE, gmp = FALSE, ...) {
+#  
+#    # run m2
+#    args <- as.list(match.call())[-1]
+#    eargs <- lapply(args, eval, envir = parent.frame())
+#    pointer <- do.call(factor_n., eargs)
+#    if(code) return(invisible(pointer))
+#  
+#    # parse output
+#    parsed_out <- m2_parse(pointer)
+#  
+#    # reformat
+#    df <- as.data.frame(matrix(unlist(parsed_out), ncol = 2, byrow = TRUE))
+#    names(df) <- c("prime", "power")
+#  
+#    # return
+#    df
+#  }
+#  <environment: namespace:m2r>
 ```
 
 Creating your own **m2r** wrapper

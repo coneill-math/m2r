@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 # __m2r__
 
-__m2r__ is a very new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2](http://www.math.uiuc.edu/Macaulay2/).
+__m2r__ is a new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2](http://www.math.uiuc.edu/Macaulay2/).
 
 The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16), funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page). 
 
@@ -53,7 +53,23 @@ m2("a = 1")
 m2("a")
 ```
 
+You can check the variables defined in the M2 session with `m2_ls()`:
+```{r m2_ls}
+m2_ls()
+```
+You can also check if variables exist with `m2_exists()`:
+```{r m2_exists}
+m2_exists("a")
+m2_exists(c("a","b"))
+```
+Notice that there are many variables returned by `m2_ls()` that we didn't make.  Most of those are created internally by __m2r__ in order to facilitate the connection, so you won't want to access them.  Others, however are ok to access directly:
+```{r m2o3}
+m2("m2o3")
+```
+
 Apart from the basic connection to M2, __m2r__ has basic data structures and methods to reference and manipulate the M2 objects within R.  These are being actively developed.
+
+
 
 
 
@@ -96,12 +112,11 @@ gb_(ps)
 
 
 
-## Additional features
 
 
 
 
-### Factor integers
+## Factor integers
 
 ```{r factor_n}
 (x <- 2^5 * 3^4 * 5^3 * 7^2 * 11^1)
@@ -109,8 +124,10 @@ factor_n(x)
 ```
 
 
+## Factor polynomials
 
-### Smith normal form of a matrix
+
+## Smith normal form of a matrix
 
 The Smith normal form of a matrix _M_ here refers to the decomposition of an integer matrix _D = PMQ_, where _D_, _P_, and _Q_ are integer matrices and _D_ is diagonal. _P_ and _Q_ are unimodular matrices (their determinants are -1 or 1), so they are invertible.  This is somewhat like a singular value decomposition for integer matrices.
 
@@ -129,6 +146,28 @@ solve(P) %*% D %*% solve(Q)  # = M
 
 det(P)
 det(Q)
+```
+
+
+
+## __m2r__ internals: pointers and pointer functions
+
+At a basic level, __m2r__ works by passing strings between R and M2.  Originating at the R side, these strings are properly formated M2 code constructed from the inputs to the R functions.  That code goes to M2, is evaluated there, and then "exported" with M2's function `toExternalString()`.  The resulting string often, but not always, produces the M2 code needed to recreate the object resulting from the evaluation, and in that sense is M2's version of R's `dput()`. That string is passed back into R and parsed there into R-style data structures, typically S3-classed lists.
+
+The R-side parsing of the external string from M2 is an expensive process because it is currently implemented in R (as opposed to C++). Consequently (and for other reasons, too!), in some cases you'll want to do a M2 computation from R, but leave the output in M2.  Since you will ultimately want something in R referring to the result, nearly every __m2r__ function that performs M2 computations as a pointer version.  As a simple naming convention, the function that returns the pointer, called the reference function, is determined by the ordinary function, called the value function, by appending a `.`.
+
+For example, we've seen that `factor_n()` computes the prime decomposition of a number. The corresponding reference function is `factor_n.()`:
+
+```{r ref_factor_n}
+(x <- 2^5 * 3^4 * 5^3 * 7^2 * 11^1)
+factor_n.(x)
+factor_n.(x)$ext_str
+```
+
+All value functions simply wrap reference functions and parse the output with `m2_parse()`, a general M2 parser, often with little more parsing:
+
+```{r }
+factor_n
 ```
 
 
