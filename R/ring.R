@@ -196,7 +196,7 @@ m2_ring_class_names <- function() {
 print.m2_polynomialring <- function(x, ...){
 
   s <- sprintf(
-    "M2 PolynomialRing: %s[%s], %s order",
+    "M2 Ring: %s[%s], %s order",
     x$coefring, paste(x$vars, collapse = ","), x$order
   )
   cat(s)

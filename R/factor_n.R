@@ -104,18 +104,6 @@ factor_n <- function (n, code = FALSE, gmp = FALSE, ...) {
   df <- as.data.frame(matrix(unlist(parsed_out), ncol = 2, byrow = TRUE))
   names(df) <- c("prime", "power")
 
-  # convert to int
-  # if (gmp) {
-  #   mat <- as.bigz(mat)
-  # } else if( all(nchar(mat) < 10) ) { # conv 2 int if small
-  #   dim <- dim(mat)
-  #   mat <- as.integer(mat)
-  #   dim(mat) <- dim
-  #   colnames(mat) <- c("prime", "power")
-  # } else { # if char array
-  #   colnames(mat) <- c("prime", "power")
-  # }
-
   # return
   df
 }
