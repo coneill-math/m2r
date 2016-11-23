@@ -1,7 +1,10 @@
 context("m2r parser")
 
 m2_parse_test <- function(m2_str, m2_expected_output) {
-  expect_equal(m2_parse(m2_str), m2_expected_output)
+  out <- m2_parse(m2_str)
+  if (is.m2(out) && "m2_name" %in% names(out)) out$m2_name <- ""
+
+  expect_equal(out, m2_expected_output)
 }
 
 test_that("m2_parse parses basic data structures",{
@@ -31,19 +34,19 @@ test_that("m2_parse parses basic data structures",{
 
   # toExternalString(matrix{{1,2,3},{4,5,6}})
   m2_matrix <- "map((ZZ)^2,(ZZ)^3,{{1, 2, 3}, {4, 5, 6}})"
-  m2_matrix_output <- structure(list(m2_name = NULL, rmatrix = matrix(c(1,4,2,5,3,6), nrow = 2, ncol = 3), ring = field_as_ring("ZZ")), class = c("m2_matrix", "m2"))
+  m2_matrix_output <- structure(list(m2_name = "", rmatrix = matrix(c(1,4,2,5,3,6), nrow = 2, ncol = 3), ring = field_as_ring("ZZ")), class = c("m2_matrix", "m2"))
   m2_parse_test(m2_matrix,m2_matrix_output)
 
   # toExternalString(matrix{{}})
   m2_empty_matrix <- "map((ZZ)^1,(ZZ)^0,0)"
-  m2_empty_matrix_output <- structure(list(m2_name = NULL, rmatrix = matrix(numeric(0), nrow = 0, ncol = 0), ring = field_as_ring("ZZ")), class = c("m2_matrix", "m2"))
+  m2_empty_matrix_output <- structure(list(m2_name = "", rmatrix = matrix(numeric(0), nrow = 0, ncol = 0), ring = field_as_ring("ZZ")), class = c("m2_matrix", "m2"))
   m2_parse_test(m2_empty_matrix,m2_empty_matrix_output)
 
   # Test case where one ring has another ring as a prefix
   m2_ring1 <- m2("R = CC[x]")
   m2_ring2 <- m2("S = R[y]")
   m2_second_ring <- "R(monoid[y, Degrees => {1}, Heft => {1}, MonomialOrder => VerticalList{MonomialSize => 32, GRevLex => {1}, Position => Up}, DegreeRank => 1])"
-  m2_second_ring_output <- structure(list(m2_name = NULL, coefring = "CC", vars = c("x","y"), order = "grevlex"), class = c("m2_polynomialring", "m2"))
+  m2_second_ring_output <- structure(list(m2_name = "", coefring = "CC", vars = c("x","y"), order = "grevlex"), class = c("m2_polynomialring", "m2"))
   m2_parse_test(m2_second_ring,m2_second_ring_output)
 
   # map(S,R,{s^3-t^2, s^3-t, s-t})
@@ -72,11 +75,11 @@ test_that("m2 parses harder data structures", {
   # toExternalString(ideal(a*b*c-d*e*f,a*c*e-b*d*f))
   m2("R = QQ[a,b,c,e,d,f]")
   m2_ideal <- "map((R)^1,(R)^{1},{{a*b*c-d*e*f, a*c*e-b*d*f}})"
-  m2_ideal_output <- structure(list(m2_name = NULL,rmatrix = structure(list(structure(list(c("a"=1,"b"=1,"c"=1,"coef"=1), c("d"=1,"e"=1,"f"=1,"coef"=-1)),class=c("mpoly")), structure(list(c("a"=1,"c"=1,"e"=1,"coef"=1), c("b"=1,"d"=1,"f"=1,"coef"=-1)),class=c("mpoly"))),dim=c(1,2)),ring = structure(list(m2_name = NULL, coefring = "QQ", vars = c("a","b","c","e","d","f"),order="grevlex"),class = c("m2_polynomialring","m2"))),class=c("m2_matrix","m2"))
+  m2_ideal_output <- structure(list(m2_name = "", rmatrix = structure(list(structure(list(c("a"=1,"b"=1,"c"=1,"coef"=1), c("d"=1,"e"=1,"f"=1,"coef"=-1)), class=c("mpoly")), structure(list(c("a"=1,"c"=1,"e"=1,"coef"=1), c("b"=1,"d"=1,"f"=1,"coef"=-1)), class=c("mpoly"))), dim=c(1,2)), ring = structure(list(m2_name = "R", coefring = "QQ", vars = c("a","b","c","e","d","f"),order="grevlex"),class = c("m2_polynomialring","m2"))),class=c("m2_matrix","m2"))
   m2_parse_test(m2_ideal, m2_ideal_output)
 
   # toExternalString(CC[x,y])
-  m2_ring <- "CC_53(monoid[x..z, a..d, Degrees => {2:1}, Heft => {1}, MonomialOrder => VerticalList{MonomialSize => 32, GRevLex => {2:1}, Position => Up},DegreeRank => 1])"
-  m2_ring_output <- structure(list(m2_name = NULL, coefring = "CC", vars = c("x", "y", "z", "a", "b", "c", "d"), order = "grevlex"),class = c("m2_polynomialring", "m2"))
+  m2_ring <- "CC_53(monoid[x..z, a..d, Degrees => {2:1}, Heft => {1}, MonomialOrder => VerticalList{MonomialSize => 32, GRevLex => {2:1}, Position => Up}, DegreeRank => 1])"
+  m2_ring_output <- structure(list(m2_name = "", coefring = "CC", vars = c("x", "y", "z", "a", "b", "c", "d"), order = "grevlex"), class = c("m2_polynomialring", "m2"))
   m2_parse_test(m2_ring, m2_ring_output)
 })

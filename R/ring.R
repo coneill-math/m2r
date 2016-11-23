@@ -157,7 +157,7 @@ m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
     }
   }
 
-  ring <- list(m2_name = NULL, coefring = x$coefring, vars = vars, order = order)
+  ring <- list(m2_name = "", coefring = x$coefring, vars = vars, order = order)
   class(ring) <- c("m2_polynomialring", "m2")
 
   ring
