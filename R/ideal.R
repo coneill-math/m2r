@@ -2,10 +2,10 @@
 #'
 #' Create a new ideal in Macaulay2
 #'
-#' @param mpolyList list of mpolys
+#' @param x a listing of polynomials. several formats are accepted,
+#'   see examples.
 #' @param ring the referent ring in Macaulay2
 #' @param code return only the M2 code? (default: \code{FALSE})
-#' @param x (for \code{print}) x
 #' @param ... ...
 #' @return a reference to a Macaulay2 ideal
 #' @name ideal
@@ -15,6 +15,7 @@
 #'
 #' (QQxy <- ring(c("x","y"), coefring = "QQ"))
 #' ideal(mp(c("x+y", "x^2+y^2")), QQxy)
+#'
 #' (QQxy <- ring(c("x","y"), coefring = "QQ", code = TRUE))
 #' ideal(mp(c("x+y", "x^2+y^2")), QQxy, code = TRUE)
 #'
@@ -25,7 +26,7 @@
 
 #' @rdname ideal
 #' @export
-ideal <- function(mpolyList, ring, code = FALSE, ...) {
+ideal <- function(x, ring, code = FALSE, ...) {
 
   # run ideal.
   pointer <- do.call(ideal., as.list(match.call())[-1])
@@ -51,11 +52,11 @@ ideal <- function(mpolyList, ring, code = FALSE, ...) {
 
 #' @rdname ideal
 #' @export
-ideal. <- function(mpolyList, ring, code = FALSE, ...) {
+ideal. <- function(x, ring, code = FALSE, ...) {
 
   # make ideal name
   ideal_name <- name_and_increment("ideal", "m2_ideal_count")
-  mpoly_strings_for_m2 <- mpolyList_to_m2_str(mpolyList)
+  mpoly_strings_for_m2 <- mpolyList_to_m2_str(x)
 
   # construct code and message
   m2_code <- sprintf(
