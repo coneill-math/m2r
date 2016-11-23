@@ -62,7 +62,7 @@
 #' gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = QQtxyz., code = TRUE)
 #'
 #' I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
-#' gb_(I, ring = QQtxyz.)
+#' gb_(I)
 #'
 #'
 #' ##### still broken
@@ -70,8 +70,9 @@
 #'
 #' gb("x*y", "x*z", "x", raw_chars = TRUE)
 #'
-#' I. <- ideal.(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
-#' gb_(I., ring = QQtxyz.)
+#' (QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
+#' I. <- ideal.(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz)
+#' gb_(I.)
 #'
 #'
 #'
@@ -81,7 +82,7 @@
 #'
 #' gb(c("x y-z^2", "y^2-w^2"), ring = "QQ[w,x,y,z]")
 #' gb(mp("x y-z^2"), mp("y^2-w^2"), ring = "QQ[w,x,y,z]")
-#' gb(mp("x y-z^2"), mp("y^2-w^2"), degreeLimit = 2)
+#' gb(mp("x y-z^2"), mp("y^2-w^2"), degree_limit = 2)
 #'
 #'
 #'
@@ -120,25 +121,14 @@
 gb <- function(..., ring, degree_limit, raw_chars = FALSE, code = FALSE) {
 
   # grab args
-  x <- list(x = pryr::dots(...))
+  x <- list(x = lapply(pryr::dots(...), eval))
   otherArgs <- as.list(match.call(expand.dots = FALSE))[-c(1:2)]
 
-
-  # parse by cases
-  if(all(vapply(dots, is.character, logical(1)))) {
-    dots <- list(x = mp(unlist(dots)))
-  } else {
-    # dots <- lapply(dots, eval) # eliminate symbols
-    # if(is.mpolyList(dots[[1]])) {
-    #   names(dots) <- "mpolyList"
-    # } else { # if it's a list of mpoly's
-    #   class(dots) <- "mpolyList"
-    #   dots <- list(mpolyList = dots)
-    # }
-  }
+  # eval
+  args <- lapply(c(x, otherArgs), eval)
 
   # run standard evaluation gb
-  do.call("gb_", c(x, otherArgs))
+  do.call("gb_", args)
 }
 
 
@@ -189,7 +179,15 @@ gb_ <- function(x, ring, degree_limit,  raw_chars = FALSE, code = FALSE, ...) {
 gb_. <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
 
   # basic arg checking
-
+  if(is.m2_ideal(x) && !missing(ring)) {
+    warning(
+      "Grobner bases of ideal objects always use their rings\n",
+      "if you want to change the ring, use (ideal)$gens"
+    )
+  }
+  if(is.m2_ideal_pointer(x) && !missing(ring)) {
+    warning("Grobner bases of ideal objects always use their rings")
+  }
 
   # create m2_code params
   if (raw_chars) {
@@ -205,6 +203,19 @@ gb_. <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
         "ideal(%s)",
         listify(mpolyList_to_m2_str(mp(unlist(x))))
       )
+    } else if (is.list(x) && all(vapply(x, is.mpoly, logical(1)))) {
+      ideal_param <- sprintf(
+        "ideal(%s)",
+        listify(mpolyList_to_m2_str(   x ))
+      )
+    } else if (is.list(x) && all(vapply(x, is.numeric, logical(1)))) {
+      # this is like c(mp("x y"), mp("x z"), mp("x"))
+      x <- lapply(x, function(.) mpoly(list(.)))
+      class(x) <- "mpolyList"
+      ideal_param <- sprintf(
+        "ideal(%s)",
+        listify(mpolyList_to_m2_str(   x ))
+      )
     } else if (is.mpolyList(x)) {
       ideal_param <- sprintf(
         "ideal(%s)",
@@ -212,14 +223,17 @@ gb_. <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
       )
     } else if (is.m2_ideal(x)) {
       ideal_param <- x$m2_name
+      ring_param <- x$ring$m2_name
     } else if (is.m2_ideal_pointer(x)) {
+      warning("broken.")
       ideal_param <- x$m2_name
+      ring_param <- x$ring$m2_name
     } else {
       stop("unrecognized input x. see ?gb", call. = FALSE)
     }
   }
 
-  if (!missing(ring)) {
+  if (!missing(ring) && !(is.m2_ideal(x) || is.m2_ideal_pointer(x))) {
     if (is.m2_polynomialring(ring)) {
       ring_param <- ring$m2_name
     } else if (is.m2_polynomialring_pointer(ring)) {
@@ -234,7 +248,11 @@ gb_. <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
 
   # construct m2_code from regularized essential parameters
   m2_code <- paste(
-    if(missing(ring)) "" else sprintf("use %s;", ring_param),
+    if(missing(ring) && !(is.m2_ideal(x) || is.m2_ideal_pointer(x))) {
+      ""
+    } else {
+      sprintf("use %s;", ring_param)
+    },
     sprintf(
       "gens gb(%s, DegreeLimit => %s)",
       ideal_param,
