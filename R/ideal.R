@@ -98,6 +98,7 @@ print.m2_ideal <- function(x, ...) {
   cat(paste("<", paste(gens_strings, collapse = ",  "), ">"))
   # cat(str_pad(gens_strings, nchar(gens_strings)+2, side = "left"), sep = "\n")
   invisible(x)
+
 }
 
 

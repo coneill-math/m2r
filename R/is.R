@@ -34,9 +34,24 @@ is.m2_pointer <- function (x) inherits(x, "m2_pointer")
 #' @rdname is
 is.ring <- function (x) inherits(x, "m2_polynomialring")
 
+
 #' @export
 #' @rdname is
 is.m2_polynomialring <- function (x) inherits(x, "m2_polynomialring")
+
+#' @export
+#' @rdname is
+is.m2_polynomialring_pointer <- function (x) is.m2_pointer(x) && (x$m2_class == "PolynomialRing")
+
+
+#' @export
+#' @rdname is
+is.m2_ideal <- function (x) inherits(x, "m2_ideal")
+
+#' @export
+#' @rdname is
+is.m2_ideal_pointer <- function (x) is.m2_pointer(x) && (x$m2_class == "PolynomialRing")
+
 
 
 #' @export

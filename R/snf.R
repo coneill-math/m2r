@@ -67,7 +67,9 @@
 snf <- function (mat, code = FALSE) {
 
   # run m2
-  pointer <- do.call(snf., as.list(match.call())[-1])
+  args <- as.list(match.call())[-1]
+  eargs <- lapply(args, eval, envir = parent.frame())
+  pointer <- do.call(snf., eargs)
   if(code) return(invisible(pointer))
 
   # parse output

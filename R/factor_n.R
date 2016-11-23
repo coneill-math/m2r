@@ -92,7 +92,9 @@
 factor_n <- function (n, code = FALSE, gmp = FALSE, ...) {
 
   # run m2
-  pointer <- do.call(factor_n., as.list(match.call())[-1])
+  args <- as.list(match.call())[-1]
+  eargs <- lapply(args, eval, envir = parent.frame())
+  pointer <- do.call(factor_n., eargs)
   if(code) return(invisible(pointer))
 
   # parse output
