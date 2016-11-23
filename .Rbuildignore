@@ -3,3 +3,7 @@
 ^.*\.png$
 ^README.Rmd$
 figures/
+.Rhistory
+.gitignore
+.Rproj.user
+.git

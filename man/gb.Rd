@@ -3,25 +3,37 @@
 \name{gb}
 \alias{gb}
 \alias{gb_}
+\alias{gb_.}
 \title{Compute a Grobner basis with Macaulay2}
 \usage{
-gb(..., ring, degreeLimit, code = FALSE)
+gb(..., ring, degree_limit, raw_chars = FALSE, code = FALSE)
 
-gb_(mpolyList, ring, degreeLimit = -1, code = FALSE)
+gb_(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...)
+
+gb_.(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...)
 }
 \arguments{
-\item{...}{a nonstandard evaluation listing of mpoly or vector of
-character strings containing referencing multivariate
-polynomials to pass to \code{\link{mp}}}
+\item{...}{...}
 
-\item{ring}{ring}
+\item{ring}{if \code{x} is an ideal, \code{ring} need not be
+specified.}
 
-\item{degreeLimit}{parameter that stops computation after S-polynomials
-have reached a given degree. Only meaningful in homogeneous case.}
+\item{degree_limit}{parameter that stops computation after
+S-polynomials have reached a given degree. Only meaningful in
+homogeneous case.}
+
+\item{raw_chars}{if \code{TRUE}, the character vector will not be
+parsed by \code{\link{mp}}, saving time (default:
+\code{FALSE}). the down-side is that the strings must be
+formated for M2 use directly, as opposed to for
+\code{\link{mp}}. (e.g. \code{"x*y+3"} instead of \code{"x y +
+3"})}
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 
-\item{mpolyList}{an mpolyList object}
+\item{x}{a character vector of polynomials to be parsed by
+\code{\link{mp}}, a \code{mpolyList} object, an
+\code{\link{ideal}} or pointer to an ideal}
 }
 \value{
 an mpolyList object
@@ -37,48 +49,88 @@ evaluation equivalent.
 
 \dontrun{ requires Macaulay2 be installed
 
-gb("t^4 - x", "t^3 - y", "t^2 - z")
-gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 
+##### basic usage
+########################################
 
-
-
-# grobner bases with different orders
-# the default is lex order with the variable ordering
-vars(mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
-gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
-
-
-# you can use different orderings
-(ps <- mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
-
-R <- ring(c("t","x","y","z"), coefring = "QQ", order = "lex")
-gb(ps, ring = R)
-
-R2 <- ring(c("x","y","t","z"), coefring = "QQ", order = "lex")
-gb(ps, ring = R2)
-
-
-
-# more nonstandard evaluation
+# the last ring evaluated is the one used in the computation
+(QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
 gb("t^4 - x", "t^3 - y", "t^2 - z")
 
-gb(
-  mp("t^4 - x"),
-  mp("t^3 - y"),
-  mp("t^2 - z")
-)
+# standard evaluation version
+gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
 
-(ps <- mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
-gb(ps)
+# different rings
+(QQxyzt <- ring(c("x","y","z","t"), coefring = "QQ"))
+gb("t^4 - x", "t^3 - y", "t^2 - z")
+
+# you can specify a specific ring apart from the last used
+# (this resets what the last used ring is)
+gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz)
+gb("t^4 - x", "t^3 - y", "t^2 - z")
+
+
+
+##### more advanced usage
+########################################
+
+# defining a ring on the fly
+gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = "QQ[t,x,y,z]")
+gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = "QQ[t,x,y,z]", code = TRUE)
+
+# interaction with pointers
+(QQtxyz. <- ring.(c("t","x","y","z"), coefring = "QQ"))
+gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = QQtxyz., code = TRUE)
+
+I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
+gb_(I, ring = QQtxyz.)
+
+
+##### still broken
+########################################
+
+gb("x*y", "x*z", "x", raw_chars = TRUE)
+
+I. <- ideal.(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
+gb_(I., ring = QQtxyz.)
+
+
+
+
+
+gb_(mp(c("x y - z^2", "y^2 - w^2")))
+
+gb(c("x y-z^2", "y^2-w^2"), ring = "QQ[w,x,y,z]")
+gb(mp("x y-z^2"), mp("y^2-w^2"), ring = "QQ[w,x,y,z]")
+gb(mp("x y-z^2"), mp("y^2-w^2"), degreeLimit = 2)
+
+
+
+
 
 
 # standard evaluation
-gb_(mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
-gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
+gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]")
+gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), "QQ[t,x,y,z]")
+gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), code = TRUE)
+gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]", degree_limit = 2)
 
-gb(mp("x y-z^2"),mp("y^2-w^2"))
-gb(mp("x y-z^2"),mp("y^2-w^2"), degreeLimit = 2)
+
+
+gb_(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]")
+
+
+
+(QQtxyz <- ring(c("t", "x","y","z"), coefring = "QQ"))
+gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), QQtxyz, code = TRUE)
+gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), QQtxyz)
+gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , QQtxyz)
+gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]", code = TRUE)
+gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]")
+gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
+gb_(ideal("t^4 - x", "t^3 - y", "t^2 - z"))
+gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), raw_chars = TRUE)
+
 
 
 }

@@ -173,7 +173,9 @@ To create your own wrapper function of something in Macaulay2, you'll need to cr
 f <- function(esntl_parm_1, esntl_parm_2, code = FALSE, parse_parm_1, parse_parm_2, ...) {
 
   # run m2
-  pointer <- do.call(f., as.list(match.call())[-1])
+  args <- as.list(match.call())[-1]
+  eargs <- lapply(args, eval, envir = parent.frame())
+  pointer <- do.call(f., eargs)
   if(code) return(invisible(pointer))
 
   # parse output

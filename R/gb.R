@@ -5,14 +5,22 @@
 #' \code{gb} uses nonstandard evaluation; \code{gb_} is the standard
 #' evaluation equivalent.
 #'
-#' @param ... a nonstandard evaluation listing of mpoly or vector of
-#'   character strings containing referencing multivariate
-#'   polynomials to pass to \code{\link{mp}}
-#' @param mpolyList an mpolyList object
-#' @param ring ring
-#' @param degreeLimit parameter that stops computation after S-polynomials
-#'   have reached a given degree. Only meaningful in homogeneous case.
+#' @param x a character vector of polynomials to be parsed by
+#'   \code{\link{mp}}, a \code{mpolyList} object, an
+#'   \code{\link{ideal}} or pointer to an ideal
+#' @param ring if \code{x} is an ideal, \code{ring} need not be
+#'   specified.
+#' @param degree_limit parameter that stops computation after
+#'   S-polynomials have reached a given degree. Only meaningful in
+#'   homogeneous case.
+#' @param raw_chars if \code{TRUE}, the character vector will not be
+#'   parsed by \code{\link{mp}}, saving time (default:
+#'   \code{FALSE}). the down-side is that the strings must be
+#'   formated for M2 use directly, as opposed to for
+#'   \code{\link{mp}}. (e.g. \code{"x*y+3"} instead of \code{"x y +
+#'   3"})
 #' @param code return only the M2 code? (default: \code{FALSE})
+#' @param ... ...
 #' @return an mpolyList object
 #' @seealso \code{\link{mp}}
 #' @name gb
@@ -20,48 +28,88 @@
 #'
 #' \dontrun{ requires Macaulay2 be installed
 #'
-#' gb("t^4 - x", "t^3 - y", "t^2 - z")
-#' gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 #'
+#' ##### basic usage
+#' ########################################
 #'
-#'
-#'
-#' # grobner bases with different orders
-#' # the default is lex order with the variable ordering
-#' vars(mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
-#' gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
-#'
-#'
-#' # you can use different orderings
-#' (ps <- mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
-#'
-#' R <- ring(c("t","x","y","z"), coefring = "QQ", order = "lex")
-#' gb(ps, ring = R)
-#'
-#' R2 <- ring(c("x","y","t","z"), coefring = "QQ", order = "lex")
-#' gb(ps, ring = R2)
-#'
-#'
-#'
-#' # more nonstandard evaluation
+#' # the last ring evaluated is the one used in the computation
+#' (QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
 #' gb("t^4 - x", "t^3 - y", "t^2 - z")
 #'
-#' gb(
-#'   mp("t^4 - x"),
-#'   mp("t^3 - y"),
-#'   mp("t^2 - z")
-#' )
+#' # standard evaluation version
+#' gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
 #'
-#' (ps <- mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
-#' gb(ps)
+#' # different rings
+#' (QQxyzt <- ring(c("x","y","z","t"), coefring = "QQ"))
+#' gb("t^4 - x", "t^3 - y", "t^2 - z")
+#'
+#' # you can specify a specific ring apart from the last used
+#' # (this resets what the last used ring is)
+#' gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz)
+#' gb("t^4 - x", "t^3 - y", "t^2 - z")
+#'
+#'
+#'
+#' ##### more advanced usage
+#' ########################################
+#'
+#' # defining a ring on the fly
+#' gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = "QQ[t,x,y,z]")
+#' gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = "QQ[t,x,y,z]", code = TRUE)
+#'
+#' # interaction with pointers
+#' (QQtxyz. <- ring.(c("t","x","y","z"), coefring = "QQ"))
+#' gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = QQtxyz., code = TRUE)
+#'
+#' I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
+#' gb_(I, ring = QQtxyz.)
+#'
+#'
+#' ##### still broken
+#' ########################################
+#'
+#' gb("x*y", "x*z", "x", raw_chars = TRUE)
+#'
+#' I. <- ideal.(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
+#' gb_(I., ring = QQtxyz.)
+#'
+#'
+#'
+#'
+#'
+#' gb_(mp(c("x y - z^2", "y^2 - w^2")))
+#'
+#' gb(c("x y-z^2", "y^2-w^2"), ring = "QQ[w,x,y,z]")
+#' gb(mp("x y-z^2"), mp("y^2-w^2"), ring = "QQ[w,x,y,z]")
+#' gb(mp("x y-z^2"), mp("y^2-w^2"), degreeLimit = 2)
+#'
+#'
+#'
+#'
 #'
 #'
 #' # standard evaluation
-#' gb_(mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
-#' gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
+#' gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]")
+#' gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), "QQ[t,x,y,z]")
+#' gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), code = TRUE)
+#' gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]", degree_limit = 2)
 #'
-#' gb(mp("x y-z^2"),mp("y^2-w^2"))
-#' gb(mp("x y-z^2"),mp("y^2-w^2"), degreeLimit = 2)
+#'
+#'
+#' gb_(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]")
+#'
+#'
+#'
+#' (QQtxyz <- ring(c("t", "x","y","z"), coefring = "QQ"))
+#' gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), QQtxyz, code = TRUE)
+#' gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), QQtxyz)
+#' gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , QQtxyz)
+#' gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]", code = TRUE)
+#' gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]")
+#' gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
+#' gb_(ideal("t^4 - x", "t^3 - y", "t^2 - z"))
+#' gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), raw_chars = TRUE)
+#'
 #'
 #'
 #' }
@@ -69,75 +117,135 @@
 
 #' @export
 #' @rdname gb
-gb <- function(..., ring, degreeLimit, code = FALSE) {
+gb <- function(..., ring, degree_limit, raw_chars = FALSE, code = FALSE) {
 
   # grab args
-  args <- as.list(match.call(expand.dots = FALSE))[-1]
-  dots <- args[["..."]]
+  x <- list(x = pryr::dots(...))
+  otherArgs <- as.list(match.call(expand.dots = FALSE))[-c(1:2)]
 
-  # eval
-  dots <- lapply(dots, eval)
 
   # parse by cases
   if(all(vapply(dots, is.character, logical(1)))) {
-    dots <- list(mpolyList = mp(unlist(dots)))
+    dots <- list(x = mp(unlist(dots)))
   } else {
-    dots <- lapply(dots, eval) # eliminate symbols
-    if(is.mpolyList(dots[[1]])) {
-      names(dots) <- "mpolyList"
-    } else { # if it's a list of mpoly's
-      class(dots) <- "mpolyList"
-      dots <- list(mpolyList = dots)
+    # dots <- lapply(dots, eval) # eliminate symbols
+    # if(is.mpolyList(dots[[1]])) {
+    #   names(dots) <- "mpolyList"
+    # } else { # if it's a list of mpoly's
+    #   class(dots) <- "mpolyList"
+    #   dots <- list(mpolyList = dots)
+    # }
+  }
+
+  # run standard evaluation gb
+  do.call("gb_", c(x, otherArgs))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# value version of f (standard user version)
+#' @rdname gb
+#' @export
+gb_ <- function(x, ring, degree_limit,  raw_chars = FALSE, code = FALSE, ...) {
+
+  # run m2
+  args <- as.list(match.call())[-1]
+  eargs <- lapply(args, eval, envir = parent.frame())
+  pointer <- do.call(gb_., eargs)
+  if(code) return(invisible(pointer))
+
+  # parse output
+  parsed_out <- m2_parse(pointer)
+
+  # more parsing
+  out <- structure(parsed_out$rmatrix[1,], class = "mpolyList")
+
+  # return
+  out
+
+}
+
+
+
+
+
+
+
+
+# reference version of f (returns pointer to m2 object)
+#' @rdname gb
+#' @export
+gb_. <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
+
+  # basic arg checking
+
+
+  # create m2_code params
+  if (raw_chars) {
+    ideal_param <- paste0(x, collapse = ", ")
+  } else {
+    if (is.character(x)) {
+      ideal_param <- sprintf(
+        "ideal(%s)",
+        listify(mpolyList_to_m2_str(mp(x)))
+      )
+    } else if (is.list(x) && all(vapply(x, is.character, logical(1)))) {
+      ideal_param <- sprintf(
+        "ideal(%s)",
+        listify(mpolyList_to_m2_str(mp(unlist(x))))
+      )
+    } else if (is.mpolyList(x)) {
+      ideal_param <- sprintf(
+        "ideal(%s)",
+        listify(mpolyList_to_m2_str(   x ))
+      )
+    } else if (is.m2_ideal(x)) {
+      ideal_param <- x$m2_name
+    } else if (is.m2_ideal_pointer(x)) {
+      ideal_param <- x$m2_name
+    } else {
+      stop("unrecognized input x. see ?gb", call. = FALSE)
     }
   }
 
-  # inject it in args
-  args[[1]] <- dots[[1]]
-  names(args)[1] <- "mpolyList"
+  if (!missing(ring)) {
+    if (is.m2_polynomialring(ring)) {
+      ring_param <- ring$m2_name
+    } else if (is.m2_polynomialring_pointer(ring)) {
+      ring_param <- ring$m2_name
+    } else if(is.character(ring) && length(ring) == 1) {
+      ring_param <- ring
+    } else {
+      stop("unrecognized ring parameter.", call. = FALSE)
+    }
+  }
 
-  # run standard evaluation gb
-  do.call("gb_", args)
-}
 
-
-
-
-#' @export
-#' @rdname gb
-gb_ <- function(mpolyList, ring, degreeLimit = -1, code = FALSE) {
-
-  # allow for character vectors
-  if(is.character(mpolyList)) mpolyList <- mp(mpolyList)
-
-  # convert mpolylist to strings readable by m2
-  poly_str <- mpolyList_to_m2_str(mpolyList)
-
-  # make ideal, vars, and ring strings for m2
-  ideal_str <- paste0("I := ideal(", poly_str, ")\n")
-  if(missing(ring)) {
-    ring_str <- sprintf(
-      "R := QQ[%s]\n",
-      paste0(vars(mpolyList), collapse = ",")
+  # construct m2_code from regularized essential parameters
+  m2_code <- paste(
+    if(missing(ring)) "" else sprintf("use %s;", ring_param),
+    sprintf(
+      "gens gb(%s, DegreeLimit => %s)",
+      ideal_param,
+      if(missing(degree_limit)) "{}" else as.character(degree_limit)
     )
-  } else {
-    ring_str <- paste0("use ", ring$m2_name, "\n")
-  }
+  )
 
-  # aggregate m2 code, message if wanted, run m2
-  m2_code <- paste0(ring_str, ideal_str, "gens gb ")
-  if (degreeLimit > 0) {
-    m2_code <- paste0(m2_code, "(I, DegreeLimit=>", degreeLimit, ")")
-  } else {
-    m2_code <- paste0(m2_code, "I")
-  }
+  # message
   if(code) { message(m2_code); return(invisible(m2_code)) }
-  m2_out <- m2(m2_code)
 
-  # comb code, mpoly parse, and out
-  m2_out <- str_sub(m2_out, 10, -3)
-  m2_out <- str_split(m2_out, ", ")[[1]]
-  m2_out <- str_replace_all(m2_out, "\\*", " ")
-  mp(m2_out)
+  # run m2 and return pointer
+  m2.(m2_code)
+
 }
-
-

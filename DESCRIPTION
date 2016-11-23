@@ -15,6 +15,7 @@ Depends:
 Imports:
     stringr,
     memoise,
+    pryr,
     gmp
 SystemRequirements:
     Macaulay2 (\url{http://www.math.uiuc.edu/Macaulay2/})
