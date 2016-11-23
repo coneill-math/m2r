@@ -76,7 +76,7 @@ ideal. <- function(mpolyList, ring, code = FALSE, ...) {
 
 
 m2_parse_function.m2_ideal <- function(x) {
-  out <- list(m2_name = NULL, rmap = x[[1]])
+  out <- list(m2_name = "", rmap = x[[1]])
   structure(out, class = c("m2_ideal", "m2"))
 }
 
