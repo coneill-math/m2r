@@ -108,7 +108,7 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 #   gens gb(ideal({t^4-x,t^3-y,t^2-z}), DegreeLimit => {})
 ```
 
-You can compute the basis respective of different orders as follows. The default ordering is the [grevlex order](https://en.wikipedia.org/wiki/Monomial_order) on the variables given by `mpoly::vars()` applied to the `mpolyList` given by the polynomials.
+You can compute the basis respective of different [orders](https://en.wikipedia.org/wiki/Monomial_order) as well The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
 
 ``` r
 R <- ring(c("x","y","t","z"), order = "lex")
@@ -118,18 +118,17 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
 #  -1 z^2  +  x
 ```
 
-`gb()` also accepts `mpoly` objects, like `gb(p1, p2, p3)` where `p1`, `p2`, and `p3` are `mpoly` objects (e.g. `p1 <- mp("t^4 - x")`). There is also a [standard evaluation](http://adv-r.had.co.nz/Computing-on-the-language.html) version of `gb()` called `gb_()`, which takes in a `mpolyList` object directly.
+On a technical level, `gb()` uses [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html). A more stable way to use the function is to use its standard evaluation version `gb_()`. `gb_()` accepts first a data structure describing the polynomials or ideal to fing the Grobner basis of, then the referent ring, and then a number of other objects. At a basic level this simply changes the previous syntax to
 
 ``` r
-(ps <- mp(c("t^4 - x", "t^3 - y", "t^2 - z")))
-#  t^4  -  x
-#  t^3  -  y
-#  t^2  -  z
-gb_(ps)
+poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
+gb_(poly_chars, ring = R)
 #  t^2  -  z
 #  -1 t z  +  y
 #  -1 z^2  +  x
 ```
+
+`gb_()` is significantly easier than `gb()` to program with, so we strongly recommend that you use `gb_()`, especially inside of other functions. `gb()` currently has some bugs that we're ironing out.
 
 Factor integers
 ---------------
