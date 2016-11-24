@@ -150,14 +150,16 @@ mem_m2_parse <- memoise(function(x) m2_parse(x))
 
 m2_parse <- function(s) {
 
-  forget(mem_m2.)
-  forget(mem_m2_parse)
-
   if (is.m2_pointer(s)) {
     tokens <- m2_tokenize(s$ext_str)
+  } else if (is.m2(s)) {
+    return(s)
   } else {
     tokens <- m2_tokenize(s)
   }
+
+  forget(mem_m2.)
+  forget(mem_m2_parse)
 
   ret <- m2_parse_internal(tokens)
   ret <- ret$result
