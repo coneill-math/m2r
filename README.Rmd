@@ -9,7 +9,7 @@ output:
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "# ",
+  comment = "#",
   fig.path = "figures/README-",
   dpi = 250
 )
@@ -116,7 +116,7 @@ poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
 gb_(poly_chars, ring = R)
 ```
 
-`gb_()` is significantly easier than `gb()` to program with, so we strongly recommend that you use `gb_()`, especially inside of other functions.  `gb()` currently has some bugs that we're ironing out.
+`gb_()` is significantly easier than `gb()` to program with, so we strongly recommend that you use `gb_()`, especially inside of other functions. 
 
 
 
@@ -126,7 +126,9 @@ gb_(poly_chars, ring = R)
 
 
 
-## Factor integers
+## Factoring integers and polynomials
+
+You can compute [prime decompositions](https://en.wikipedia.org/wiki/Integer_factorization) of integers with `factor_n()`:
 
 ```{r factor_n}
 (x <- 2^5 * 3^4 * 5^3 * 7^2 * 11^1)
@@ -134,7 +136,7 @@ factor_n(x)
 ```
 
 
-## Factor polynomials
+You can also [factor polynomials](https://en.wikipedia.org/wiki/Factorization) over rings using `factor_poly()`:
 
 ```{r factor_poly}
 QQxy <- ring(c("x","y"), "QQ")

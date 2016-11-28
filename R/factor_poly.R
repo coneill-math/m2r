@@ -8,7 +8,9 @@
 #'   object
 #' @param code return only the M2 code? (default: \code{FALSE})
 #' @param ... ...
-#' @return a string representation of the factored polynomial.
+#' @return a named list with elements \code{factor} (an
+#'   \code{\link{mpolyList}} object) and \code{power}, an integer
+#'   vector
 #' @name factor_poly
 #' @examples
 #'
@@ -57,7 +59,7 @@ factor_poly <- function (mpoly, ring, code = FALSE) {
   mpolyList <- lapply(parsed_out, function(.) mp(.[[1]]))
   class(mpolyList) <- "mpolyList"
   powers <- vapply(parsed_out, `[[`, integer(1), 2)
-  list(mpolyList = mpolyList, power = powers)
+  list(factor = mpolyList, power = powers)
 
 }
 
