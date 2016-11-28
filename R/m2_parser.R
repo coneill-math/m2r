@@ -5,12 +5,18 @@
 #' @param x x
 #' @param ... ...
 #' @return an R object
-#' @name m2_to_r
+#' @name m2_parser
 #' @examples
 #'
 #' \dontrun{ requires Macaulay2 be installed
 #'
+#' m2("1+1")
+#' m2.("1+1")
+#' m2_parse(m2.("1+1"))
 #'
+#' m2("QQ[x,y]")
+#' m2.("QQ[x,y]")
+#' m2_parse(m2.("QQ[x,y]"))
 #'
 #' }
 
@@ -21,7 +27,7 @@
 
 
 
-#' @rdname m2_to_r
+#' @rdname m2_parser
 #' @export
 m2_to_r <- function(x, ...) UseMethod("m2_to_r")
 
@@ -147,7 +153,8 @@ mem_m2. <- memoise(function(x) m2.(x))
 mem_m2_parse <- memoise(function(x) m2_parse(x))
 
 
-
+#' @rdname m2_parser
+#' @export
 m2_parse <- function(s) {
 
   if (is.m2_pointer(s)) {

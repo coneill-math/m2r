@@ -3,9 +3,9 @@
 **m2r**
 =======
 
-**m2r** is a new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2](http://www.math.uiuc.edu/Macaulay2/).
+**m2r** is a new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2 (M2)](http://www.math.uiuc.edu/Macaulay2/).
 
-The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16), funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page).
+The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16) on algebraic statistics, funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page).
 
 It is currently being actively developed, so expect changes. If you have a feature request, please file an issue!
 
@@ -16,60 +16,60 @@ Getting started
 
 ``` r
 library(m2r)
-#  Loading required package: mpoly
-#  Loading required package: stringr
-#    M2 found in /Applications/Macaulay2-1.9.2/bin
+# Loading required package: mpoly
+# Loading required package: stringr
+#   M2 found in /Applications/Macaulay2-1.9.2/bin
 ```
 
 When loaded, **m2r** initializes a persistent connection to a back-end Macaulay2 session. The basic function in R that accesses this connection is `m2()`, which simply accepts a character string that is run by the Macaulay2 session.
 
 ``` r
 m2("1 + 1")
-#  Starting M2
-#  [1] "2"
+# Starting M2
+# [1] "2"
 ```
 
 You can see the persistence by setting variables and accessing them across different `m2()` calls:
 
 ``` r
 m2("a = 1")
-#  [1] "1"
+# [1] "1"
 m2("a")
-#  [1] "1"
+# [1] "1"
 ```
 
 You can check the variables defined in the M2 session with `m2_ls()`:
 
 ``` r
 m2_ls()
-#   [1] "a"                      "m2o1"                  
-#   [3] "m2o2"                   "m2o3"                  
-#   [5] "m2o4"                   "m2rintoutline"         
-#   [7] "m2rintretcode"          "m2rintruncount"        
-#   [9] "m2rintoutclassclass"    "m2rintoutvalsucceeded" 
-#  [11] "m2rintinout"            "m2rintinline"          
-#  [13] "m2rintoutval"           "m2rintoutlinesucceeded"
-#  [15] "m2rintvarname"          "m2rintoutclass"        
-#  [17] "m2rintnumlines"
+#  [1] "a"                      "m2o1"                  
+#  [3] "m2o2"                   "m2o3"                  
+#  [5] "m2o4"                   "m2rintoutline"         
+#  [7] "m2rintretcode"          "m2rintruncount"        
+#  [9] "m2rintoutclassclass"    "m2rintoutvalsucceeded" 
+# [11] "m2rintinout"            "m2rintinline"          
+# [13] "m2rintoutval"           "m2rintoutlinesucceeded"
+# [15] "m2rintvarname"          "m2rintoutclass"        
+# [17] "m2rintnumlines"
 ```
 
 You can also check if variables exist with `m2_exists()`:
 
 ``` r
 m2_exists("a")
-#  [1] TRUE
+# [1] TRUE
 m2_exists(c("a","b"))
-#  [1]  TRUE FALSE
+# [1]  TRUE FALSE
 ```
 
 Notice that there are many variables returned by `m2_ls()` that we didn't make. Most of those are created internally by **m2r** in order to facilitate the connection, so you won't want to access them. Others, however, are ok to access directly:
 
 ``` r
 m2("m2o3")
-#  [1] "1"
+# [1] "1"
 ```
 
-Apart from the basic connection to M2, **m2r** has basic data structures and methods to reference and manipulate the M2 objects within R. These are being actively developed.
+Apart from the basic connection to M2, **m2r** has basic data structures and methods to reference and manipulate the M2 objects within R. For more on this, see the **m2r** internals section below.
 
 Rings, ideals, and Grobner bases
 --------------------------------
@@ -78,44 +78,56 @@ Rings, ideals, and Grobner bases
 
 ``` r
 (R <- ring(c("t", "x", "y", "z"), "QQ"))
-#  M2 Ring: QQ[t,x,y,z], grevlex order
+# M2 Ring: QQ[t,x,y,z], grevlex order
 ```
 
 and [ideals](https://en.wikipedia.org/wiki/Ideal_(ring_theory)) of rings:
 
 ``` r
 (I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), R))
-#  M2 Ideal of ring QQ[t,x,y,z] (grevlex) with generators: 
-#  < t^4  -  x,  t^3  -  y,  t^2  -  z >
+# M2 Ideal of ring QQ[t,x,y,z] (grevlex) with generators: 
+# < t^4  -  x,  t^3  -  y,  t^2  -  z >
 ```
 
 You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well. The basic function to do this is `gb()`:
 
 ``` r
+gb(I)
+# z^2  -  x
+# z t  -  y
+# -1 z x  +  y^2
+# -1 x  +  t y
+# -1 z y  +  x t
+# -1 z  +  t^2
+```
+
+Perhaps an easier way to do this is just to list off the polynomials as character strings:
+
+``` r
 gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
-#  z^2  -  x
-#  z t  -  y
-#  -1 z x  +  y^2
-#  -1 x  +  t y
-#  -1 z y  +  x t
-#  -1 z  +  t^2
+# z^2  -  x
+# z t  -  y
+# -1 z x  +  y^2
+# -1 x  +  t y
+# -1 z y  +  x t
+# -1 z  +  t^2
 ```
 
 The result is an `mpolyList` object, from the [**mpoly** package](https://github.com/dkahle/mpoly). You can see the M2 code by adding `code = TRUE`:
 
 ``` r
 gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
-#   gens gb(ideal({t^4-x,t^3-y,t^2-z}), DegreeLimit => {})
+# gens gb(ideal({t^4-x,t^3-y,t^2-z}), DegreeLimit => {})
 ```
 
-You can compute the basis respective of different [orders](https://en.wikipedia.org/wiki/Monomial_order) as well The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
+You can compute the basis respective of different [monomial orders](https://en.wikipedia.org/wiki/Monomial_order) as well. The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
 
 ``` r
 R <- ring(c("x","y","t","z"), order = "lex")
 gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
-#  t^2  -  z
-#  -1 t z  +  y
-#  -1 z^2  +  x
+# t^2  -  z
+# -1 t z  +  y
+# -1 z^2  +  x
 ```
 
 On a technical level, `gb()` uses [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html). A more stable way to use the function is to use its standard evaluation version `gb_()`. `gb_()` accepts first a data structure describing the polynomials or ideal to fing the Grobner basis of, then the referent ring, and then a number of other objects. At a basic level this simply changes the previous syntax to
@@ -123,43 +135,44 @@ On a technical level, `gb()` uses [nonstandard evaluation rules](http://adv-r.ha
 ``` r
 poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
 gb_(poly_chars, ring = R)
-#  t^2  -  z
-#  -1 t z  +  y
-#  -1 z^2  +  x
+# t^2  -  z
+# -1 t z  +  y
+# -1 z^2  +  x
 ```
 
-`gb_()` is significantly easier than `gb()` to program with, so we strongly recommend that you use `gb_()`, especially inside of other functions. `gb()` currently has some bugs that we're ironing out.
+`gb_()` is significantly easier than `gb()` to program with, so we strongly recommend that you use `gb_()`, especially inside of other functions.
 
-Factor integers
----------------
+Factoring integers and polynomials
+----------------------------------
+
+You can compute [prime decompositions](https://en.wikipedia.org/wiki/Integer_factorization) of integers with `factor_n()`:
 
 ``` r
 (x <- 2^5 * 3^4 * 5^3 * 7^2 * 11^1)
-#  [1] 174636000
+# [1] 174636000
 factor_n(x)
-#    prime power
-#  1     2     5
-#  2     3     4
-#  3     5     3
-#  4     7     2
-#  5    11     1
+#   prime power
+# 1     2     5
+# 2     3     4
+# 3     5     3
+# 4     7     2
+# 5    11     1
 ```
 
-Factor polynomials
-------------------
+You can also [factor polynomials](https://en.wikipedia.org/wiki/Factorization) over rings using `factor_poly()`:
 
 ``` r
 QQxy <- ring(c("x","y"), "QQ")
 factor_poly("x^4 - y^4", QQxy)
-#  $mpolyList
-#  x  -  y
-#  x  +  y
-#  x^2  +  y^2
-#  
-#  $power
-#  [1] 1 1 1
+# $factor
+# x  -  y
+# x  +  y
+# x^2  +  y^2
+# 
+# $power
+# [1] 1 1 1
 mp("x-y") * mp("x+y") * mp("x^2+y^2")
-#  x^4  -  y^4
+# x^4  -  y^4
 ```
 
 Smith normal form of a matrix
@@ -175,40 +188,40 @@ M <- matrix(c(
 ), nrow = 3, byrow = TRUE)
 
 (mats <- snf(M))
-#  $D
-#       [,1] [,2] [,3]
-#  [1,]   12    0    0
-#  [2,]    0    6    0
-#  [3,]    0    0    2
-#  
-#  $P
-#       [,1] [,2] [,3]
-#  [1,]    1    0    1
-#  [2,]    0    1    0
-#  [3,]    0    0    1
-#  
-#  $Q
-#       [,1] [,2] [,3]
-#  [1,]    4   -2   -1
-#  [2,]   -2    3    1
-#  [3,]    3   -2   -1
+# $D
+#      [,1] [,2] [,3]
+# [1,]   12    0    0
+# [2,]    0    6    0
+# [3,]    0    0    2
+# 
+# $P
+#      [,1] [,2] [,3]
+# [1,]    1    0    1
+# [2,]    0    1    0
+# [3,]    0    0    1
+# 
+# $Q
+#      [,1] [,2] [,3]
+# [1,]    4   -2   -1
+# [2,]   -2    3    1
+# [3,]    3   -2   -1
 P <- mats$P; D <- mats$D; Q <- mats$Q
 
 P %*% M %*% Q                # = D
-#       [,1] [,2] [,3]
-#  [1,]   12    0    0
-#  [2,]    0    6    0
-#  [3,]    0    0    2
+#      [,1] [,2] [,3]
+# [1,]   12    0    0
+# [2,]    0    6    0
+# [3,]    0    0    2
 solve(P) %*% D %*% solve(Q)  # = M
-#       [,1] [,2] [,3]
-#  [1,]    2    4    4
-#  [2,]   -6    6   12
-#  [3,]   10   -4  -16
+#      [,1] [,2] [,3]
+# [1,]    2    4    4
+# [2,]   -6    6   12
+# [3,]   10   -4  -16
 
 det(P)
-#  [1] 1
+# [1] 1
 det(Q)
-#  [1] -1
+# [1] -1
 ```
 
 **m2r** internals: pointers and pointer functions
@@ -222,39 +235,39 @@ For example, we've seen that `factor_n()` computes the prime decomposition of a 
 
 ``` r
 (x <- 2^5 * 3^4 * 5^3 * 7^2 * 11^1)
-#  [1] 174636000
+# [1] 174636000
 factor_n.(x)
-#  M2 Pointer Object
-#    ExternalString : new Product from {new Power from {2,5},new Power fro...
-#           M2 Name : m2o168
-#          M2 Class : Product (WrapperType)
+# M2 Pointer Object
+#   ExternalString : new Product from {new Power from {2,5},new Power fro...
+#          M2 Name : m2o204
+#         M2 Class : Product (WrapperType)
 factor_n.(x)$ext_str
-#  [1] "new Product from {new Power from {2,5},new Power from {3,4},new Power from {5,3},new Power from {7,2},new Power from {11,1}}"
+# [1] "new Product from {new Power from {2,5},new Power from {3,4},new Power from {5,3},new Power from {7,2},new Power from {11,1}}"
 ```
 
 All value functions simply wrap reference functions and parse the output with `m2_parse()`, a general M2 parser, often with little more parsing:
 
 ``` r
 factor_n
-#  function (n, code = FALSE, gmp = FALSE, ...) {
-#  
-#    # run m2
-#    args <- as.list(match.call())[-1]
-#    eargs <- lapply(args, eval, envir = parent.frame())
-#    pointer <- do.call(factor_n., eargs)
-#    if(code) return(invisible(pointer))
-#  
-#    # parse output
-#    parsed_out <- m2_parse(pointer)
-#  
-#    # reformat
-#    df <- as.data.frame(matrix(unlist(parsed_out), ncol = 2, byrow = TRUE))
-#    names(df) <- c("prime", "power")
-#  
-#    # return
-#    df
-#  }
-#  <environment: namespace:m2r>
+# function (n, code = FALSE, gmp = FALSE, ...) {
+# 
+#   # run m2
+#   args <- as.list(match.call())[-1]
+#   eargs <- lapply(args, eval, envir = parent.frame())
+#   pointer <- do.call(factor_n., eargs)
+#   if(code) return(invisible(pointer))
+# 
+#   # parse output
+#   parsed_out <- m2_parse(pointer)
+# 
+#   # reformat
+#   df <- as.data.frame(matrix(unlist(parsed_out), ncol = 2, byrow = TRUE))
+#   names(df) <- c("prime", "power")
+# 
+#   # return
+#   df
+# }
+# <environment: namespace:m2r>
 ```
 
 Creating your own **m2r** wrapper

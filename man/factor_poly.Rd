@@ -21,7 +21,9 @@ object}
 \item{...}{...}
 }
 \value{
-a string representation of the factored polynomial.
+a named list with elements \code{factor} (an
+  \code{\link{mpolyList}} object) and \code{power}, an integer
+  vector
 }
 \description{
 Factor a polynomial
