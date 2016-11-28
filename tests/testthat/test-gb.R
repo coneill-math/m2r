@@ -15,12 +15,9 @@ test_that("gb(... = chars, ring = m2_polynomialring_pointer", {
   expect_equal(gb("x y", "x z", "x"), mpolyList(mp("x")))
 })
 
-
 test_that("gb(... = chars, ring = char", {
 
 })
-
-
 
 
 
