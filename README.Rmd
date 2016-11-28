@@ -20,9 +20,9 @@ knitr::opts_chunk$set(
 
 # __m2r__
 
-__m2r__ is a new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2](http://www.math.uiuc.edu/Macaulay2/).
+__m2r__ is a new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2 (M2)](http://www.math.uiuc.edu/Macaulay2/).
 
-The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16), funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page). 
+The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16) on algebraic statistics, funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page). 
 
 It is currently being actively developed, so expect changes. If you have a feature request, please file an issue!
 
@@ -67,7 +67,7 @@ Notice that there are many variables returned by `m2_ls()` that we didn't make. 
 m2("m2o3")
 ```
 
-Apart from the basic connection to M2, __m2r__ has basic data structures and methods to reference and manipulate the M2 objects within R.  These are being actively developed.
+Apart from the basic connection to M2, __m2r__ has basic data structures and methods to reference and manipulate the M2 objects within R. For more on this, see the __m2r__ internals section below.
 
 
 
@@ -92,6 +92,10 @@ and [ideals](https://en.wikipedia.org/wiki/Ideal_(ring_theory)) of rings:
 ```
 
 You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well.  The basic function to do this is `gb()`:
+```{r ideal_grobner}
+gb(I)
+```
+Perhaps an easier way to do this is just to list off the polynomials as character strings:
 ```{r basic_grobner}
 gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
 ```
@@ -100,7 +104,7 @@ The result is an `mpolyList` object, from the [__mpoly__ package](https://github
 gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 ```
 
-You can compute the basis respective of different [orders](https://en.wikipedia.org/wiki/Monomial_order) as well  The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
+You can compute the basis respective of different [monomial orders](https://en.wikipedia.org/wiki/Monomial_order) as well.  The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
 ```{r grobner_order}
 R <- ring(c("x","y","t","z"), order = "lex")
 gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)

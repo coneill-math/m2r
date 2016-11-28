@@ -3,9 +3,9 @@
 **m2r**
 =======
 
-**m2r** is a new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2](http://www.math.uiuc.edu/Macaulay2/).
+**m2r** is a new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2 (M2)](http://www.math.uiuc.edu/Macaulay2/).
 
-The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16), funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page).
+The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16) on algebraic statistics, funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page).
 
 It is currently being actively developed, so expect changes. If you have a feature request, please file an issue!
 
@@ -69,7 +69,7 @@ m2("m2o3")
 #  [1] "1"
 ```
 
-Apart from the basic connection to M2, **m2r** has basic data structures and methods to reference and manipulate the M2 objects within R. These are being actively developed.
+Apart from the basic connection to M2, **m2r** has basic data structures and methods to reference and manipulate the M2 objects within R. For more on this, see the **m2r** internals section below.
 
 Rings, ideals, and Grobner bases
 --------------------------------
@@ -92,6 +92,18 @@ and [ideals](https://en.wikipedia.org/wiki/Ideal_(ring_theory)) of rings:
 You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well. The basic function to do this is `gb()`:
 
 ``` r
+gb(I)
+#  z^2  -  x
+#  z t  -  y
+#  -1 z x  +  y^2
+#  -1 x  +  t y
+#  -1 z y  +  x t
+#  -1 z  +  t^2
+```
+
+Perhaps an easier way to do this is just to list off the polynomials as character strings:
+
+``` r
 gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
 #  z^2  -  x
 #  z t  -  y
@@ -105,10 +117,10 @@ The result is an `mpolyList` object, from the [**mpoly** package](https://github
 
 ``` r
 gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
-#   gens gb(ideal({t^4-x,t^3-y,t^2-z}), DegreeLimit => {})
+#  gens gb(ideal({t^4-x,t^3-y,t^2-z}), DegreeLimit => {})
 ```
 
-You can compute the basis respective of different [orders](https://en.wikipedia.org/wiki/Monomial_order) as well The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
+You can compute the basis respective of different [monomial orders](https://en.wikipedia.org/wiki/Monomial_order) as well. The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
 
 ``` r
 R <- ring(c("x","y","t","z"), order = "lex")
@@ -226,7 +238,7 @@ For example, we've seen that `factor_n()` computes the prime decomposition of a 
 factor_n.(x)
 #  M2 Pointer Object
 #    ExternalString : new Product from {new Power from {2,5},new Power fro...
-#           M2 Name : m2o168
+#           M2 Name : m2o204
 #          M2 Class : Product (WrapperType)
 factor_n.(x)$ext_str
 #  [1] "new Product from {new Power from {2,5},new Power from {3,4},new Power from {5,3},new Power from {7,2},new Power from {11,1}}"
