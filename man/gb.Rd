@@ -70,6 +70,10 @@ gb("t^4 - x", "t^3 - y", "t^2 - z")
 gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz)
 gb("t^4 - x", "t^3 - y", "t^2 - z")
 
+# gb of an ideal
+(QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
+I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz)
+gb(I)
 
 
 ##### more advanced usage
@@ -86,15 +90,15 @@ gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = QQtxyz., code = TRUE)
 I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
 gb_(I)
 
+I. <- ideal.(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
+gb_(I.)
+
 
 ##### still broken
 ########################################
 
 gb("x*y", "x*z", "x", raw_chars = TRUE)
 
-(QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
-I. <- ideal.(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz)
-gb_(I.)
 
 
 

@@ -49,6 +49,10 @@
 #' gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz)
 #' gb("t^4 - x", "t^3 - y", "t^2 - z")
 #'
+#' # gb of an ideal
+#' (QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
+#' I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz)
+#' gb(I)
 #'
 #'
 #' ##### more advanced usage
@@ -65,15 +69,15 @@
 #' I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
 #' gb_(I)
 #'
+#' I. <- ideal.(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
+#' gb_(I.)
+#'
 #'
 #' ##### still broken
 #' ########################################
 #'
 #' gb("x*y", "x*z", "x", raw_chars = TRUE)
 #'
-#' (QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
-#' I. <- ideal.(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz)
-#' gb_(I.)
 #'
 #'
 #'
@@ -122,7 +126,9 @@
 gb <- function(..., ring, degree_limit, raw_chars = FALSE, code = FALSE) {
 
   # grab args
-  x <- list(x = lapply(pryr::dots(...), eval))
+  x <- list(x = lapply(pryr::dots(...), eval, envir = parent.frame()))
+  if(is.list(x) && (length(x) == 1) && is.m2_ideal(x[[c(1,1)]])) x <- x[[1]]
+  if(is.list(x) && (length(x) == 1) && is.m2_ideal_pointer(x[[c(1,1)]])) x <- x[[1]]
   otherArgs <- as.list(match.call(expand.dots = FALSE))[-c(1:2)]
 
   # eval
