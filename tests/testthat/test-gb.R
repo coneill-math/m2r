@@ -149,19 +149,19 @@ test_that("gb_(m2_ideal, ring = m2_polynomialring_pointer",{
 })
 
 
-# test_that("gb_(m2_ideal_pointer, ring = m2_polynomialring",{
-#   R <- ring(c("x","y","z"), "QQ")
-#   I. <- ideal.(mp(c("x y", "x z", "x")), R)
-#   out <- gb_(I.)
-#   expect_equal(out, mpolyList(mp("x")))
-# })
-#
-# test_that("gb_(m2_ideal_pointer., ring = m2_polynomialring_pointer",{
-#   R. <- ring.(c("x","y","z"), "QQ")
-#   I. <- ideal.(mp(c("x y", "x z", "x")), R.)
-#   out <- gb_(I.)
-#   expect_equal(out, mpolyList(mp("x")))
-# })
+test_that("gb_(m2_ideal_pointer, ring = m2_polynomialring",{
+  R <- ring(c("x","y","z"), "QQ")
+  I. <- ideal.(mp(c("x y", "x z", "x")), R)
+  out <- gb_(I.)
+  expect_equal(out, mpolyList(mp("x")))
+})
+
+test_that("gb_(m2_ideal_pointer., ring = m2_polynomialring_pointer",{
+  R. <- ring.(c("x","y","z"), "QQ")
+  I. <- ideal.(mp(c("x y", "x z", "x")), R.)
+  out <- gb_(I.)
+  expect_equal(out, mpolyList(mp("x")))
+})
 
 
 

@@ -29,6 +29,13 @@
 #' ideal(   c("x+y", "x^2+y^2") , QQxy.)
 #' ideal(mp(c("x+y", "x^2+y^2")), QQxy.)
 #'
+#' I  <- ideal (c("x+y", "x^2+y^2"), QQxy.)
+#' I. <- ideal.(c("x+y", "x^2+y^2"), QQxy.)
+#' is.m2_ideal(I)
+#' is.m2_ideal(I.)
+#' is.m2_ideal_pointer(I)
+#' is.m2_ideal_pointer(I.)
+#'
 #' }
 
 

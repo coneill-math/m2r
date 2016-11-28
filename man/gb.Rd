@@ -56,6 +56,7 @@ evaluation equivalent.
 # the last ring evaluated is the one used in the computation
 (QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
 gb("t^4 - x", "t^3 - y", "t^2 - z")
+gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 
 # standard evaluation version
 gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))

@@ -50,8 +50,8 @@ is.m2_ideal <- function (x) inherits(x, "m2_ideal")
 
 #' @export
 #' @rdname is
-is.m2_ideal_pointer <- function (x) is.m2_pointer(x) && (x$m2_class == "PolynomialRing")
-
+is.m2_ideal_pointer <- function (x) is.m2_pointer(x) && (x$m2_class == "Ideal")
+# is.m2_ideal_pointer <- function (x) is.m2_pointer(x) && (x$m2_class == "PolynomialRing")
 
 
 #' @export
