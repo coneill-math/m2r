@@ -199,7 +199,7 @@ gb_. <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
         "ideal(%s)",
         listify(mpolyList_to_m2_str(mp(x)))
       )
-    } else if (is.list(x) && all(vapply(x, is.character, logical(1)))) {
+    } else if (is.list(x) && all(vapply(x, is.character, logical(1))) && !is.m2_ideal_pointer(x)) {
       ideal_param <- sprintf(
         "ideal(%s)",
         listify(mpolyList_to_m2_str(mp(unlist(x))))
@@ -225,7 +225,6 @@ gb_. <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
       ideal_param <- x$m2_name
       ring_param <- x$ring$m2_name
     } else if (is.m2_ideal_pointer(x)) {
-      warning("broken.")
       ideal_param <- x$m2_name
       ring_param <- x$ring$m2_name
     } else {

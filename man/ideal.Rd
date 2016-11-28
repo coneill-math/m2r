@@ -40,10 +40,21 @@ Create a new ideal in Macaulay2
 \dontrun{ requires Macaulay2 be installed
 
 (QQxy <- ring(c("x","y"), coefring = "QQ"))
+ideal(   c("x+y", "x^2+y^2") , QQxy)
 ideal(mp(c("x+y", "x^2+y^2")), QQxy)
 
-(QQxy <- ring(c("x","y"), coefring = "QQ", code = TRUE))
 ideal(mp(c("x+y", "x^2+y^2")), QQxy, code = TRUE)
+
+(QQxy. <- ring.(c("x","y"), coefring = "QQ"))
+ideal(   c("x+y", "x^2+y^2") , QQxy.)
+ideal(mp(c("x+y", "x^2+y^2")), QQxy.)
+
+I  <- ideal (c("x+y", "x^2+y^2"), QQxy.)
+I. <- ideal.(c("x+y", "x^2+y^2"), QQxy.)
+is.m2_ideal(I)
+is.m2_ideal(I.)
+is.m2_ideal_pointer(I)
+is.m2_ideal_pointer(I.)
 
 }
 }
