@@ -2,7 +2,7 @@ context("factor_poly ")
 
 
 # define objects common to the tests
-expected_output <- list(mpolyList = mp(c("x-y", "x+y", "x^2+y^2")), power = c(1L, 1L, 1L))
+expected_output <- list(factor = mp(c("x-y", "x+y", "x^2+y^2")), power = c(1L, 1L, 1L))
 
 
 # run tests

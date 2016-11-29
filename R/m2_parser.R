@@ -3,6 +3,8 @@
 #' Convert a M2 object into an R object
 #'
 #' @param x x
+#' @param s a character(1), typically the result of running
+#'   toExternalString on an M2 object
 #' @param ... ...
 #' @return an R object
 #' @name m2_parser

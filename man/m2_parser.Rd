@@ -14,6 +14,9 @@ m2_parse(s)
 \item{x}{x}
 
 \item{...}{...}
+
+\item{s}{a character(1), typically the result of running
+toExternalString on an M2 object}
 }
 \value{
 an R object

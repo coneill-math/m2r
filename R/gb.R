@@ -53,6 +53,7 @@
 #' (QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
 #' I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz)
 #' gb(I)
+#' ideal(gb(I), QQtxyz)
 #'
 #'
 #' ##### more advanced usage
