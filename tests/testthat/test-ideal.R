@@ -5,10 +5,12 @@ context("ideal ")
 test_that("ideal takes a variety of params",{
 
   param1 <- list(
-    c("x+y", "x^2+y^2"),
-    mp(c("x+y", "x^2+y^2")),
-    list("x+y", "x^2+y^2"),
-    list(mp("x+y"), mp("x^2+y^2"))
+    list(c("x+y", "x^2+y^2"), FALSE),
+    list(mp(c("x+y", "x^2+y^2")), FALSE),
+    list(list("x+y", "x^2+y^2"), FALSE),
+    list(list(mp("x+y"), mp("x^2+y^2")), FALSE),
+    list("x+y, x^2+y^2", TRUE),
+    list(c("x+y", "x^2+y^2"), TRUE)
   )
 
   param2 <- list(
@@ -17,7 +19,8 @@ test_that("ideal takes a variety of params",{
   )
 
   apply(expand.grid(param1, param2), 1, FUN = function(x) {
-    I <- ideal(x[[1]], x[[2]])
+
+    I <- ideal(x[[c(1,1)]], x[[2]], raw_chars = x[[c(1,2)]])
 
     obj <- structure(
       list(
@@ -29,6 +32,7 @@ test_that("ideal takes a variety of params",{
     )
 
     expect_equal(I, obj)
+
   })
 
 })
@@ -38,7 +42,8 @@ test_that("ideal takes a variety of params",{
 test_that("ideal errors with certain params",{
 
   param1 <- list(
-    c(mp("x+y"), mp("x^2+y^2"))
+    list(c(mp("x+y"), mp("x^2+y^2")), FALSE),
+    list("x+y x^2+y^2", TRUE)
   )
 
   param2 <- list(
@@ -47,152 +52,18 @@ test_that("ideal errors with certain params",{
   )
 
   apply(expand.grid(param1, param2), 1, FUN = function(x) {
+
+    msg <- "you appear to have used c*"
+    if (x[[c(1,2)]]) msg <- "Macaulay2 Error"
+
     expect_error(
-      ideal(x[[1]], x[[2]]),
-      "you appear to have used c*"
+      ideal(x[[c(1,1)]], x[[2]], raw_chars = x[[c(1,2)]]),
+      msg
     )
+
   })
 
 })
-
-
-
-#
-# test_that("ideal(chars, ring = m2_polynomialring",{
-#   QQxy <- ring(c("x","y"), "QQ")
-#   I <- ideal(c("x+y", "x^2+y^2"), QQxy)
-#   obj <- structure(
-#     list(
-#       m2_name = I$m2_name,
-#       ring = QQxy,
-#       gens = mp(c("x+y", "x^2+y^2"))
-#     ),
-#     class = c("m2_ideal", "m2")
-#   )
-#   expect_equal(I, obj)
-# })
-#
-# test_that("ideal(mpolyList, ring = m2_polynomialring",{
-#   QQxy <- ring(c("x","y"), "QQ")
-#   I <- ideal(mp(c("x+y", "x^2+y^2")), QQxy)
-#   obj <- structure(
-#     list(
-#       m2_name = I$m2_name,
-#       ring = QQxy,
-#       gens = mp(c("x+y", "x^2+y^2"))
-#     ),
-#     class = c("m2_ideal", "m2")
-#   )
-#   expect_equal(I, obj)
-# })
-#
-# test_that("ideal(list o chars, ring = m2_polynomialring",{
-#   QQxy <- ring(c("x","y"), "QQ")
-#   I <- ideal(list("x+y", "x^2+y^2"), QQxy)
-#   obj <- structure(
-#     list(
-#       m2_name = I$m2_name,
-#       ring = QQxy,
-#       gens = mp(c("x+y", "x^2+y^2"))
-#     ),
-#     class = c("m2_ideal", "m2")
-#   )
-#   expect_equal(I, obj)
-# })
-#
-# test_that("ideal(list o mpolys, ring = m2_polynomialring",{
-#   QQxy <- ring(c("x","y"), "QQ")
-#   I <- ideal(list(mp("x+y"), mp("x^2+y^2")), QQxy)
-#   obj <- structure(
-#     list(
-#       m2_name = I$m2_name,
-#       ring = QQxy,
-#       gens = mp(c("x+y", "x^2+y^2"))
-#     ),
-#     class = c("m2_ideal", "m2")
-#   )
-#   expect_equal(I, obj)
-# })
-
-# test_that("ideal(c'd mpolys, ring = m2_polynomialring",{
-#   QQxy <- ring(c("x","y"), "QQ")
-#   expect_error(
-#     ideal(c(mp("x+y"), mp("x^2+y^2")), QQxy),
-#     "you appear to have used c*"
-#   )
-# })
-
-
-
-
-
-# test_that("ideal(chars, ring = m2_polynomialring_pointer",{
-#   QQxy  <- ring (c("x","y"), "QQ")
-#   QQxy. <- ring.(c("x","y"), "QQ")
-#   I <- ideal(c("x+y", "x^2+y^2"), QQxy.)
-#   obj <- structure(
-#     list(
-#       m2_name = I$m2_name,
-#       ring = m2_parse(QQxy.),
-#       gens = mp(c("x+y", "x^2+y^2"))
-#     ),
-#     class = c("m2_ideal", "m2")
-#   )
-#   expect_equal(I, obj)
-# })
-#
-# test_that("ideal(mpolyList, ring = m2_polynomialring_pointer",{
-#   QQxy. <- ring.(c("x","y"), "QQ")
-#   I <- ideal(mp(c("x+y", "x^2+y^2")), QQxy.)
-#   obj <- structure(
-#     list(
-#       m2_name = I$m2_name,
-#       ring = m2_parse(QQxy.),
-#       gens = mp(c("x+y", "x^2+y^2"))
-#     ),
-#     class = c("m2_ideal", "m2")
-#   )
-#   expect_equal(I, obj)
-# })
-#
-# test_that("ideal(list o chars, ring = m2_polynomialring_pointer",{
-#   QQxy. <- ring.(c("x","y"), "QQ")
-#   I <- ideal(list("x+y", "x^2+y^2"), QQxy.)
-#   obj <- structure(
-#     list(
-#       m2_name = I$m2_name,
-#       ring = m2_parse(QQxy.),
-#       gens = mp(c("x+y", "x^2+y^2"))
-#     ),
-#     class = c("m2_ideal", "m2")
-#   )
-#   expect_equal(I, obj)
-# })
-#
-# test_that("ideal(list o mpolys, ring = m2_polynomialring_pointer",{
-#   QQxy. <- ring.(c("x","y"), "QQ")
-#   I <- ideal(list(mp("x+y"), mp("x^2+y^2")), QQxy.)
-#   obj <- structure(
-#     list(
-#       m2_name = I$m2_name,
-#       ring = m2_parse(QQxy.),
-#       gens = mp(c("x+y", "x^2+y^2"))
-#     ),
-#     class = c("m2_ideal", "m2")
-#   )
-#   expect_equal(I, obj)
-# })
-
-# test_that("ideal(c'd mpolys, ring = m2_polynomialring_pointer",{
-#   QQxy. <- ring.(c("x","y"), "QQ")
-#   expect_error(
-#     ideal(c(mp("x+y"), mp("x^2+y^2")), QQxy.),
-#     "you appear to have used c*"
-#   )
-# })
-
-
-
 
 
 
@@ -205,10 +76,12 @@ context("ideal.")
 test_that("ideal. takes a variety of params",{
 
   param1 <- list(
-    c("x+y", "x^2+y^2"),
-    mp(c("x+y", "x^2+y^2")),
-    list("x+y", "x^2+y^2"),
-    list(mp("x+y"), mp("x^2+y^2"))
+    list(c("x+y", "x^2+y^2"), FALSE),
+    list(mp(c("x+y", "x^2+y^2")), FALSE),
+    list(list("x+y", "x^2+y^2"), FALSE),
+    list(list(mp("x+y"), mp("x^2+y^2")), FALSE),
+    list("x+y, x^2+y^2", TRUE),
+    list(c("x+y", "x^2+y^2"), TRUE)
   )
 
   param2 <- list(
@@ -217,7 +90,8 @@ test_that("ideal. takes a variety of params",{
   )
 
   apply(expand.grid(param1, param2), 1, FUN = function(x) {
-    I <- ideal.(x[[1]], x[[2]])
+
+    I <- ideal.(x[[c(1,1)]], x[[2]], raw_chars = x[[c(1,2)]])
 
     obj <- structure(
       list(
@@ -235,6 +109,7 @@ test_that("ideal. takes a variety of params",{
     )
 
     expect_equal(I, obj)
+
   })
 
 })
@@ -244,7 +119,8 @@ test_that("ideal. takes a variety of params",{
 test_that("ideal. errors with certain params",{
 
   param1 <- list(
-    c(mp("x+y"), mp("x^2+y^2"))
+    list(c(mp("x+y"), mp("x^2+y^2")), FALSE),
+    list("x+y x^2+y^2", TRUE)
   )
 
   param2 <- list(
@@ -253,28 +129,23 @@ test_that("ideal. errors with certain params",{
   )
 
   apply(expand.grid(param1, param2), 1, FUN = function(x) {
+
+    msg <- "you appear to have used c*"
+    if (x[[c(1,2)]]) msg <- "Macaulay2 Error"
+
     expect_error(
-      ideal.(x[[1]], x[[2]]),
-      "you appear to have used c*"
+      ideal.(x[[c(1,1)]], x[[2]], raw_chars = x[[c(1,2)]]),
+      msg
     )
+
   })
 
 })
 
 
-# test_that("ideal.(chars, ring = m2_polynomialring",{
-#   QQxy <- ring(c("x","y"), "QQ")
-#   I. <- ideal.(c("x+y", "x^2+y^2"), QQxy)
-#   obj <- structure(
-#     list(
-#       m2_name = I$m2_name,
-#       ring = QQxy,
-#       gens = mp(c("x+y", "x^2+y^2"))
-#     ),
-#     class = c("m2_ideal", "m2")
-#   )
-#   expect_equal(I, obj)
-# })
+
+
+
 
 
 
