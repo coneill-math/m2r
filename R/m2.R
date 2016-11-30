@@ -144,7 +144,7 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
     )
 
   } else if(is.win()) {
-
+browser()
     # TODO: fix later
     # matFile <- file.path2(dir2, "countCode.latte")
     # matFile <- chartr("\\", "/", matFile)
