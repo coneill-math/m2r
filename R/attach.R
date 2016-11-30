@@ -150,7 +150,7 @@ win_search_and_set <- function(optionName){
   # if(stringr::str_detect(x, "/")) {
   #   set_m2r_option(m2_path = dirname(x))
   # }
-  set_m2r_option(m2_path = "C:\\cygwin\\bin\\M2.exe")
+  set_m2r_option(m2_path = "C:\\cygwin\\bin")
 
 }
 

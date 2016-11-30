@@ -144,20 +144,18 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
     )
 
   } else if(is.win()) {
-browser()
-    # TODO: fix later
-    # matFile <- file.path2(dir2, "countCode.latte")
-    # matFile <- chartr("\\", "/", matFile)
-    # matFile <- str_c("/cygdrive/c", str_sub(matFile, 3))
-    # system2(
-    #   "cmd.exe",
-    #   paste(
-    #     "/c env.exe",
-    #     file.path(getOption("latte_path"), "count"),
-    #     opts, matFile
-    #   ),
-    #   stdout = "countOut", stderr = "countErr"
-    # )
+
+    system2(
+      "cmd.exe",
+      paste(
+        "/K",# env.exe",
+        file.path2(get_m2_path(), "env.exe"),
+        file.path2(get_m2_path(), "M2.exe")
+      ),
+      stdout = NULL, stderr = NULL,
+      stdin = write_to_temp(m2_listen_code(port, timeout)),
+      wait = FALSE
+    )
 
   }
 
