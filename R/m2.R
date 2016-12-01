@@ -144,20 +144,46 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
     )
 
   } else if(is.win()) {
+browser()
 
-    # TODO: fix later
-    # matFile <- file.path2(dir2, "countCode.latte")
-    # matFile <- chartr("\\", "/", matFile)
-    # matFile <- str_c("/cygdrive/c", str_sub(matFile, 3))
-    # system2(
-    #   "cmd.exe",
-    #   paste(
-    #     "/c env.exe",
-    #     file.path(getOption("latte_path"), "count"),
-    #     opts, matFile
-    #   ),
-    #   stdout = "countOut", stderr = "countErr"
-    # )
+    # this works from dos command line with some complaining
+    # env.exe PATH=/usr/bin:/cygdrive/c/cygwin/lib/lapack /usr/bin/M2
+
+    # i've tried the following.... (and more)
+    # env.exe PATH=/usr/bin:$PATH:/cygdrive/c/cygwin/lib/lapack /usr/bin/M2
+    # env.exe PATH=/usr/bin:$PATH:/cygdrive/c/cygwin/lib/lapack:/usr/share/Macaulay2:/usr/share/doc/Macaulay2:/usr/share/Macaulay2/Core /usr/bin/M2
+
+    # ...but i can't stop the complaining unless i use
+    # env.exe PATH=/usr/bin:/cygdrive/c/cygwin/lib/lapack /usr/bin/M2 --no-setup
+    # note: if you run that, "exit" won't work in M2, you have to kill the process
+    # manually from the task manager
+
+    # this launches M2 with no errors... but kills it immediately
+    system("cmd /K C:\\cygwin\\bin\\env.exe PATH=/usr/bin:$PATH:/usr/share/Macaulay2/Core:/usr/share/doc/Macaulay2:/cygdrive/c/cygwin/lib/lapack /usr/bin/M2 --no-setup")
+
+    # and this launches the persistent session, but otherwise doesn't work.
+    # e.g. m2("1+1") hangs
+    system2(
+      "cmd",
+      "/K C:\\cygwin\\bin\\env.exe PATH=/cygdrive/c/cygwin/lib/lapack:/usr/bin /usr/bin/M2 --no-setup",
+      stdout = NULL, stderr = NULL,
+      stdin = write_to_temp(m2_listen_code(port, timeout)),
+      wait = FALSE
+    )
+
+    # creates a process that dies immediately
+#     system2(
+#       "cmd.exe",
+#       paste(
+#         "/K",# env.exe",
+#         file.path2(get_m2_path(), "env.exe"),
+#         "PATH=/cygdrive/c/cygwin/lib/lapack /usr/bin/M2"
+#         # file.path2(get_m2_path(), "M2.exe")
+#       ),
+#       stdout = NULL, stderr = NULL,
+#       stdin = write_to_temp(m2_listen_code(port, timeout)),
+#       wait = FALSE
+#     )
 
   }
 

@@ -12,13 +12,13 @@
 			psm("  It needs to be in your C:\\ drive, but wasn't found.")
 			return(invisible())
 		}
-		if(!whereis_is_accessible()){ # check for whereis, return if not found
-			psm(
-				"The whereis function was not found, so algstat can't find the required exe's.\n",
-				"  Try setting the path with set_m2_path()."
-			)
-			return()
-		}
+		# if(!whereis_is_accessible()){ # check for whereis, return if not found
+		# 	psm(
+		# 		"The whereis function was not found, so algstat can't find the required exe's.\n",
+		# 		"  Try setting the path with set_m2_path()."
+		# 	)
+		# 	return()
+		# }
 		win_search_and_set("m2")
 	}
 
@@ -146,10 +146,11 @@ win_find <- function(s){
 win_search_and_set <- function(optionName){
 
   # search
-  x <- win_find("m2")
-  if(stringr::str_detect(x, "/")) {
-    set_m2r_option(m2_path = dirname(x))
-  }
+  # x <- win_find("m2")
+  # if(stringr::str_detect(x, "/")) {
+  #   set_m2r_option(m2_path = dirname(x))
+  # }
+  set_m2r_option(m2_path = "C:\\cygwin\\bin")
 
 }
 
