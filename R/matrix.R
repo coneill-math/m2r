@@ -33,7 +33,10 @@
 #' @export
 m2_matrix <- function(mat, ring, name, code = FALSE) {
 
-  pointer <- do.call(m2_matrix., as.list(match.call())[-1])
+  # run m2
+  args <- as.list(match.call())[-1]
+  eargs <- lapply(args, eval, envir = parent.frame())
+  pointer <- do.call(m2_matrix., eargs)
 
   # construct R-side matrix, class and return
   matrix <- list(
