@@ -37,11 +37,16 @@ m2_matrix <- function(mat, ring, name, code = FALSE) {
   args <- as.list(match.call())[-1]
   eargs <- lapply(args, eval, envir = parent.frame())
   pointer <- do.call(m2_matrix., eargs)
+  if(code) return(invisible(pointer))
+
+  # parse output
+  parsed_out <- m2_parse(pointer)
 
   # construct R-side matrix, class and return
   matrix <- list(
     m2_name = pointer$m2_name,
-    rmatrix = mat
+    rmatrix = mat,
+    ring = parsed_out$ring
   )
   class(matrix) <- c("m2", "m2_matrix")
   matrix
