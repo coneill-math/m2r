@@ -1,0 +1,1 @@
+The installation instructions for downloading Cygwin and Macaulay2 can be found at http://www.math.uiuc.edu/Macaulay2/Downloads/Microsoft-Windows/Cygwin/index.html
