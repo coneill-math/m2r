@@ -144,7 +144,6 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
     )
 
   } else if(is.win()) {
-browser()
 
     # this works from dos command line with some complaining
     # env.exe PATH=/usr/bin:/cygdrive/c/cygwin/lib/lapack /usr/bin/M2
@@ -159,7 +158,7 @@ browser()
     # manually from the task manager
 
     # this launches M2 with no errors... but kills it immediately
-    system("cmd /K C:\\cygwin\\bin\\env.exe PATH=/usr/bin:$PATH:/usr/share/Macaulay2/Core:/usr/share/doc/Macaulay2:/cygdrive/c/cygwin/lib/lapack /usr/bin/M2 --no-setup")
+    # system("cmd /K C:\\cygwin\\bin\\env.exe PATH=/usr/bin:$PATH:/usr/share/Macaulay2/Core:/usr/share/doc/Macaulay2:/cygdrive/c/cygwin/lib/lapack /usr/bin/M2 --no-setup")
 
     # and this launches the persistent session, but otherwise doesn't work.
     # e.g. m2("1+1") hangs
