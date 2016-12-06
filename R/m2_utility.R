@@ -16,6 +16,14 @@
 #'
 #' m2_getwd()
 #'
+#' x <- 1
+#' class(x) <- "m2"
+#' attr(x, "m2_meta") <- list(a = 1, b = 2)
+#' m2_meta(x)
+#' m2_meta(x, "b")
+#' m2_meta(x, "b") <- 5
+#' m2_meta(x, "b")
+#'
 #'
 #' }
 
@@ -32,12 +40,25 @@ m2_name <- function (x) {
 }
 
 
+
+
 #' @rdname m2_utility
 #' @export
-m2_meta <- function (x, attr) {
+m2_meta <- function (x, m2_attr) {
   if ( !is.m2(x) ) return(NULL)
-  if ( !exists(attr) ) return(attr(x, "m2_meta"))
-  attr(x, "m2_meta")[[attr]]
+  if ( missing(m2_attr) ) return(attr(x, "m2_meta"))
+  attr(x, "m2_meta")[[m2_attr]]
+}
+
+
+#' @rdname m2_utility
+#' @export
+`m2_meta<-` <- function (x, attr, value) {
+  stopifnot( is.m2(x) )
+  meta <- m2_meta(x)
+  meta[[attr]] <- value
+  attr(x, "m2_meta") <- meta
+  x
 }
 
 

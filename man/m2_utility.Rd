@@ -5,6 +5,7 @@
 \alias{m2_getwd}
 \alias{m2_ls}
 \alias{m2_meta}
+\alias{m2_meta<-}
 \alias{m2_name}
 \alias{m2_rm}
 \alias{m2_utility}
@@ -12,7 +13,9 @@
 \usage{
 m2_name(x)
 
-m2_meta(x, attr)
+m2_meta(x, m2_attr)
+
+m2_meta(x, attr) <- value
 
 m2_exists(name)
 
@@ -39,6 +42,14 @@ m2("b = 1")
 m2_exists(c("a","b","c"))
 
 m2_getwd()
+
+x <- 1
+class(x) <- "m2"
+attr(x, "m2_meta") <- list(a = 1, b = 2)
+m2_meta(x)
+m2_meta(x, "b")
+m2_meta(x, "b") <- 5
+m2_meta(x, "b")
 
 
 }
