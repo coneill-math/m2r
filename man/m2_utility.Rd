@@ -4,10 +4,16 @@
 \alias{m2_exists}
 \alias{m2_getwd}
 \alias{m2_ls}
+\alias{m2_meta}
+\alias{m2_name}
 \alias{m2_rm}
 \alias{m2_utility}
 \title{Utility tools for M2}
 \usage{
+m2_name(x)
+
+m2_meta(x, attr)
+
 m2_exists(name)
 
 m2_ls()

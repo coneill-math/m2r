@@ -20,6 +20,27 @@
 #' }
 
 
+
+#' @rdname m2_utility
+#' @export
+m2_name <- function (x) {
+  if ( is.m2(x) ) {
+    attr(x, "m2_name")
+  } else {
+    character(0)
+  }
+}
+
+
+#' @rdname m2_utility
+#' @export
+m2_meta <- function (x, attr) {
+  if ( !is.m2(x) ) return(NULL)
+  if ( !exists(attr) ) return(attr(x, "m2_meta"))
+  attr(x, "m2_meta")[[attr]]
+}
+
+
 #' @rdname m2_utility
 #' @export
 m2_exists <- function(name) {

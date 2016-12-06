@@ -27,18 +27,35 @@
 
 
 
-
-
 #' @rdname m2_parser
 #' @export
-m2_to_r <- function(x, ...) UseMethod("m2_to_r")
+m2_parse <- function(s) {
 
+  if (is.m2_pointer(s)) {
+    tokens <- m2_tokenize(s$ext_str)
+  } else if (is.m2(s)) {
+    return(s)
+  } else {
+    tokens <- m2_tokenize(s)
+  }
 
+  forget(mem_m2.)
+  forget(mem_m2_parse)
 
+  ret <- m2_parse_internal(tokens)
+  ret <- ret$result
 
+  if (is.m2_pointer(s) && is.m2(ret) &&
+      "m2_name" %in% names(ret) && ret$m2_name == "") {
+    ret$m2_name <- s$m2_name
+  }
 
-m2_to_r.default <- function(x, ...) x$ext_str
+  forget(mem_m2.)
+  forget(mem_m2_parse)
 
+  ret
+
+}
 
 
 
@@ -55,12 +72,6 @@ m2_symbol_chars <- function() {
 }
 
 
-
-
-
-
-
-
 # m2 operators, sorted by length for easier tokenizing
 m2_operators <- function() {
   c(
@@ -73,8 +84,6 @@ m2_operators <- function() {
     "[", "]", "{", "}", "(", ")"
   )
 }
-
-
 
 
 
@@ -147,44 +156,9 @@ m2_tokenize <- function(s) {
 
 
 
-
-
-
 # only used for ring parsing!  Don't get greedy!!!!
 mem_m2. <- memoise(function(x) m2.(x))
 mem_m2_parse <- memoise(function(x) m2_parse(x))
-
-
-#' @rdname m2_parser
-#' @export
-m2_parse <- function(s) {
-
-  if (is.m2_pointer(s)) {
-    tokens <- m2_tokenize(s$ext_str)
-  } else if (is.m2(s)) {
-    return(s)
-  } else {
-    tokens <- m2_tokenize(s)
-  }
-
-  forget(mem_m2.)
-  forget(mem_m2_parse)
-
-  ret <- m2_parse_internal(tokens)
-  ret <- ret$result
-
-  if (is.m2_pointer(s) && is.m2(ret) &&
-      "m2_name" %in% names(ret) && ret$m2_name == "") {
-    ret$m2_name <- s$m2_name
-  }
-
-  forget(mem_m2.)
-  forget(mem_m2_parse)
-
-  ret
-
-}
-
 
 
 m2_parse_internal <- function(tokens, start = 1) {
@@ -386,7 +360,6 @@ m2_parse_function.m2_optiontable <- m2_parse_function.m2_hashtable
 m2_parse_function.m2_verticallist <- m2_parse_function.m2_hashtable
 
 
-
 m2_parse_function.m2_symbol <- function(x) {
 
   class(x[[1]]) <- c("m2_symbol","m2")
@@ -426,6 +399,9 @@ m2_parse_object_as_function.m2_symbol <- function(x, params) {
 
 
 
+
+
+
 m2_parse_new <- function(tokens, start = 1) {
 
   i <- start
@@ -444,6 +420,9 @@ m2_parse_new <- function(tokens, start = 1) {
   list(result = ret, nIndex = i)
 
 }
+
+
+
 
 
 
@@ -493,6 +472,8 @@ m2_parse_symbol <- function(tokens, start = 1) {
 
 
 
+
+
 # {A1 => B1, A2 => B2, ...}
 m2_parse_list <- function(tokens, start = 1, open_char = "{", close_char = "}", type_name = "list") {
 
@@ -530,17 +511,12 @@ m2_parse_list <- function(tokens, start = 1, open_char = "{", close_char = "}", 
 
 
 
-
-
 # [A, B, ...]
 m2_parse_array <- function(tokens, start = 1) {
 
   m2_parse_list(tokens, start = start, open_char = "[", close_char = "]", type_name = "array")
 
 }
-
-
-
 
 
 
@@ -571,27 +547,6 @@ m2_parse_sequence <- function(tokens, start = 1, save_paren = FALSE) {
 error_on_fail <- function(t, e) {
   if (!t) stop(e)
 }
-
-
-
-
-
-
-peek <- function(tokens, i) {
-  if (i > length(tokens)) {
-    return(NULL)
-  } else {
-    return(tokens[i])
-  }
-}
-
-
-
-
-
-
-
-
 
 
 

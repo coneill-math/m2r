@@ -3,20 +3,17 @@
 \name{m2_parser}
 \alias{m2_parse}
 \alias{m2_parser}
-\alias{m2_to_r}
 \title{Convert a M2 object into an R object}
 \usage{
-m2_to_r(x, ...)
-
 m2_parse(s)
 }
 \arguments{
+\item{s}{a character(1), typically the result of running
+toExternalString on an M2 object}
+
 \item{x}{x}
 
 \item{...}{...}
-
-\item{s}{a character(1), typically the result of running
-toExternalString on an M2 object}
 }
 \value{
 an R object
