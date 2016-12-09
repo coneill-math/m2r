@@ -127,7 +127,7 @@ m2_parse_function.m2_map <- function(x) {
     if (!is.null(R1$vars)) {
       # convert to mpolys
       for (i in 1:length(x[[3]])) {
-        x[[c(3,i)]] = lapply(x[[c(3,i)]], function(.) mp(.))
+        x[[c(3,i)]] = lapply(x[[c(3,i)]], function(.) mp(as.character(.)))
       }
     }
 
