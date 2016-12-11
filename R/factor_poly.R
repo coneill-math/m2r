@@ -56,10 +56,13 @@ factor_poly <- function (mpoly, ring, code = FALSE) {
   parsed_out <- m2_parse(pointer)
 
   # reformat and out
-  mpolyList <- lapply(parsed_out, function(.) mp(.[[1]]))
-  class(mpolyList) <- "mpolyList"
-  powers <- vapply(parsed_out, `[[`, integer(1), 2)
-  list(factor = mpolyList, power = powers)
+  list(
+    factor = structure(
+      lapply(parsed_out, function(.) mp(.[[1]])),
+      class = "mpolyList"
+    ),
+    power = vapply(parsed_out, `[[`, integer(1), 2)
+  )
 
 }
 
@@ -72,13 +75,15 @@ factor_poly <- function (mpoly, ring, code = FALSE) {
 factor_poly. <- function (mpoly, ring, code = FALSE, ...) {
 
   # basic arg checking
-  if (!is.m2_pointer(ring) && ring$coefring != "QQ" && ring$coefring != "ZZ") {
+  if (!is.m2_pointer(ring) &&
+      m2_meta(ring, "coefring") != "QQ" &&
+      m2_meta(ring, "coefring") != "ZZ") {
     stop("factor_poly only supports coefficent rings ZZ or QQ")
   }
 
   # prepare mpoly param
   if (is.m2_pointer(mpoly)) {
-    mpoly_param <- mpoly$m2_name
+    mpoly_param <- m2_name(mpoly)
   } else if (is.character(mpoly)) {
     mpoly_param <- mpoly
   } else if (is.mpoly(mpoly) || is.mpolyList(mpoly)) {
@@ -89,11 +94,11 @@ factor_poly. <- function (mpoly, ring, code = FALSE, ...) {
   if (!missing(ring)) {
     # prepare mpoly param
     if (is.m2_pointer(ring)) {
-      ring_param <- ring$m2_name
+      ring_param <- m2_name(ring)
     } else if (is.character(ring)) {
       ring_param <- ring
     } else if (is.ring(ring)) {
-      ring_param <- ring$m2_name
+      ring_param <- m2_name(ring)
     }
   }
 
@@ -101,12 +106,12 @@ factor_poly. <- function (mpoly, ring, code = FALSE, ...) {
   m2_code <- sprintf("factor(%s)", mpoly_param)
 
   # add ring name if desired
-  if(!missing(ring)) {
+  if (!missing(ring)) {
     m2_code <- paste0(sprintf("use %s; ", ring_param), m2_code)
   }
 
   # message
-  if(code) { message(m2_code); return(invisible(m2_code)) }
+  if (code) { message(m2_code); return(invisible(m2_code)) }
 
   # run m2 and return pointer
   m2.(m2_code)

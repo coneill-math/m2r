@@ -55,14 +55,14 @@ ideal <- function(x, ring, raw_chars = FALSE, code = FALSE, ...) {
   parsed_out <- m2_parse(pointer)
 
   # construct R-side ideal, class and return
-  ideal <- list(
-    m2_name = pointer$m2_name,
-    ring = parsed_out$rmap$ring,
-    gens = structure(parsed_out$rmap$rmatrix[1,], class = "mpolyList")
+  m2_structure(
+    m2_name = m2_name(pointer),
+    m2_class = "m2_ideal",
+    m2_meta = list(
+      ring = m2_meta(m2_meta(parsed_out, "rmap"), "ring"),
+      gens = structure(m2_meta(parsed_out, "rmap")[1,], class = "mpolyList")
+    )
   )
-
-  # could also want to parse ideal to polys here
-  structure(ideal, class = c("m2_ideal", "m2"))
 
 }
 
@@ -108,9 +108,9 @@ ideal. <- function(x, ring, raw_chars = FALSE, code = FALSE, ...) {
   # make ring_param
   if(!missing(ring)) {
     if (is.m2_polynomialring(ring)) {
-      ring_param <- ring$m2_name
+      ring_param <- m2_name(ring)
     } else if (is.m2_polynomialring_pointer(ring)) {
-      ring_param <- ring$m2_name
+      ring_param <- m2_name(ring)
     } else {
       stop("unrecognized input ring. see ?ideal", call. = FALSE)
     }
@@ -127,7 +127,7 @@ ideal. <- function(x, ring, raw_chars = FALSE, code = FALSE, ...) {
   out <- m2.(m2_code)
 
   # change name and return
-  out$m2_name <- ideal_name
+  m2_name(out) <- ideal_name
   out
 }
 
@@ -135,8 +135,11 @@ ideal. <- function(x, ring, raw_chars = FALSE, code = FALSE, ...) {
 
 
 m2_parse_function.m2_ideal <- function(x) {
-  out <- list(m2_name = "", rmap = x[[1]])
-  structure(out, class = c("m2_ideal", "m2"))
+  m2_structure(
+    m2_name = "",
+    m2_class = "m2_ideal",
+    m2_meta = list(rmap = x[[1]])
+  )
 }
 
 
@@ -148,12 +151,14 @@ print.m2_ideal <- function(x, ...) {
   # from print.m2_polynomialring
   s <- sprintf(
     "ring %s[%s] (%s)",
-    x$ring$coefring, paste(x$ring$vars, collapse = ","), x$ring$order
+    m2_meta(m2_meta(x, "ring"), "coefring"),
+    paste(m2_meta(m2_meta(x, "ring"), "vars"), collapse = ","),
+    m2_meta(m2_meta(x, "ring"), "order")
   )
 
   # ideal stuff
   cat("M2 Ideal of", s, "with generators:", "\n")
-  gens_strings <- print(x$gens, silent = TRUE)
+  gens_strings <- print(m2_meta(x, "gens"), silent = TRUE)
   cat(paste("<", paste(gens_strings, collapse = ",  "), ">"))
   # cat(str_pad(gens_strings, nchar(gens_strings)+2, side = "left"), sep = "\n")
   invisible(x)

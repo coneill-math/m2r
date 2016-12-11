@@ -18,36 +18,49 @@ test_that("snf works properly", {
   apply(expand.grid(param1, list(1)), 1, FUN = function(x) {
 
     mats <- snf(x[[1]])
-    P <- mats$P; D <- mats$D; Q <- mats$Q
 
-    # test P
-    expect_equal(
-      P, matrix(c(
-        1L, 33471L, -43292L, 0L,
-        0L, 1L, 0L, 0L,
-        0L, 0L, 1L, 0L,
-        0L, 0L, 0L, 1L
-      ), nrow = 4, byrow = TRUE)
+    expected_output <- list(
+      D = m2_structure(
+        matrix(c(
+          135654L, 0L, 0L,
+          0L, 1L, 0L,
+          0L, 0L, 1L,
+          0L, 0L, 0L
+        ), nrow = 4, byrow = TRUE),
+        m2_name = m2_name(mats$D),
+        m2_class = "m2_matrix",
+        m2_meta = list(
+          ring = field_as_ring("ZZ")
+        )
+      ),
+      P = m2_structure(
+        matrix(c(
+          1L, 33471L, -43292L, 0L,
+          0L, 1L, 0L, 0L,
+          0L, 0L, 1L, 0L,
+          0L, 0L, 0L, 1L
+        ), nrow = 4, byrow = TRUE),
+        m2_name = m2_name(mats$P),
+        m2_class = "m2_matrix",
+        m2_meta = list(
+          ring = field_as_ring("ZZ")
+        )
+      ),
+      Q = m2_structure(
+        matrix(c(
+          171927L, -42421L,  54868L,
+          93042L, -22957L,  29693L,
+          -74119L,  18288L, -23654L
+        ), nrow = 3, byrow = TRUE),
+        m2_name = m2_name(mats$Q),
+        m2_class = "m2_matrix",
+        m2_meta = list(
+          ring = field_as_ring("ZZ")
+        )
+      )
     )
 
-    # test D
-    expect_equal(
-      D, matrix(c(
-        135654L, 0L, 0L,
-        0L, 1L, 0L,
-        0L, 0L, 1L,
-        0L, 0L, 0L
-      ), nrow = 4, byrow = TRUE)
-    )
-
-    # test Q
-    expect_equal(
-      Q, matrix(c(
-        171927L, -42421L,  54868L,
-         93042L, -22957L,  29693L,
-        -74119L,  18288L, -23654L
-      ), nrow = 3, byrow = TRUE)
-    )
+    expect_equal(mats, expected_output)
 
     # this is testing M2 more than m2r, skipping
     #

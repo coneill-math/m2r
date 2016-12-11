@@ -35,7 +35,7 @@
 #' ########################################
 #'
 #' (integer_pointer <- m2.("218700"))
-#' integer_pointer$m2_name
+#' m2_name(integer_pointer)
 #' factor_n(integer_pointer, code = TRUE)
 #' factor_n(integer_pointer)
 #'
@@ -61,10 +61,10 @@
 #'
 #' # here's a workaround:
 #' factor_pointer <- factor_n.("32344325422364353453")
-#' factor_pointer$ext_str
+#' m2_meta(factor_pointer, "ext_str")
 #' extract_factors <- function(pointer) {
 #'   require(stringr)
-#'   str <- pointer$ext_str
+#'   str <- m2_meta(pointer, "ext_str")
 #'   str <- str_sub(str, 19, -2)
 #'   str <- str_extract_all(str, "\\{[0-9]+,[0-9]+\\}")[[1]]
 #'   str <- str_sub(str, 2, -2)
@@ -95,7 +95,7 @@ factor_n <- function (n, code = FALSE, gmp = FALSE, ...) {
   args <- as.list(match.call())[-1]
   eargs <- lapply(args, eval, envir = parent.frame())
   pointer <- do.call(factor_n., eargs)
-  if(code) return(invisible(pointer))
+  if (code) return(invisible(pointer))
 
   # parse output
   parsed_out <- m2_parse(pointer)
@@ -116,13 +116,11 @@ factor_n. <- function (n, code = FALSE, ...) {
   # arg checking
   # compute factor with m2, e.g. "2^2*67*97*9433"
   if (is.m2_pointer(n)) {
-    param <- n$m2_name
+    param <- m2_name(n)
+  } else if (is.numeric(n)) {
+    param <- as.character(format(n, scientific = FALSE)) # for big Z's
   } else {
-    if (is.numeric(n)) {
-      param <- as.character(format(n, scientific = FALSE)) # for big Z's
-    } else {
-      param <- n
-    }
+    param <- n
   }
 
   # create code and message

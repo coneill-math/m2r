@@ -32,7 +32,7 @@
 m2_parse <- function(s) {
 
   if (is.m2_pointer(s)) {
-    tokens <- m2_tokenize(s$ext_str)
+    tokens <- m2_tokenize(m2_meta(s, "ext_str"))
   } else if (is.m2(s)) {
     return(s)
   } else {
@@ -46,8 +46,8 @@ m2_parse <- function(s) {
   ret <- ret$result
 
   if (is.m2_pointer(s) && is.m2(ret) &&
-      "m2_name" %in% names(ret) && ret$m2_name == "") {
-    ret$m2_name <- s$m2_name
+      !is.null(m2_name(ret)) && m2_name(ret) == "") {
+    m2_name(ret) <- m2_name(s)
   }
 
   forget(mem_m2.)
@@ -433,14 +433,14 @@ m2_parse_symbol <- function(tokens, start = 1) {
 
   ptr <- mem_m2.(sym_name)
 
-  if (ptr$m2_class %in% m2_ring_class_names()) {
+  if (m2_meta(ptr, "m2_class") %in% m2_ring_class_names()) {
 
     ret <- ""
     if (sym_name %in% m2_coefrings()) {
       ret <- field_as_ring(sym_name)
     } else {
       ret <- mem_m2_parse(ptr)
-      ret$m2_name <- sym_name
+      m2_name(ret) <- sym_name
     }
 
     while (i <= length(tokens) && tokens[i] == "_") i <- i + 2

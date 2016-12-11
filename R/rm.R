@@ -10,11 +10,11 @@
 #' \dontrun{ requires Macaulay2 be installed
 #'
 #' R <- ring(c("x1", "x2", "x3"))
-#' m2(paste("class", R$m2_name))
+#' m2(paste("class", m2_name(R)))
 #'
 #' rm_m2(R)
 #'
-#' m2(paste("class", R$m2_name))
+#' m2(paste("class", m2_name(R)))
 #'
 #' }
 #'
@@ -25,7 +25,7 @@ rm_m2 <- function (x) {
     return(invisible())
   }
 
-  m2(paste(x$m2_name, "=symbol", x$m2_name))
+  m2(paste(m2_name(x), "=symbol", m2_name(x)))
 
   invisible()
 }

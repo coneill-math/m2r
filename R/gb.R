@@ -167,7 +167,7 @@ gb_ <- function(x, ring, degree_limit,  raw_chars = FALSE, code = FALSE, ...) {
   parsed_out <- m2_parse(pointer)
 
   # more parsing
-  out <- structure(parsed_out$rmatrix[1,], class = "mpolyList")
+  out <- structure(parsed_out[1,], class = "mpolyList")
 
   # return
   out
@@ -190,7 +190,7 @@ gb_. <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
   if(is.m2_ideal(x) && !missing(ring)) {
     warning(
       "Grobner bases of ideal objects always use their rings\n",
-      "if you want to change the ring, use (ideal)$gens"
+      "if you want to change the ring, use m2_meta((ideal),\"gens\")"
     )
   }
   if(is.m2_ideal_pointer(x) && !missing(ring)) {
@@ -229,11 +229,11 @@ gb_. <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
         listify(mpolyList_to_m2_str(   x ))
       )
     } else if (is.m2_ideal(x)) {
-      ideal_param <- x$m2_name
-      ring_param <- x$ring$m2_name
+      ideal_param <- m2_name(x)
+      ring_param <- m2_name(m2_meta(x, "ring"))
     } else if (is.m2_ideal_pointer(x)) {
-      ideal_param <- x$m2_name
-      ring_param <- x$ring$m2_name
+      ideal_param <- m2_name(x)
+      ring_param <- m2_name(m2_meta(x, "ring"))
     } else {
       stop("unrecognized input x. see ?gb", call. = FALSE)
     }
@@ -241,9 +241,9 @@ gb_. <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
 
   if (!missing(ring) && !(is.m2_ideal(x) || is.m2_ideal_pointer(x))) {
     if (is.m2_polynomialring(ring)) {
-      ring_param <- ring$m2_name
+      ring_param <- m2_name(ring)
     } else if (is.m2_polynomialring_pointer(ring)) {
-      ring_param <- ring$m2_name
+      ring_param <- m2_name(ring)
     } else if(is.character(ring) && length(ring) == 1) {
       ring_param <- ring
     } else {

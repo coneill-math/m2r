@@ -33,13 +33,13 @@ solve_system <- function (mpolyList) {
   pointer <- solve_system.(mpolyList)
 
   # parse output
-  solutions <- list(
-    m2_name = pointer$m2_name,
-    sols = m2_pts_str_to_list(pointer$ext_str)
+  m2_structure(
+    m2_name = m2_name(pointer),
+    m2_class = "m2_solutions",
+    m2_meta = list(
+      sols = m2_pts_str_to_list(m2_meta(pointer, "ext_str"))
+    )
   )
-
-  # class and out
-  structure(solutions, class = c("m2", "m2_solutions"))
 
 }
 
@@ -50,7 +50,7 @@ solve_system <- function (mpolyList) {
 solve_system. <- function (mpolyList) {
 
   poly_str <- mpolyList_to_m2_str(mpolyList)
-  var_str <- suppressMessages(paste0(vars(mpolyList),collapse=","))
+  var_str <- suppressMessages(paste0(vars(mpolyList), collapse=","))
 
   # create m2 code
   m2_code <- sprintf('
@@ -79,7 +79,7 @@ mixed_volume <- function (mpolyList) {
     mixedVolume( %s )
   ', var_str, listify(poly_str))
 
-  m2.(m2_code)$ext_str
+  m2_meta(m2.(m2_code), "ext_str")
 }
 
 

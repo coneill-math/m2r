@@ -15,9 +15,9 @@
 #'
 #' (mymatrix <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
 #'
-#' mymatrix$m2_name
-#' m2(mymatrix$m2_name)
-#' m2(paste0("class(", mymatrix$m2_name, ")"))
+#' m2_name(mymatrix)
+#' m2(m2_name(mymatrix))
+#' m2(paste0("class(", m2_name(mymatrix), ")"))
 #'
 #' ring(c("x","y","z"))
 #' mat <- matrix(mp(c("x","y","x+y","y-2","x-3","y-z")), nrow = 2, ncol = 3)
@@ -37,19 +37,20 @@ m2_matrix <- function(mat, ring, name, code = FALSE) {
   args <- as.list(match.call())[-1]
   eargs <- lapply(args, eval, envir = parent.frame())
   pointer <- do.call(m2_matrix., eargs)
-  if(code) return(invisible(pointer))
+  if (code) return(invisible(pointer))
 
   # parse output
   parsed_out <- m2_parse(pointer)
 
   # construct R-side matrix, class and return
-  matrix <- list(
-    m2_name = pointer$m2_name,
-    rmatrix = mat,
-    ring = parsed_out$ring
+  m2_structure(
+    mat,
+    m2_name = m2_name(pointer),
+    m2_class = "m2_matrix",
+    m2_meta = list(
+      ring = m2_meta(parsed_out, "ring")
+    )
   )
-  class(matrix) <- c("m2", "m2_matrix")
-  matrix
 }
 
 
@@ -67,10 +68,10 @@ m2_matrix. <- function(mat, ring, name, code = FALSE) {
   }
 
   # prep ring string
-  ring_str <- if(missing(ring)) "" else paste0("*1_", ring$m2_name)
+  ring_str <- if (missing(ring)) "" else paste0("*1_", m2_name(ring))
 
   # make matrix name
-  if(missing(name)) {
+  if (missing(name)) {
     matrix_name <- name_and_increment("matrix", "m2_matrix_count")
   } else {
     matrix_name <- name
@@ -91,7 +92,7 @@ m2_matrix. <- function(mat, ring, name, code = FALSE) {
 
   # run m2 and add name
   out <- m2.(m2_code)
-  out$m2_name <- matrix_name
+  m2_name(out) <- matrix_name
 
   # return
   out
@@ -113,40 +114,46 @@ m2_parse_function.m2_map <- function(x) {
     stop("Parsing error: map between different rings not supported")
   }
 
+  has_vars <- !is.null(m2_meta(R1, "vars"))
+
   if (is.integer(x[[3]]) && x[[3]] == 0) {
-    if (is.null(R1$vars)) {
+
+    if (!has_vars) {
       mat <- matrix(numeric(0), nrow = 0, ncol = 0)
     } else {
       mat <- matrix(character(0), nrow = 0, ncol = 0)
     }
+
   } else {
+
     if (!is.list(x[[3]]) || !is.list(x[[c(3,1)]])) {
       stop("Parsing error: unsupported map format")
     }
 
-    if (!is.null(R1$vars)) {
+    if (has_vars) {
       # convert to mpolys
       for (i in 1:length(x[[3]])) {
-        x[[c(3,i)]] = lapply(x[[c(3,i)]], function(.) mp(as.character(.)))
+        x[[c(3,i)]] <- lapply(x[[c(3,i)]], function(.) mp(as.character(.)))
       }
     }
 
     nrow <- length(x[[3]])
     ncol <- length(x[[c(3,1)]])
 
-    if (is.null(R1$vars)) {
+    if (!has_vars) {
       mat <- t(matrix(unlist(x[[3]]), nrow = ncol, ncol = nrow))
     } else {
-      mat <- t(matrix(unlist(x[[3]], recursive=FALSE), nrow = ncol, ncol = nrow))
+      mat <- t(matrix(unlist(x[[3]], recursive = FALSE), nrow = ncol, ncol = nrow))
     }
 
   }
 
-  matrix <- list(
+  m2_structure(
+    mat,
     m2_name = "",
-    rmatrix = mat,
-    ring = R1
+    m2_class = "m2_matrix",
+    m2_meta = list(
+      ring = R1
+    )
   )
-  class(matrix) <- c("m2_matrix", "m2")
-  matrix
 }

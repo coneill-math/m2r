@@ -40,6 +40,13 @@ m2_name <- function (x) {
 }
 
 
+#' @rdname m2_utility
+#' @export
+`m2_name<-` <- function (x, value) {
+  stopifnot( is.m2(x) )
+  attr(x, "m2_name") <- value
+  x
+}
 
 
 #' @rdname m2_utility
@@ -53,11 +60,39 @@ m2_meta <- function (x, m2_attr) {
 
 #' @rdname m2_utility
 #' @export
-`m2_meta<-` <- function (x, attr, value) {
+`m2_meta<-` <- function (x, m2_attr, value) {
   stopifnot( is.m2(x) )
-  meta <- m2_meta(x)
-  meta[[attr]] <- value
-  attr(x, "m2_meta") <- meta
+  if (missing(m2_attr)) {
+    attr(x, "m2_meta") <- value
+  } else {
+    meta <- m2_meta(x)
+    meta[[m2_attr]] <- value
+    attr(x, "m2_meta") <- meta
+  }
+  x
+}
+
+
+#' @rdname m2_utility
+#' @export
+m2_structure <- function (x = NA, m2_name, m2_class, m2_meta) {
+
+  if (!missing(m2_class)) {
+    class(x) <- c(m2_class, "m2")
+  }
+
+  if (!missing(m2_name)) {
+    m2_name(x) <- m2_name
+  }
+
+  # if (m2_meta(x) != NULL) {
+  #   m2_meta(x)
+  # }
+
+  if (!missing(m2_meta)) {
+    m2_meta(x) <- m2_meta
+  }
+
   x
 }
 

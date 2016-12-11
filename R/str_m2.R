@@ -27,7 +27,7 @@ str_m2.default <- function(object, ...) {
   cat("M2 Object\n")
   cat(sprintf("    Type : %s\n", class(object)[1]))
   # cat(sprintf("  R Name : %s\n", deparse(substitute(object))))
-  cat(sprintf(" M2 Name : %s\n", object$m2_name))
+  cat(sprintf(" M2 Name : %s\n", m2_name(object)))
 }
 
 
@@ -36,11 +36,12 @@ str_m2.default <- function(object, ...) {
 str_m2.m2_polynomialring <- function(object, ...){
 
   cat("M2 Object\n")
-  cat(sprintf("    Type : %s\n", class(object)[1]))
+  cat(sprintf("     Type : %s\n", class(object)[1]))
   # cat(sprintf("  R Name : %s\n", deparse(substitute(object))))
-  cat(sprintf(" M2 Name : %s\n", object$m2_name))
-  cat(sprintf("    Vars : %s\n", paste(object$vars, collapse = ", ")))
-  cat(sprintf("   Order : %s\n", object$order))
+  cat(sprintf("  M2 Name : %s\n", m2_name(object)))
+  cat(sprintf(" Coefring : %s\n", m2_meta(object, "coefring")))
+  cat(sprintf("     Vars : %s\n", paste(m2_meta(object, "vars"), collapse = ", ")))
+  cat(sprintf("    Order : %s\n", m2_meta(object, "order")))
 
   invisible(object)
 }

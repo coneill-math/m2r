@@ -22,10 +22,10 @@
 #'
 #' (myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 #'
-#' myring$m2_name
-#' myring$vars
-#' myring$coefring
-#' myring$order
+#' m2_name(myring)
+#' m2_meta(myring, "vars")
+#' m2_meta(myring, "coefring")
+#' m2_meta(myring, "order")
 #'
 #' ##### other options
 #' ########################################
@@ -58,12 +58,14 @@ ring <- function(
   if(code) return(invisible(pointer))
 
   # construct R-side ring, class and return
-  ring <- list(
-    m2_name = pointer$m2_name, coefring = coefring,
-    vars = vars, order = order
+  m2_structure(
+    m2_name = m2_name(pointer),
+    m2_class = "m2_polynomialring",
+    m2_meta = list(
+      coefring = coefring,
+      vars = vars, order = order
+    )
   )
-  class(ring) <- c("m2_polynomialring", "m2")
-  ring
 
 }
 
@@ -115,7 +117,7 @@ ring. <- function(
   # run m2
   ret <- m2.(line)
 
-  ret$m2_name <- ringname
+  m2_name(ret) <- ringname
   ret
 }
 
@@ -126,10 +128,15 @@ ring. <- function(
 # m2 coefficient rings currently supported
 field_as_ring <- function(coefring) {
 
-  ring <- list(m2_name = coefring, coefring = coefring, vars = NULL, order = "grevlex")
-  class(ring) <- c("m2_polynomialring", "m2")
-
-  ring
+  m2_structure(
+    m2_name = coefring,
+    m2_class = "m2_polynomialring",
+    m2_meta = list(
+      coefring = coefring,
+      vars = NULL,
+      order = "grevlex"
+    )
+  )
 
 }
 
@@ -138,7 +145,7 @@ field_as_ring <- function(coefring) {
 m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
 
   monoid <- params[[c(1)]]
-  vars <- c(x$vars)
+  vars <- c(m2_meta(x, "vars"))
   order <- "grevlex"
 
   for (i in 1:length(monoid)) {
@@ -157,10 +164,15 @@ m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
     }
   }
 
-  ring <- list(m2_name = "", coefring = x$coefring, vars = vars, order = order)
-  class(ring) <- c("m2_polynomialring", "m2")
-
-  ring
+  m2_structure(
+    m2_name = "",
+    m2_class = "m2_polynomialring",
+    m2_meta = list(
+      coefring = m2_meta(x, "coefring"),
+      vars = vars,
+      order = order
+    )
+  )
 
 }
 
@@ -197,7 +209,9 @@ print.m2_polynomialring <- function(x, ...){
 
   s <- sprintf(
     "M2 Ring: %s[%s], %s order",
-    x$coefring, paste(x$vars, collapse = ","), x$order
+    m2_meta(x, "coefring"),
+    paste(m2_meta(x, "vars"), collapse = ","),
+    m2_meta(x, "order")
   )
   cat(s)
 

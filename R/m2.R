@@ -271,7 +271,7 @@ reset_m2 <- function(port = 27436L, timeout = 10) {
 #' @export
 #' @rdname m2_call
 m2 <- function(code, timeout = -1) {
-  do.call(m2., as.list(match.call())[-1])$ext_str
+  m2_meta(do.call(m2., as.list(match.call())[-1]), "ext_str")
 }
 
 
@@ -340,30 +340,18 @@ m2. <- function(code, timeout = -1) {
     output <- NULL
   }
 
-  # aggregate and class
-  out <- list(
-    ext_str = output,
+  # assemble pointer object and return
+  m2_structure(
     m2_name = m2_name,
-    m2_class = m2_class,
-    m2_class_class = m2_class_class
+    m2_class = "m2_pointer",
+    m2_meta = list(
+      ext_str = output,
+      m2_class = m2_class,
+      m2_class_class = m2_class_class
+    )
   )
-  class(out) <- c("m2_pointer", "m2")
-
-  # return
-  out
 }
 
-
-
-
-
-# if (type2 == "Type") {
-#   setOption("m2_returntype", type1)
-# } else if (type2 == "Ring") {
-#   setOption("m2_returntype", paste("RingElement", type1))
-# } else {
-#   setOption("m2_returntype", paste(c(type1,type2), sep = ","))
-# }
 
 
 
@@ -373,17 +361,17 @@ m2. <- function(code, timeout = -1) {
 #' @rdname m2_call
 print.m2_pointer <- function (x, ...) {
   cat("M2 Pointer Object\n")
-  if(is.null(x$ext_str)) x$ext_str <- ""
+  if(is.null(m2_meta(x, "ext_str"))) m2_meta(x, "ext_str") <- ""
   w <- min(c(options()$width, 80), na.rm = TRUE) - 19
-  if(nchar(x$ext_str) > w) {
-    ext_str <- str_c(str_sub(x$ext_str, 1, w-4), "...")
+  if(nchar(m2_meta(x, "ext_str")) > w) {
+    ext_str <- str_c(str_sub(m2_meta(x, "ext_str"), 1, w-4), "...")
   } else {
-    ext_str <- x$ext_str
+    ext_str <- m2_meta(x, "ext_str")
   }
   cat(sprintf("  ExternalString : %s\n", ext_str))
   # cat(sprintf("          R Name : %s\n", deparse(substitute(x))))
-  cat(sprintf("         M2 Name : %s\n", x$m2_name))
-  cat(sprintf("        M2 Class : %s (%s)\n", x$m2_class, x$m2_class_class))
+  cat(sprintf("         M2 Name : %s\n", m2_name(x)))
+  cat(sprintf("        M2 Class : %s (%s)\n", m2_meta(x, "m2_class"), m2_meta(x, "m2_class_class")))
 }
 
 

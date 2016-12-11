@@ -77,9 +77,9 @@ snf <- function (mat, code = FALSE) {
 
   # list and out
   list(
-    D = parsed_out[[1]]$rmatrix,
-    P = parsed_out[[2]]$rmatrix,
-    Q = parsed_out[[3]]$rmatrix
+    D = parsed_out[[1]],
+    P = parsed_out[[2]],
+    Q = parsed_out[[3]]
   )
 }
 
@@ -92,9 +92,9 @@ snf <- function (mat, code = FALSE) {
 snf. <- function (mat, code = FALSE) {
 
   # arg checking
-  if (is.m2_matrix(mat)) mat <- mat$rmatrix
+  # if (is.m2_matrix(mat)) mat <- mat$rmatrix
   if (is.m2_pointer(mat)) {
-    param <- mat$m2_name
+    param <- m2_name(mat)
   } else {
     if (!is.integer(mat)) stopifnot(all(mat == as.integer(mat)))
     param <- paste0("matrix", listify_mat(mat))
