@@ -126,7 +126,7 @@ ring. <- function(
 
 
 # m2 coefficient rings currently supported
-field_as_ring <- function(coefring) {
+coefring_as_ring <- function(coefring) {
 
   m2_structure(
     m2_name = coefring,

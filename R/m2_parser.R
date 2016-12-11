@@ -437,7 +437,7 @@ m2_parse_symbol <- function(tokens, start = 1) {
 
     ret <- ""
     if (sym_name %in% m2_coefrings()) {
-      ret <- field_as_ring(sym_name)
+      ret <- coefring_as_ring(sym_name)
     } else {
       ret <- mem_m2_parse(ptr)
       m2_name(ret) <- sym_name

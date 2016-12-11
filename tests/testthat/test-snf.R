@@ -30,7 +30,7 @@ test_that("snf works properly", {
         m2_name = m2_name(mats$D),
         m2_class = "m2_matrix",
         m2_meta = list(
-          ring = field_as_ring("ZZ")
+          ring = coefring_as_ring("ZZ")
         )
       ),
       P = m2_structure(
@@ -43,7 +43,7 @@ test_that("snf works properly", {
         m2_name = m2_name(mats$P),
         m2_class = "m2_matrix",
         m2_meta = list(
-          ring = field_as_ring("ZZ")
+          ring = coefring_as_ring("ZZ")
         )
       ),
       Q = m2_structure(
@@ -55,7 +55,7 @@ test_that("snf works properly", {
         m2_name = m2_name(mats$Q),
         m2_class = "m2_matrix",
         m2_meta = list(
-          ring = field_as_ring("ZZ")
+          ring = coefring_as_ring("ZZ")
         )
       )
     )
