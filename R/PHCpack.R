@@ -56,7 +56,7 @@ solve_system. <- function (mpolyList) {
   m2_code <- sprintf('
     needsPackage "PHCpack"
     R := CC[%s];
-    pts := solveSystem {%s};
+    pts := solveSystem %s;
     for i in 0..(#pts-1) list (toExternalString pts#i#Coordinates)
   ', var_str, listify(poly_str))
 
