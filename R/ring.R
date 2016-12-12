@@ -62,8 +62,9 @@ ring <- function(
     m2_name = m2_name(pointer),
     m2_class = "m2_polynomialring",
     m2_meta = list(
+      vars = vars,
       coefring = coefring,
-      vars = vars, order = order
+      order = order
     )
   )
 
@@ -132,8 +133,8 @@ coefring_as_ring <- function(coefring) {
     m2_name = coefring,
     m2_class = "m2_polynomialring",
     m2_meta = list(
-      coefring = coefring,
       vars = NULL,
+      coefring = coefring,
       order = "grevlex"
     )
   )
@@ -155,10 +156,22 @@ m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
       for (j in 1:length(monoid[[c(i,2)]])) {
         if (
           is.m2_option(monoid[[c(i,2,j)]]) &&
-          monoid[[c(i,2,j,1)]] %in% c("Lex", "GLex", "GRevLex")
+          monoid[[c(i,2,j,1)]] %in% c("Lex", "Weights", "GRevLex")
         ) {
+
           order <- monoid[[c(i,2,j,1)]]
-          order <- switch(order, Lex = "lex", GLex = "glex", GRevLex = "grevlex")
+
+          # extra checking for glex
+          if (
+            order == "Weights" &&
+            all(unlist(lapply(monoid[[c(i,2,j,2)]], function(x) x==1)))
+          ) {
+            order <- "glex"
+            break()
+          }
+
+          order <- switch(order, Lex = "lex", GRevLex = "grevlex")
+
         }
       }
     }
@@ -168,8 +181,8 @@ m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
     m2_name = "",
     m2_class = "m2_polynomialring",
     m2_meta = list(
-      coefring = m2_meta(x, "coefring"),
       vars = vars,
+      coefring = m2_meta(x, "coefring"),
       order = order
     )
   )

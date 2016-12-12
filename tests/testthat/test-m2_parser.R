@@ -79,8 +79,8 @@ test_that("m2_parse parses basic data structures",{
     m2_name = "",
     m2_class = "m2_polynomialring",
     m2_meta = list(
-      coefring = "CC",
       vars = c("x","y"),
+      coefring = "CC",
       order = "grevlex"
     )
   )
@@ -163,8 +163,8 @@ test_that("m2 parses harder data structures", {
         m2_name = "R",
         m2_class = "m2_polynomialring",
         m2_meta = list(
-          coefring = "QQ",
           vars = c("a","b","c","e","d","f"),
+          coefring = "QQ",
           order="grevlex"
         )
       )
@@ -178,8 +178,8 @@ test_that("m2 parses harder data structures", {
     m2_name = "",
     m2_class = "m2_polynomialring",
     m2_meta = list(
-      coefring = "CC",
       vars = c("x", "y", "z", "a", "b", "c", "d"),
+      coefring = "CC",
       order = "grevlex"
     )
   )
