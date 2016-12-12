@@ -55,7 +55,7 @@ factor_poly <- function (mpoly, ring, code = FALSE) {
   # parse output
   parsed_out <- m2_parse(pointer)
 
-  # reformat and out
+  # reformat and return
   list(
     factor = structure(
       lapply(parsed_out, function(.) mp(.[[1]])),
@@ -84,10 +84,10 @@ factor_poly. <- function (mpoly, ring, code = FALSE, ...) {
   # prepare mpoly param
   if (is.m2_pointer(mpoly)) {
     mpoly_param <- m2_name(mpoly)
-  } else if (is.character(mpoly)) {
-    mpoly_param <- mpoly
   } else if (is.mpoly(mpoly) || is.mpolyList(mpoly)) {
     mpoly_param <- mpolyList_to_m2_str(mpoly)
+  } else {
+    mpoly_param <- as.character(mpoly)
   }
 
   # prepare ring param (if present)

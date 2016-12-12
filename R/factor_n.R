@@ -100,12 +100,12 @@ factor_n <- function (n, code = FALSE, gmp = FALSE, ...) {
   # parse output
   parsed_out <- m2_parse(pointer)
 
-  # reformat
-  df <- as.data.frame(matrix(unlist(parsed_out), ncol = 2, byrow = TRUE))
-  names(df) <- c("prime", "power")
+  # reformat and return
+  list(
+    prime = vapply(parsed_out, `[[`, integer(1), 1),
+    power = vapply(parsed_out, `[[`, integer(1), 2)
+  )
 
-  # return
-  df
 }
 
 
@@ -124,7 +124,7 @@ factor_n. <- function (n, code = FALSE, ...) {
   }
 
   # create code and message
-  m2_code <- sprintf("factor %s", param)
+  m2_code <- sprintf("factor(%s)", param)
   if(code) { message(m2_code); return(invisible(m2_code)) }
 
   # run m2 and return pointer

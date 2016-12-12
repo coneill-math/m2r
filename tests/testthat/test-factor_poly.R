@@ -1,7 +1,7 @@
 context("factor_poly ")
 
 
-test_that("factor_poly(various)", {
+test_that("factor_poly(formats)", {
 
   # this MUST come first!
   param2 <- list(
@@ -31,6 +31,33 @@ test_that("factor_poly(various)", {
 })
 
 
+test_that("factor_poly(1)", {
+
+  # this MUST come first!
+  param2 <- list(
+    ring (c("x","y"), "QQ")
+  )
+
+  param1 <- list(
+    c  (1),
+    c  ("1"),
+    mp ("1")
+  )
+
+  expected_output <- list(
+    factor = structure(list(), class = "mpolyList"),
+    power = integer(0)
+  )
+
+  apply(expand.grid(param1, param2), 1, FUN = function(x) {
+
+    factors <- factor_poly(x[[1]], x[[2]])
+
+    expect_equal(factors, expected_output)
+
+  })
+
+})
 
 
 
@@ -39,7 +66,7 @@ test_that("factor_poly(various)", {
 context("factor_poly.")
 
 
-test_that("factor_poly(various)", {
+test_that("factor_poly(formats)", {
 
   # this MUST come first!
   param2 <- list(

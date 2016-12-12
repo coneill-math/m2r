@@ -53,7 +53,7 @@ test_that("m2_parse parses basic data structures",{
     m2_name = "",
     m2_class = "m2_matrix",
     m2_meta = list(
-      ring = field_as_ring("ZZ")
+      ring = coefring_as_ring("ZZ")
     )
   )
   m2_parse_test(m2_matrix,m2_matrix_output)
@@ -65,7 +65,7 @@ test_that("m2_parse parses basic data structures",{
     m2_name = "",
     m2_class = "m2_matrix",
     m2_meta = list(
-      ring = field_as_ring("ZZ")
+      ring = coefring_as_ring("ZZ")
     )
   )
   m2_parse_test(m2_empty_matrix,m2_empty_matrix_output)
