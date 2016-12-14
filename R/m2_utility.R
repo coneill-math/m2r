@@ -77,21 +77,10 @@ m2_meta <- function (x, m2_attr) {
 #' @export
 m2_structure <- function (x = NA, m2_name, m2_class, m2_meta) {
 
-  if (!missing(m2_class)) {
-    class(x) <- c(m2_class, "m2")
-  }
-
-  if (!missing(m2_name)) {
-    m2_name(x) <- m2_name
-  }
-
-  # if (m2_meta(x) != NULL) {
-  #   m2_meta(x)
-  # }
-
-  if (!missing(m2_meta)) {
-    m2_meta(x) <- m2_meta
-  }
+  if (!missing(m2_class)) class(x) <- c(m2_class, "m2")
+  if (!missing(m2_name)) m2_name(x) <- m2_name
+  # if (m2_meta(x) != NULL) m2_meta(x)
+  if (!missing(m2_meta)) m2_meta(x) <- m2_meta
 
   x
 }

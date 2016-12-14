@@ -7,15 +7,21 @@
 \alias{m2_meta}
 \alias{m2_meta<-}
 \alias{m2_name}
+\alias{m2_name<-}
 \alias{m2_rm}
+\alias{m2_structure}
 \alias{m2_utility}
 \title{Utility tools for M2}
 \usage{
 m2_name(x)
 
+m2_name(x) <- value
+
 m2_meta(x, m2_attr)
 
-m2_meta(x, attr) <- value
+m2_meta(x, m2_attr) <- value
+
+m2_structure(x = NA, m2_name, m2_class, m2_meta)
 
 m2_exists(name)
 
