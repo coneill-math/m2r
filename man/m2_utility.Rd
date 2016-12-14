@@ -7,15 +7,21 @@
 \alias{m2_meta}
 \alias{m2_meta<-}
 \alias{m2_name}
+\alias{m2_name<-}
 \alias{m2_rm}
+\alias{m2_structure}
 \alias{m2_utility}
 \title{Utility tools for M2}
 \usage{
 m2_name(x)
 
+m2_name(x) <- value
+
 m2_meta(x, m2_attr)
 
-m2_meta(x, attr) <- value
+m2_meta(x, m2_attr) <- value
+
+m2_structure(x = NA, m2_name, m2_class, m2_meta)
 
 m2_exists(name)
 
@@ -26,7 +32,19 @@ m2_rm()
 m2_getwd()
 }
 \arguments{
-\item{name}{name of object}
+\item{x}{an object of class \code{m2}}
+
+\item{value}{the value to assign}
+
+\item{m2_attr}{the name of an M2 attribute}
+
+\item{m2_name}{\code{m2_name}  M2 attribute}
+
+\item{m2_class}{\code{m2_class} M2 attribute}
+
+\item{m2_meta}{\code{m2_meta}  M2 attribute}
+
+\item{name}{a string; the name of a M2 object}
 }
 \description{
 Utility tools for M2

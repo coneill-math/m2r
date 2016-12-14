@@ -51,7 +51,7 @@ factor_n(218700, code = TRUE)
 ########################################
 
 (integer_pointer <- m2.("218700"))
-integer_pointer$m2_name
+m2_name(integer_pointer)
 factor_n(integer_pointer, code = TRUE)
 factor_n(integer_pointer)
 
@@ -77,10 +77,10 @@ factor_n("32344325422364353453")
 
 # here's a workaround:
 factor_pointer <- factor_n.("32344325422364353453")
-factor_pointer$ext_str
+m2_meta(factor_pointer, "ext_str")
 extract_factors <- function(pointer) {
   require(stringr)
-  str <- pointer$ext_str
+  str <- m2_meta(pointer, "ext_str")
   str <- str_sub(str, 19, -2)
   str <- str_extract_all(str, "\\\\{[0-9]+,[0-9]+\\\\}")[[1]]
   str <- str_sub(str, 2, -2)

@@ -51,10 +51,10 @@ ring(c("x", "y"), code = TRUE)
 
 (myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 
-myring$m2_name
-myring$vars
-myring$coefring
-myring$order
+m2_name(myring)
+m2_meta(myring, "vars")
+m2_meta(myring, "coefring")
+m2_meta(myring, "order")
 
 ##### other options
 ########################################

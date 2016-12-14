@@ -31,9 +31,9 @@ Create a new matrix in Macaulay2
 
 (mymatrix <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
 
-mymatrix$m2_name
-m2(mymatrix$m2_name)
-m2(paste0("class(", mymatrix$m2_name, ")"))
+m2_name(mymatrix)
+m2(m2_name(mymatrix))
+m2(paste0("class(", m2_name(mymatrix), ")"))
 
 ring(c("x","y","z"))
 mat <- matrix(mp(c("x","y","x+y","y-2","x-3","y-z")), nrow = 2, ncol = 3)
