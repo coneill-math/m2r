@@ -32,7 +32,19 @@ m2_rm()
 m2_getwd()
 }
 \arguments{
-\item{name}{name of object}
+\item{x}{an object of class \code{m2}}
+
+\item{value}{the value to assign}
+
+\item{m2_attr}{the name of an M2 attribute}
+
+\item{m2_name}{\code{m2_name}  M2 attribute}
+
+\item{m2_class}{\code{m2_class} M2 attribute}
+
+\item{m2_meta}{\code{m2_meta}  M2 attribute}
+
+\item{name}{a string; the name of a M2 object}
 }
 \description{
 Utility tools for M2
