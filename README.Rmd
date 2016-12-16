@@ -193,10 +193,10 @@ Perhaps the easiest way to see this is with a matrix. The `m2_matrix()` creates 
 ```{r objects_1}
 library(magrittr)
 mat <- matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)
-mat %>% m2_matrix.                       # = m2_matrix.(mat)
+mat %>% m2_matrix.   # = m2_matrix.(mat)
 mat %>% m2_matrix. %>% m2_parse
 mat %>% m2_matrix. %>% m2_parse %>% str
-mat %>% m2_matrix                        # = m2_parse(m2_matrix.(mat))
+mat %>% m2_matrix    # = m2_parse(m2_matrix.(mat))
 ```
 
 It may be helpful to think of _every_ `m2` object as being a missing value (`NA`, a `logical(1)`) with two M2 attributes: their name (`m2_name`) and a capture-all named list called `m2_meta`. These can be accessed with `m2_name()` and `m2_meta()`.  For example, a ring, having no analogous object in R, is a `NA` with attributes:
@@ -207,7 +207,7 @@ class(r)
 m2_name(r)
 m2_meta(r)
 ```
-But a matrix isn't:
+But a matrix of integers isn't:
 ```{r objects_3}
 mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2))
 str(mat)
@@ -215,7 +215,7 @@ class(mat)
 m2_name(mat)
 m2_meta(mat)
 ```
-Since a matrix (of integers) is an object in R, it's represented as one.  Since a ring is not, it's an `NA`. 
+Since a matrix of integers is an object in R, it's represented as one.  Since a ring is not, it's an `NA`. 
 
 
 ## Creating your own __m2r__ wrapper

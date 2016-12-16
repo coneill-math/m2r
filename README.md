@@ -257,7 +257,7 @@ Perhaps the easiest way to see this is with a matrix. The `m2_matrix()` creates 
 ``` r
 library(magrittr)
 mat <- matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)
-mat %>% m2_matrix.                       # = m2_matrix.(mat)
+mat %>% m2_matrix.   # = m2_matrix.(mat)
 # M2 Pointer Object
 #   ExternalString : map((ZZ)^3,(ZZ)^2,{{1, 4}, {2, 5}, {3, 6}})
 #          M2 Name : m2rintmatrix00000001
@@ -279,7 +279,7 @@ mat %>% m2_matrix. %>% m2_parse %>% str
 #   .. .. .. ..$ vars    : NULL
 #   .. .. .. ..$ coefring: chr "ZZ"
 #   .. .. .. ..$ order   : chr "grevlex"
-mat %>% m2_matrix                        # = m2_parse(m2_matrix.(mat))
+mat %>% m2_matrix    # = m2_parse(m2_matrix.(mat))
 #      [,1] [,2]
 # [1,]    1    4
 # [2,]    2    5
@@ -313,7 +313,7 @@ m2_meta(r)
 # [1] "grevlex"
 ```
 
-But a matrix isn't:
+But a matrix of integers isn't:
 
 ``` r
 mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2))
@@ -337,7 +337,7 @@ m2_meta(mat)
 # M2 Ring: ZZ[], grevlex order
 ```
 
-Since a matrix (of integers) is an object in R, it's represented as one. Since a ring is not, it's an `NA`.
+Since a matrix of integers is an object in R, it's represented as one. Since a ring is not, it's an `NA`.
 
 Creating your own **m2r** wrapper
 ---------------------------------
