@@ -250,7 +250,7 @@ class(factor_n.(x))
 # [1] "m2_pointer" "m2"
 ```
 
-In fact, `m2_parse()` often creates objects that have an inheritance structure that references `m2` somewhere in the middle of its class structure, with specific structure preceding and general structure succeeding (examples below). Apart from its class, for the object itself the general principle we follow here is this: if the M2 object has a direct analogue in R, it is parsed into that kind of R object and additional M2 properties are kept as metadata (attributes); if there is no direct analogue in R, the object is `NA` with the metadata.
+In fact, `m2_parse()` often creates objects that have an inheritance structure that references `m2` somewhere in the middle of its class structure, with specific structure preceding and general structure succeeding (examples below). Apart from its class, for the object itself the general principle we follow here is this: if the M2 object has a direct analogue in R, it is parsed into that kind of R object and additional M2 properties are kept as metadata (attributes); if there is no direct analogue in R, the object is an `NA` with metadata.
 
 Perhaps the easiest way to see this is with a matrix. The `m2_matrix()` creates a matrix on the M2 side from input on the R side. In the following, to make things more clear we use [**magrittr**'s pipe operator](https://github.com/tidyverse/magrittr), with which the following calls are semantically equivalent: `g(f(x))` and `x %>% f %>% g`.
 
@@ -287,7 +287,7 @@ mat %>% m2_matrix    # = m2_parse(m2_matrix.(mat))
 # M2 Matrix over ZZ[]
 ```
 
-It may be helpful to think of *every* `m2` object as being a missing value (`NA`, a `logical(1)`) with two M2 attributes: their name (`m2_name`) and a capture-all named list called `m2_meta`. These can be accessed with `m2_name()` and `m2_meta()`. For example, a ring, having no analogous object in R, is a `NA` with attributes:
+It may be helpful to think of every `m2` object as being a missing value (`NA`, a `logical(1)`) with two M2 attributes: their name (`m2_name`) and a capture-all named list (`m2_meta`). These can be accessed with `m2_name()` and `m2_meta()`. For example, a ring, having no analogous object in R, is an `NA` with attributes:
 
 ``` r
 r <- ring(c("x","y"), "QQ")
