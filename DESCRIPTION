@@ -1,7 +1,7 @@
 Package: m2r
 Type: Package
 Title: Macaulay2 in R
-Version: 0.0.0
+Version: 0.1.0
 Author: c(person("David", "Kahle", email = "david.kahle@gmail.com", role = c("aut", "cph", "cre")),
   person("Christopher", "O'Neill", email = "musicman3320@gmail.com, role = c("aut", "cph", "cre")),
   person("Jeff", "Sommars", email = "sommars1@uic.edu", role = c("aut", "cph", "cre")))
