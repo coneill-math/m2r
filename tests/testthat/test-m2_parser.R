@@ -54,7 +54,8 @@ test_that("m2_parse parses basic data structures",{
     m2_class = "m2_matrix",
     m2_meta = list(
       ring = coefring_as_ring("ZZ")
-    )
+    ),
+    base_class = "matrix"
   )
   m2_parse_test(m2_matrix,m2_matrix_output)
 
@@ -66,7 +67,8 @@ test_that("m2_parse parses basic data structures",{
     m2_class = "m2_matrix",
     m2_meta = list(
       ring = coefring_as_ring("ZZ")
-    )
+    ),
+    base_class = "matrix"
   )
   m2_parse_test(m2_empty_matrix,m2_empty_matrix_output)
 
@@ -168,7 +170,8 @@ test_that("m2 parses harder data structures", {
           order="grevlex"
         )
       )
-    )
+    ),
+    base_class = "matrix"
   )
   m2_parse_test(m2_ideal, m2_ideal_output)
 
