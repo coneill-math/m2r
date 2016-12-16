@@ -224,12 +224,12 @@ det(Q)
 # [1] -1
 ```
 
-**m2r** internals: pointers and pointer functions
--------------------------------------------------
+**m2r** internals: pointers, reference and value functions, and `m2` objects
+----------------------------------------------------------------------------
 
 At a basic level, **m2r** works by passing strings between R and M2. Originating at the R side, these strings are properly formated M2 code constructed from the inputs to the R functions. That code goes to M2, is evaluated there, and then "exported" with M2's function `toExternalString()`. The resulting string often, but not always, produces the M2 code needed to recreate the object resulting from the evaluation, and in that sense is M2's version of R's `dput()`. That string is passed back into R and parsed there into R-style data structures, typically S3-classed lists.
 
-The R-side parsing of the external string from M2 is an expensive process because it is currently implemented in R as opposed to C++. Consequently (and for other reasons, too!), in some cases you'll want to do a M2 computation from R, but leave the output in M2. Since you will ultimately want something in R referring to the result, nearly every **m2r** function that performs M2 computations as a pointer version. As a simple naming convention, the function that returns the pointer, called the reference function, is determined by the ordinary function, called the value function, by appending a `.`.
+The R-side parsing of the external string from M2 is an expensive process because it is currently implemented in R as opposed to C++. Consequently (and for other reasons, too!), in some cases you'll want to do a M2 computation from R, but leave the output in M2. Since you will ultimately want something in R referring to the result, nearly every **m2r** function that performs M2 computations has a pointer version. As a simple naming convention, the function that returns the pointer, called the reference function, is determined by the ordinary function, called the value function, by appending a `.`.
 
 For example, we've seen that `factor_n()` computes the prime decomposition of a number. The corresponding reference function is `factor_n.()`:
 
@@ -243,26 +243,101 @@ factor_n.(x)
 #         M2 Class : Product (WrapperType)
 ```
 
-All value functions simply wrap reference functions and parse the output with `m2_parse()`, a general M2 parser, often with little more parsing. The general principle we follow here is this: if the M2 object has a direct analogue in R, this is the kind of object it is parsed into and additional M2 properties are kept as metadata; if there is no direct analogue in R, the object is `NA` with the metadata.
+All value functions simply wrap reference functions and parse the output with `m2_parse()`, a general M2 parser, often with little more parsing. `m2_parse()` typically creates an object of class `m2` so that R knows what kind of thing it is. For example:
 
-Perhaps the easiest way to see this is with a matrix. The `m2_matrix()` creates a matrix on the M2 side from input on the R side. In the following, I make use of [**magrittr**'s pipe operator](https://github.com/tidyverse/magrittr) with which the following calls are semantically equivalent: `g(f(x))` and `x %>% f %>% g`.
+``` r
+class(factor_n.(x))
+# [1] "m2_pointer" "m2"
+```
+
+In fact, `m2_parse()` often creates objects that have an inheritance structure that references `m2` somewhere in the middle of its class structure, with specific structure preceding and general structure succeeding (examples below). Apart from its class, for the object itself the general principle we follow here is this: if the M2 object has a direct analogue in R, it is parsed into that kind of R object and additional M2 properties are kept as metadata (attributes); if there is no direct analogue in R, the object is `NA` with the metadata.
+
+Perhaps the easiest way to see this is with a matrix. The `m2_matrix()` creates a matrix on the M2 side from input on the R side. In the following, to make things more clear we use [**magrittr**'s pipe operator](https://github.com/tidyverse/magrittr), with which the following calls are semantically equivalent: `g(f(x))` and `x %>% f %>% g`.
 
 ``` r
 library(magrittr)
 mat <- matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)
-m2_matrix.(mat)
-m2_matrix.(mat) %>% m2_parse
-m2_matrix.(mat) %>% m2_parse %>% str
-m2_matrix(mat) # = m2_parse(m2_matrix.(mat))
+mat %>% m2_matrix.                       # = m2_matrix.(mat)
+# M2 Pointer Object
+#   ExternalString : map((ZZ)^3,(ZZ)^2,{{1, 4}, {2, 5}, {3, 6}})
+#          M2 Name : m2rintmatrix00000001
+#         M2 Class : Matrix (Type)
+mat %>% m2_matrix. %>% m2_parse
+#      [,1] [,2]
+# [1,]    1    4
+# [2,]    2    5
+# [3,]    3    6
+# M2 Matrix over ZZ[]
+mat %>% m2_matrix. %>% m2_parse %>% str
+#  int [1:3, 1:2] 1 2 3 4 5 6
+#  - attr(*, "class")= chr [1:3] "m2_matrix" "m2" "matrix"
+#  - attr(*, "m2_name")= chr "m2rintmatrix00000003"
+#  - attr(*, "m2_meta")=List of 1
+#   ..$ ring:Classes 'm2_polynomialring', 'm2'  atomic [1:1] NA
+#   .. .. ..- attr(*, "m2_name")= chr "ZZ"
+#   .. .. ..- attr(*, "m2_meta")=List of 3
+#   .. .. .. ..$ vars    : NULL
+#   .. .. .. ..$ coefring: chr "ZZ"
+#   .. .. .. ..$ order   : chr "grevlex"
+mat %>% m2_matrix                        # = m2_parse(m2_matrix.(mat))
+#      [,1] [,2]
+# [1,]    1    4
+# [2,]    2    5
+# [3,]    3    6
+# M2 Matrix over ZZ[]
 ```
 
-It may be helpful to think of every `m2` object as being a missing value (`NA`, a `logical(1)`) with M2 metadata stored as attributes. This can be accessed with `m2_meta()`. For example, a ring:
+It may be helpful to think of *every* `m2` object as being a missing value (`NA`, a `logical(1)`) with two M2 attributes: their name (`m2_name`) and a capture-all named list called `m2_meta`. These can be accessed with `m2_name()` and `m2_meta()`. For example, a ring, having no analogous object in R, is a `NA` with attributes:
 
 ``` r
 r <- ring(c("x","y"), "QQ")
 str(r)
+# Classes 'm2_polynomialring', 'm2'  atomic [1:1] NA
+#   ..- attr(*, "m2_name")= chr "m2rintring00000004"
+#   ..- attr(*, "m2_meta")=List of 3
+#   .. ..$ vars    : chr [1:2] "x" "y"
+#   .. ..$ coefring: chr "QQ"
+#   .. ..$ order   : chr "grevlex"
+class(r)
+# [1] "m2_polynomialring" "m2"
+m2_name(r)
+# [1] "m2rintring00000004"
 m2_meta(r)
+# $vars
+# [1] "x" "y"
+# 
+# $coefring
+# [1] "QQ"
+# 
+# $order
+# [1] "grevlex"
 ```
+
+But a matrix isn't:
+
+``` r
+mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2))
+str(mat)
+#  m2_matrix [1:3, 1:2] 1 2 3 4 5 6
+#  - attr(*, "class")= chr [1:3] "m2_matrix" "m2" "matrix"
+#  - attr(*, "m2_name")= chr "m2rintmatrix00000005"
+#  - attr(*, "m2_meta")=List of 1
+#   ..$ ring:Classes 'm2_polynomialring', 'm2'  atomic [1:1] NA
+#   .. .. ..- attr(*, "m2_name")= chr "ZZ"
+#   .. .. ..- attr(*, "m2_meta")=List of 3
+#   .. .. .. ..$ vars    : NULL
+#   .. .. .. ..$ coefring: chr "ZZ"
+#   .. .. .. ..$ order   : chr "grevlex"
+class(mat)
+# [1] "m2_matrix" "m2"        "matrix"
+m2_name(mat)
+# [1] "m2rintmatrix00000005"
+m2_meta(mat)
+# $ring
+# M2 Ring: ZZ[], grevlex order
+```
+
+Since a matrix (of integers) is an object in R, it's represented as one. Since a ring is not, it's an `NA`.
 
 Creating your own **m2r** wrapper
 ---------------------------------
@@ -313,7 +388,7 @@ f <- function(esntl_parm_1, esntl_parm_2, code = FALSE, parse_parm_1, parse_parm
   # parse output
   parsed_out <- m2_parse(pointer)
 
-  # more parsing
+  # more parsing, like changing classes and such
   TRUE
 
   # return
