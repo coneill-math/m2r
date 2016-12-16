@@ -21,7 +21,7 @@ m2_meta(x, m2_attr)
 
 m2_meta(x, m2_attr) <- value
 
-m2_structure(x = NA, m2_name, m2_class, m2_meta)
+m2_structure(x = NA, m2_name, m2_class, m2_meta, base_class)
 
 m2_exists(name)
 
@@ -43,6 +43,10 @@ m2_getwd()
 \item{m2_class}{\code{m2_class} M2 attribute}
 
 \item{m2_meta}{\code{m2_meta}  M2 attribute}
+
+\item{base_class}{a base class; an R class to use for dispatching
+if there is no relevant method for the other classes (e.g.
+\code{m2})}
 
 \item{name}{a string; the name of a M2 object}
 }
