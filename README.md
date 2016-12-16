@@ -151,12 +151,11 @@ You can compute [prime decompositions](https://en.wikipedia.org/wiki/Integer_fac
 (x <- 2^5 * 3^4 * 5^3 * 7^2 * 11^1)
 # [1] 174636000
 factor_n(x)
-#   prime power
-# 1     2     5
-# 2     3     4
-# 3     5     3
-# 4     7     2
-# 5    11     1
+# $prime
+# [1]  2  3  5  7 11
+# 
+# $power
+# [1] 5 4 3 2 1
 ```
 
 You can also [factor polynomials](https://en.wikipedia.org/wiki/Factorization) over rings using `factor_poly()`:
@@ -193,18 +192,19 @@ M <- matrix(c(
 # [1,]   12    0    0
 # [2,]    0    6    0
 # [3,]    0    0    2
-# 
+# M2 Matrix over ZZ[]
 # $P
 #      [,1] [,2] [,3]
 # [1,]    1    0    1
 # [2,]    0    1    0
 # [3,]    0    0    1
-# 
+# M2 Matrix over ZZ[]
 # $Q
 #      [,1] [,2] [,3]
 # [1,]    4   -2   -1
 # [2,]   -2    3    1
 # [3,]    3   -2   -1
+# M2 Matrix over ZZ[]
 P <- mats$P; D <- mats$D; Q <- mats$Q
 
 P %*% M %*% Q                # = D
@@ -229,7 +229,7 @@ det(Q)
 
 At a basic level, **m2r** works by passing strings between R and M2. Originating at the R side, these strings are properly formated M2 code constructed from the inputs to the R functions. That code goes to M2, is evaluated there, and then "exported" with M2's function `toExternalString()`. The resulting string often, but not always, produces the M2 code needed to recreate the object resulting from the evaluation, and in that sense is M2's version of R's `dput()`. That string is passed back into R and parsed there into R-style data structures, typically S3-classed lists.
 
-The R-side parsing of the external string from M2 is an expensive process because it is currently implemented in R (as opposed to C++). Consequently (and for other reasons, too!), in some cases you'll want to do a M2 computation from R, but leave the output in M2. Since you will ultimately want something in R referring to the result, nearly every **m2r** function that performs M2 computations as a pointer version. As a simple naming convention, the function that returns the pointer, called the reference function, is determined by the ordinary function, called the value function, by appending a `.`.
+The R-side parsing of the external string from M2 is an expensive process because it is currently implemented in R as opposed to C++. Consequently (and for other reasons, too!), in some cases you'll want to do a M2 computation from R, but leave the output in M2. Since you will ultimately want something in R referring to the result, nearly every **m2r** function that performs M2 computations as a pointer version. As a simple naming convention, the function that returns the pointer, called the reference function, is determined by the ordinary function, called the value function, by appending a `.`.
 
 For example, we've seen that `factor_n()` computes the prime decomposition of a number. The corresponding reference function is `factor_n.()`:
 
@@ -241,33 +241,27 @@ factor_n.(x)
 #   ExternalString : new Product from {new Power from {2,5},new Power fro...
 #          M2 Name : m2o204
 #         M2 Class : Product (WrapperType)
-factor_n.(x)$ext_str
-# [1] "new Product from {new Power from {2,5},new Power from {3,4},new Power from {5,3},new Power from {7,2},new Power from {11,1}}"
 ```
 
-All value functions simply wrap reference functions and parse the output with `m2_parse()`, a general M2 parser, often with little more parsing:
+All value functions simply wrap reference functions and parse the output with `m2_parse()`, a general M2 parser, often with little more parsing. The general principle we follow here is this: if the M2 object has a direct analogue in R, this is the kind of object it is parsed into and additional M2 properties are kept as metadata; if there is no direct analogue in R, the object is `NA` with the metadata.
+
+Perhaps the easiest way to see this is with a matrix. The `m2_matrix()` creates a matrix on the M2 side from input on the R side. In the following, I make use of [**magrittr**'s pipe operator](https://github.com/tidyverse/magrittr) with which the following calls are semantically equivalent: `g(f(x))` and `x %>% f %>% g`.
 
 ``` r
-factor_n
-# function (n, code = FALSE, gmp = FALSE, ...) {
-# 
-#   # run m2
-#   args <- as.list(match.call())[-1]
-#   eargs <- lapply(args, eval, envir = parent.frame())
-#   pointer <- do.call(factor_n., eargs)
-#   if(code) return(invisible(pointer))
-# 
-#   # parse output
-#   parsed_out <- m2_parse(pointer)
-# 
-#   # reformat
-#   df <- as.data.frame(matrix(unlist(parsed_out), ncol = 2, byrow = TRUE))
-#   names(df) <- c("prime", "power")
-# 
-#   # return
-#   df
-# }
-# <environment: namespace:m2r>
+library(magrittr)
+mat <- matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)
+m2_matrix.(mat)
+m2_matrix.(mat) %>% m2_parse
+m2_matrix.(mat) %>% m2_parse %>% str
+m2_matrix(mat) # = m2_parse(m2_matrix.(mat))
+```
+
+It may be helpful to think of every `m2` object as being a missing value (`NA`, a `logical(1)`) with M2 metadata stored as attributes. This can be accessed with `m2_meta()`. For example, a ring:
+
+``` r
+r <- ring(c("x","y"), "QQ")
+str(r)
+m2_meta(r)
 ```
 
 Creating your own **m2r** wrapper
