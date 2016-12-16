@@ -4,7 +4,7 @@
 #' (\url{http://www.math.uiuc.edu/Macaulay2/})
 #'
 #' @docType package
-#' @import mpoly stringr memoise gmp
+#' @import mpoly stringr memoise
 #' @importFrom pryr dots
 #' @name m2r
 #' @aliases m2r package-m2r

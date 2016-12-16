@@ -5,7 +5,7 @@
 \alias{factor_n.}
 \title{Factor an integer into primes}
 \usage{
-factor_n(n, code = FALSE, gmp = FALSE, ...)
+factor_n(n, code = FALSE, ...)
 
 factor_n.(n, code = FALSE, ...)
 }
@@ -13,9 +13,6 @@ factor_n.(n, code = FALSE, ...)
 \item{n}{an integer or a polynomial}
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
-
-\item{gmp}{(broken) logical; use multiple precision arithmetic?
-see \code{\link{as.bigz}}}
 
 \item{...}{...}
 }

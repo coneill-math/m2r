@@ -4,8 +4,6 @@
 #'
 #' @param n an integer or a polynomial
 #' @param code return only the M2 code? (default: \code{FALSE})
-#' @param gmp (broken) logical; use multiple precision arithmetic?
-#'   see \code{\link{as.bigz}}
 #' @param ... ...
 #' @return a data frame with integer columns \code{prime} and
 #'   \code{power} or \code{m2_pointer} referencing the factorization
@@ -89,7 +87,7 @@
 
 #' @rdname factor_n
 #' @export
-factor_n <- function (n, code = FALSE, gmp = FALSE, ...) {
+factor_n <- function (n, code = FALSE, ...) {
 
   # run m2
   args <- as.list(match.call())[-1]
