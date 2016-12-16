@@ -29,17 +29,20 @@ Create a new matrix in Macaulay2
 
 \dontrun{ requires Macaulay2 be installed
 
-(mymatrix <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
+(mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
 
-m2_name(mymatrix)
-m2(m2_name(mymatrix))
-m2(paste0("class(", m2_name(mymatrix), ")"))
+m2_name(mat)
+m2(m2_name(mat))
+m2(sprintf("class(\%s)", m2_name(mat)))
 
 ring(c("x","y","z"))
 mat <- matrix(mp(c("x","y","x+y","y-2","x-3","y-z")), nrow = 2, ncol = 3)
 m2_matrix(mat)
-
-
+# the above is an mpoly problem, not a m2r problem
+# mpoly does not have a data structure for matrices (as of 12/2016)
+mat_chars <- sapply(m2_matrix(mat), print, silent = TRUE)
+dim(mat_chars) <- c(2, 3)
+mat_chars
 
 }
 }

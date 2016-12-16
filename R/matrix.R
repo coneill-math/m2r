@@ -13,17 +13,20 @@
 #'
 #' \dontrun{ requires Macaulay2 be installed
 #'
-#' (mymatrix <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
+#' (mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
 #'
-#' m2_name(mymatrix)
-#' m2(m2_name(mymatrix))
-#' m2(paste0("class(", m2_name(mymatrix), ")"))
+#' m2_name(mat)
+#' m2(m2_name(mat))
+#' m2(sprintf("class(%s)", m2_name(mat)))
 #'
 #' ring(c("x","y","z"))
 #' mat <- matrix(mp(c("x","y","x+y","y-2","x-3","y-z")), nrow = 2, ncol = 3)
 #' m2_matrix(mat)
-#'
-#'
+#' # the above is an mpoly problem, not a m2r problem
+#' # mpoly does not have a data structure for matrices (as of 12/2016)
+#' mat_chars <- sapply(m2_matrix(mat), print, silent = TRUE)
+#' dim(mat_chars) <- c(2, 3)
+#' mat_chars
 #'
 #' }
 
@@ -49,7 +52,8 @@ m2_matrix <- function(mat, ring, name, code = FALSE) {
     m2_class = "m2_matrix",
     m2_meta = list(
       ring = m2_meta(parsed_out, "ring")
-    )
+    ),
+    base_class = "matrix"
   )
 }
 
@@ -156,4 +160,32 @@ m2_parse_function.m2_map <- function(x) {
       ring = R1
     )
   )
+}
+
+
+
+
+
+
+#' @rdname ring
+#' @export
+print.m2_matrix <- function(x, ...){
+
+  x_no_attr <- x
+  attr(x_no_attr, "class") <- NULL
+  attr(x_no_attr, "m2_name") <- NULL
+  attr(x_no_attr, "m2_meta") <- NULL
+  print(x_no_attr)
+
+  r <- m2_meta(x)$ring
+
+  s <- sprintf(
+    "M2 Matrix over %s[%s]",
+    m2_meta(r, "coefring"),
+    paste(m2_meta(r, "vars"), collapse = ","),
+    m2_meta(r, "order")
+  )
+  cat(s)
+
+  invisible(x)
 }
