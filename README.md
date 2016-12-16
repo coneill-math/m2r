@@ -337,7 +337,7 @@ m2_meta(mat)
 # M2 Ring: ZZ[], grevlex order
 ```
 
-Since a matrix of integers is an object in R, it's represented as one. Since a ring is not, it's an `NA`.
+Since a matrix of integers is an object in R, it's represented as one. Since a ring is not, it's an `NA`. When dealing with M2, object like rings, that is to say objects without R analogues, are more common than those like integer matrices.
 
 Creating your own **m2r** wrapper
 ---------------------------------
