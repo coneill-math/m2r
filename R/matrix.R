@@ -158,7 +158,8 @@ m2_parse_function.m2_map <- function(x) {
     m2_class = "m2_matrix",
     m2_meta = list(
       ring = R1
-    )
+    ),
+    base_class = "matrix"
   )
 }
 
