@@ -11,7 +11,7 @@
 #' @name factor_n
 #' @examples
 #'
-#' \dontrun{ requires Macaulay2 be installed
+#' \dontrun{ requires Macaulay2
 #'
 #' ##### basic usage
 #' ########################################

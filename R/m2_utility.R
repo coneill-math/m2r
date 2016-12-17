@@ -15,7 +15,7 @@
 #' @name m2_utility
 #' @examples
 #'
-#' \dontrun{ requires Macaulay2 be installed
+#' \dontrun{ requires Macaulay2
 #'
 #' m2("a = 5")
 #' m2_ls()
@@ -32,6 +32,14 @@
 #' m2_meta(x, "b")
 #' m2_meta(x, "b") <- 5
 #' m2_meta(x, "b")
+#'
+#' # R <- ring(c("x1", "x2", "x3"))
+#' # m2_name(R)
+#' # m2(sprintf("class %s", m2_name(R)))
+#' # m2_ls()
+#' # m2_rm(m2_name(R))
+#' # m2_ls()
+#' # m2(paste("class", m2_name(R)))
 #'
 #'
 #' }
@@ -116,8 +124,11 @@ m2_ls <- function() {
 
 #' @rdname m2_utility
 #' @export
-m2_rm <- function() {
-  stop("not yet implemented.")
+m2_rm <- function(name) {
+  stop("broken.")
+  if (!is.m2(name)) return(invisible())
+  m2(paste(m2_name(name), "=symbol", m2_name(name)))
+  invisible()
 }
 
 

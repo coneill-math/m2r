@@ -11,7 +11,7 @@
 #' @return a list of integer matrices D, P, and Q
 #' @examples
 #'
-#' \dontrun{ requires Macaulay2 be installed and an interactive session
+#' \dontrun{ requires Macaulay2
 #'
 #' ##### basic usage
 #' ########################################

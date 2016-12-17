@@ -47,7 +47,7 @@ evaluation equivalent.
 }
 \examples{
 
-\dontrun{ requires Macaulay2 be installed
+\dontrun{ requires Macaulay2
 
 
 ##### basic usage

@@ -27,7 +27,7 @@ m2_exists(name)
 
 m2_ls()
 
-m2_rm()
+m2_rm(name)
 
 m2_getwd()
 }
@@ -55,7 +55,7 @@ Utility tools for M2
 }
 \examples{
 
-\dontrun{ requires Macaulay2 be installed
+\dontrun{ requires Macaulay2
 
 m2("a = 5")
 m2_ls()
@@ -72,6 +72,14 @@ m2_meta(x)
 m2_meta(x, "b")
 m2_meta(x, "b") <- 5
 m2_meta(x, "b")
+
+# R <- ring(c("x1", "x2", "x3"))
+# m2_name(R)
+# m2(sprintf("class \%s", m2_name(R)))
+# m2_ls()
+# m2_rm(m2_name(R))
+# m2_ls()
+# m2(paste("class", m2_name(R)))
 
 
 }

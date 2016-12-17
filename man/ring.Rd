@@ -44,7 +44,7 @@ Create a new ring in Macaulay2
 }
 \examples{
 
-\dontrun{ requires Macaulay2 be installed
+\dontrun{ requires Macaulay2
 
 ##### basic usage
 ########################################
@@ -66,6 +66,5 @@ ring.(c("x", "y"))
 ring.(c("x", "y"), code = TRUE)
 
 }
-
 }
 
