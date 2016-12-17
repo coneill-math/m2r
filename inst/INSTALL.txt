@@ -1,1 +1,1 @@
-The installation instructions for downloading Cygwin and Macaulay2 can be found at http://www.math.uiuc.edu/Macaulay2/Downloads/Microsoft-Windows/Cygwin/index.html
+m2r requires the Macaulay2 software library be installed, which on Windows will also require CygWin.  See http://www.math.uiuc.edu/Macaulay2/Downloads/ for details.
