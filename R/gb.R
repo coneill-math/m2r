@@ -26,7 +26,7 @@
 #' @name gb
 #' @examples
 #'
-#' \dontrun{ requires Macaulay2 be installed
+#' \dontrun{ requires Macaulay2
 #'
 #'
 #' ##### basic usage

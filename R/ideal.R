@@ -17,7 +17,7 @@
 #' @name ideal
 #' @examples
 #'
-#' \dontrun{ requires Macaulay2 be installed
+#' \dontrun{ requires Macaulay2
 #'
 #' (QQxy <- ring(c("x","y"), coefring = "QQ"))
 #' ideal(   c("x+y", "x^2+y^2") , QQxy)

@@ -10,8 +10,7 @@
 #' @name phc
 #' @examples
 #'
-#'
-#' \dontrun{ requires Macaulay2 be installed
+#' \dontrun{ requires Macaulay2
 #'
 #' # for this to work, you need to have modified your
 #' # init-PHCpack.m2 file instead of changing your .bashrc
@@ -21,8 +20,8 @@
 #' (mpolyList <- mp(c("t^4 - x", "t^3 - y", "t^2 - z", "x+y+z")))
 #' solve_system(mpolyList)
 #' mixed_volume(mpolyList)
-#' }
 #'
+#' }
 
 
 #' @rdname phc

@@ -27,7 +27,7 @@ Create a new matrix in Macaulay2
 }
 \examples{
 
-\dontrun{ requires Macaulay2 be installed
+\dontrun{ requires Macaulay2
 
 (mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
 

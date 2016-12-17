@@ -34,7 +34,7 @@
 #' @author David Kahle \email{david.kahle@@gmail.com}
 #' @examples
 #'
-#' \dontrun{ # the below code requires suggested external software
+#' \dontrun{ requires Macaulay2
 #'
 #' getOption("m2_path")
 #' set_m2_path()

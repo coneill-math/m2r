@@ -9,7 +9,7 @@
 #' @name m2_parser
 #' @examples
 #'
-#' \dontrun{ requires Macaulay2 be installed
+#' \dontrun{ requires Macaulay2
 #'
 #' m2("1+1")
 #' m2.("1+1")

@@ -7,7 +7,7 @@
 #' @name is
 #' @examples
 #'
-#' \dontrun{ requires Macaulay2 be installed
+#' \dontrun{ requires Macaulay2
 #'
 #' R <- ring(c("x1", "x2", "x3"))
 #' is.m2(R)

@@ -25,7 +25,7 @@ Q are unimodular (have determinants +- 1).
 }
 \examples{
 
-\dontrun{ requires Macaulay2 be installed and an interactive session
+\dontrun{ requires Macaulay2
 
 ##### basic usage
 ########################################

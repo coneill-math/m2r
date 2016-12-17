@@ -8,7 +8,7 @@
 #' @export
 #' @examples
 #'
-#' \dontrun{ requires Macaulay2 be installed
+#' \dontrun{ requires Macaulay2
 #'
 #' a <- m2("1")
 #'
