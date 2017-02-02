@@ -28,6 +28,9 @@
 #' dim(mat_chars) <- c(2, 3)
 #' mat_chars
 #'
+#'
+#' mat <- m2_matrix(matrix(c(1,2),nrow=1))
+#' (m2_kernel(mat))
 #' }
 
 
@@ -189,4 +192,59 @@ print.m2_matrix <- function(x, ...){
   cat(s)
 
   invisible(x)
+}
+
+
+
+
+m2_parse_function.m2_image <- function(x) {
+  m2_structure(
+    x[[1]],
+    m2_name = "",
+    m2_class = "m2_image",
+    base_class = "image"
+  )
+}
+
+#' @rdname ring
+#' @export
+print.m2_image <- function(x, ...){
+  cat("M2 Image\n")
+  print.m2_matrix(x)
+
+  invisible(x)
+}
+
+m2_kernel <- function(mat, name, code = FALSE) {
+  # run m2
+  args <- as.list(match.call())[-1]
+  eargs <- lapply(args, eval, envir = parent.frame())
+  pointer <- do.call(m2_kernel., eargs)
+  if (code) return(invisible(pointer))
+
+  # parse output
+  parsed_out <- m2_parse(pointer)
+}
+
+m2_kernel. <- function(mat, name, code = FALSE) {
+  if ((class(mat)[1] != "m2_matrix") && (class(mat)[1] != "m2_pointer")) {
+    stop(print("Class of matrix must be m2_matrix or m2_pointer"))
+  }
+
+  # make kernel name
+  if (missing(name)) {
+    kernel_name <- name_and_increment("matrix", "m2_image_count")
+  } else {
+    kernel_name <- name
+  }
+
+  m2_code <- sprintf("%s = kernel %s",kernel_name, attr(mat, "m2_name"))
+  if(code) { message(m2_code); return(invisible(m2_code)) }
+
+  # run m2 and add name
+  out <- m2.(m2_code)
+  m2_name(out) <- kernel_name
+
+  # return
+  out
 }
