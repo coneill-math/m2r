@@ -110,13 +110,13 @@ R <- ring(c("x","y","t","z"), order = "lex")
 gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
 ```
 
-On a technical level, `gb()` uses [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html).  A more stable way to use the function is to use its standard evaluation version `gb_()`.  `gb_()` accepts first a data structure describing the polynomials or ideal to fing the Grobner basis of, then the referent ring, and then a number of other objects.  At a basic level this simply changes the previous syntax to
+On a technical level, `gb()` uses [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html).  A more stable way to use the function is to use its standard evaluation version `gb_()`.  `gb_()` accepts first a data structure describing the polynomials or ideal, then the referent ring, and then a number of other objects.  At a basic level this simply changes the previous syntax to
 ```{r gb_}
 poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
 gb_(poly_chars, ring = R)
 ```
 
-`gb_()` is significantly easier than `gb()` to program with, so we strongly recommend that you use `gb_()`, especially inside of other functions. 
+`gb_()` is significantly easier to code with than `gb()` in the sense that its inputs and outputs are more predictable, so we strongly recommend that you use `gb_()`, especially inside of other functions and packages. 
 
 
 
@@ -169,7 +169,7 @@ det(Q)
 
 ## __m2r__ internals: pointers, reference and value functions, and `m2` objects
 
-At a basic level, __m2r__ works by passing strings between R and M2.  Originating at the R side, these strings are properly formated M2 code constructed from the inputs to the R functions.  That code goes to M2, is evaluated there, and then "exported" with M2's function `toExternalString()`.  The resulting string often, but not always, produces the M2 code needed to recreate the object resulting from the evaluation, and in that sense is M2's version of R's `dput()`. That string is passed back into R and parsed there into R-style data structures, typically S3-classed lists.
+At a basic level, __m2r__ works by passing strings between R and M2.  Originating at the R side, these strings are properly formated M2 code constructed from the inputs to the R functions.  That code goes to M2, is evaluated there, and then "exported" with M2's function `toExternalString()`.  The resulting string often, but not always, produces the M2 code needed to recreate the object resulting from the evaluation, and in that sense is M2's version of R's `dput()`. That string is passed back into R and parsed there into R-style data structures, typically [S3-classed lists](http://adv-r.had.co.nz/OO-essentials.html#s3).
 
 The R-side parsing of the external string from M2 is an expensive process because it is currently implemented in R as opposed to C++. Consequently (and for other reasons, too!), in some cases you'll want to do a M2 computation from R, but leave the output in M2.  Since you will ultimately want something in R referring to the result, nearly every __m2r__ function that performs M2 computations has a pointer version.  As a simple naming convention, the function that returns the pointer, called the reference function, is determined by the ordinary function, called the value function, by appending a `.`.
 

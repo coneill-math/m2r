@@ -130,7 +130,7 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
 # -1 z^2  +  x
 ```
 
-On a technical level, `gb()` uses [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html). A more stable way to use the function is to use its standard evaluation version `gb_()`. `gb_()` accepts first a data structure describing the polynomials or ideal to fing the Grobner basis of, then the referent ring, and then a number of other objects. At a basic level this simply changes the previous syntax to
+On a technical level, `gb()` uses [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html). A more stable way to use the function is to use its standard evaluation version `gb_()`. `gb_()` accepts first a data structure describing the polynomials or ideal, then the referent ring, and then a number of other objects. At a basic level this simply changes the previous syntax to
 
 ``` r
 poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
@@ -140,7 +140,7 @@ gb_(poly_chars, ring = R)
 # -1 z^2  +  x
 ```
 
-`gb_()` is significantly easier than `gb()` to program with, so we strongly recommend that you use `gb_()`, especially inside of other functions.
+`gb_()` is significantly easier to code with than `gb()` in the sense that its inputs and outputs are more predictable, so we strongly recommend that you use `gb_()`, especially inside of other functions and packages.
 
 Factoring integers and polynomials
 ----------------------------------
