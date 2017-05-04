@@ -49,13 +49,16 @@
 #' }
 
 
-
+m2_version_number <- function() {
+  "1.0.0"
+}
 
 
 m2_listen_code <- function (port, timeout) {
   sprintf("
     m2rintinout = openInOut \"$:%d\";
     m2rintruncount = 0;
+    m2rintinout << \"%s\" << \"\\n\" << flush;
     while true do (
       m2rintinline = read m2rintinout;
       if m2rintinline == \"\" then break;
@@ -96,7 +99,7 @@ m2_listen_code <- function (port, timeout) {
                   << m2rintoutline << \"\\n\" << flush;
     );
     close m2rintinout;
-  ", port)
+  ", port, m2_version_number())
 }
 # cat(m2_listen_code(27436L, 10))
 
@@ -217,6 +220,12 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
     m2_port = port,
     m2_timeout = timeout
   )
+
+  server_version <- readLines(get_m2_con(), 1)
+  if (server_version != m2_version_number()) {
+    stop(sprintf("Internal error: server version is %s and client version is %s.",
+                 server_version, m2_version_number()))
+  }
   set_m2r_option(m2_procid = strtoi(m2("processID()")))
 
   invisible(0L)
