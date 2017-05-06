@@ -3,11 +3,11 @@
 if #commandLine < 4 then
   error("CommandLine was not given port.");
 
-m2rintopenport = commandLine#3
+m2rintopenport = commandLine#3;
 
 m2rintlog = (m2rinttoprint) -> (
   if m2rinttoprint == "" then (
-    print("")
+    print("");
   ) else (
     m2rintdateinout = openInOut "!date \"+%Y-%m-%d %H:%M:%S: \"";
     m2rintthedate = read m2rintdateinout;
@@ -16,21 +16,21 @@ m2rintlog = (m2rinttoprint) -> (
   )
 )
 
-m2rintlog("Session begins")
+m2rintlog("Session begins");
 
 m2rintinout = openInOut concatenate("$:", m2rintopenport);
 m2rintruncount = 0;
 m2rintinout << "1.0.0" << "\n" << flush;
 
-m2rintlog(concatenate("Connection received on port ", toString m2rintopenport))
-m2rintlog("")
+m2rintlog(concatenate("Connection received on port ", toString m2rintopenport));
+m2rintlog("");
 
 while true do (
   m2rintinline = read m2rintinout;
   if m2rintinline == "" then break;
   
-  m2rintlog(concatenate("Command:\n", m2rintinline))
-  m2rintlog("")
+  m2rintlog(concatenate("Command:\n", m2rintinline));
+  m2rintlog("");
 
   m2rintretcode = 0;
   m2rintoutvalsucceeded = false;
@@ -68,9 +68,9 @@ while true do (
 
   m2rintinout << m2rintoutinfo << "\n" << m2rintoutline << "\n" << flush;
   
-  m2rintlog(concatenate("Command output:\n", m2rintoutinfo, "\n", m2rintoutline))
-  m2rintlog("")
+  m2rintlog(concatenate("Command output:\n", m2rintoutinfo, "\n", m2rintoutline));
+  m2rintlog("");
 );
 
-m2rintlog("Session ends")
+m2rintlog("Session ends");
 close m2rintinout;

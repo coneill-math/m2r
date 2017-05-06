@@ -57,7 +57,7 @@ with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as serversocket:
 				
 				# launch M2 docker instance
 				cmd = ["docker", "start", containername]
-				cmd = cmd + [";", "docker", "exec", containername, "M2", "--script", "/m2r_server_script.m2", str(openport)]#, "&>" + logfilename]
+				cmd = cmd + [";", "docker", "exec", containername, "M2", "--script", "/m2rserverscript.m2", str(openport)]#, "&>" + logfilename]
 				cmd = cmd + [";", "docker", "stop", containername]
 				cmd = cmd + [";", "docker", "rm", containername]
 				# cmd = cmd + [";", "aws", "s3", "cp", logfilename, "s3://my_bucket/my_folder/my_file.ext"]
