@@ -3,18 +3,40 @@
 if #commandLine < 4 then
   error("CommandLine was not given port.");
 
-m2rintinout = openInOut concatenate("$:", commandLine#3);
+m2rintopenport = commandLine#3
+
+m2rintlog = (m2rinttoprint) -> (
+  if m2rinttoprint == "" then (
+    print("")
+  ) else (
+    m2rintdateinout = openInOut "!date \"+%Y-%m-%d %H:%M:%S: \"";
+    m2rintthedate = read m2rintdateinout;
+    print(concatenate(substring(m2rintthedate, 0, length m2rintthedate - 1), m2rinttoprint));
+    close m2rintdateinout;
+  )
+)
+
+m2rintlog("Session begins")
+
+m2rintinout = openInOut concatenate("$:", m2rintopenport);
 m2rintruncount = 0;
 m2rintinout << "1.0.0" << "\n" << flush;
+
+m2rintlog(concatenate("Connection received on port ", toString m2rintopenport))
+m2rintlog("")
+
 while true do (
   m2rintinline = read m2rintinout;
   if m2rintinline == "" then break;
+  
+  m2rintlog(concatenate("Command:\n", m2rintinline))
+  m2rintlog("")
 
   m2rintretcode = 0;
   m2rintoutvalsucceeded = false;
   m2rintoutlinesucceeded = false;
   m2rintruncount = m2rintruncount + 1;
-
+  
   try (
     m2rintoutval_m2rintruncount = value(m2rintinline);
     m2rintoutvalsucceeded = true;
@@ -38,11 +60,17 @@ while true do (
   );
 
   m2rintnumlines = 1 + #select("\n", m2rintoutline);
+  m2rintoutinfo = concatenate(m2rintretcode, 
+                          " ", m2rintnumlines, 
+                          " ", toString(m2rintvarname), 
+                          " ", toString(m2rintoutclass), 
+                          " ", toString(m2rintoutclassclass))
 
-  m2rintinout << m2rintretcode << " " << m2rintnumlines << " "
-              << toString(m2rintvarname) << " "
-              << toString(m2rintoutclass) << " "
-              << toString(m2rintoutclassclass) << "\n"
-              << m2rintoutline << "\n" << flush;
+  m2rintinout << m2rintoutinfo << "\n" << m2rintoutline << "\n" << flush;
+  
+  m2rintlog(concatenate("Command output:\n", m2rintoutinfo, "\n", m2rintoutline))
+  m2rintlog("")
 );
+
+m2rintlog("Session ends")
 close m2rintinout;
