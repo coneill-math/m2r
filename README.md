@@ -170,8 +170,6 @@ factor_poly("x^4 - y^4", QQxy)
 # 
 # $power
 # [1] 1 1 1
-mp("x-y") * mp("x+y") * mp("x^2+y^2")
-# x^4  -  y^4
 ```
 
 Smith normal form of a matrix
@@ -227,9 +225,9 @@ det(Q)
 **m2r** internals: pointers, reference and value functions, and `m2` objects
 ----------------------------------------------------------------------------
 
-At a basic level, **m2r** works by passing strings between R and M2. Originating at the R side, these strings are properly formated M2 code constructed from the inputs to the R functions. That code goes to M2, is evaluated there, and then "exported" with M2's function `toExternalString()`. The resulting string often, but not always, produces the M2 code needed to recreate the object resulting from the evaluation, and in that sense is M2's version of R's `dput()`. That string is passed back into R and parsed there into R-style data structures, typically S3-classed lists.
+At a basic level, **m2r** works by passing strings between R and M2. Originating at the R side, these strings are properly formated M2 code constructed from the inputs to the R functions. That code goes to M2, is evaluated there, and then "exported" with M2's function `toExternalString()`. The resulting string often, but not always, produces the M2 code needed to recreate the object resulting from the evaluation, and in that sense is M2's version of R's `dput()`. That string is passed back into R and parsed there into R-style data structures, typically [S3-classed lists](http://adv-r.had.co.nz/OO-essentials.html#s3).
 
-The R-side parsing of the external string from M2 is an expensive process because it is currently implemented in R as opposed to C++. Consequently (and for other reasons, too!), in some cases you'll want to do a M2 computation from R, but leave the output in M2. Since you will ultimately want something in R referring to the result, nearly every **m2r** function that performs M2 computations has a pointer version. As a simple naming convention, the function that returns the pointer, called the reference function, is determined by the ordinary function, called the value function, by appending a `.`.
+The R-side parsing of the external string from M2 is an expensive process because it is currently implemented in R. Consequently (and for other reasons, too!), in some cases you'll want to do a M2 computation from R, but leave the output in M2. Since you will ultimately want something in R referencing the result, nearly every **m2r** function that performs M2 computations has a pointer version. As a simple naming convention, the name of the function that returns the pointer, called the reference function, is determined by the name of the ordinary function, called the value function, by appending a `.`.
 
 For example, we've seen that `factor_n()` computes the prime decomposition of a number. The corresponding reference function is `factor_n.()`:
 
@@ -243,16 +241,16 @@ factor_n.(x)
 #         M2 Class : Product (WrapperType)
 ```
 
-All value functions simply wrap reference functions and parse the output with `m2_parse()`, a general M2 parser, often with little more parsing. `m2_parse()` typically creates an object of class `m2` so that R knows what kind of thing it is. For example:
+All value functions simply wrap reference functions and parse the output with `m2_parse()`, a general M2 parser, often followed by a little more parsing. `m2_parse()` typically creates an object of class `m2` so that R knows what kind of thing it is. For example:
 
 ``` r
 class(factor_n.(x))
 # [1] "m2_pointer" "m2"
 ```
 
-In fact, `m2_parse()` often creates objects that have an inheritance structure that references `m2` somewhere in the middle of its class structure, with specific structure preceding and general structure succeeding (examples below). Apart from its class, for the object itself the general principle we follow here is this: if the M2 object has a direct analogue in R, it is parsed into that kind of R object and additional M2 properties are kept as metadata (attributes); if there is no direct analogue in R, the object is an `NA` with metadata.
+Even more, `m2_parse()` often creates objects that have an inheritance structure that references `m2` somewhere in the middle of its class structure, with specific structure preceding and general structure succeeding (examples below). Apart from its class, the general principle we follow here for the object itself is this: if the M2 object has a direct analogue in R, it is parsed into that kind of R object and additional M2 properties are kept as metadata (attributes); if there is no direct analogue in R, the object is an `NA` with metadata.
 
-Perhaps the easiest way to see this is with a matrix. The `m2_matrix()` creates a matrix on the M2 side from input on the R side. In the following, to make things more clear we use [**magrittr**'s pipe operator](https://github.com/tidyverse/magrittr), with which the following calls are semantically equivalent: `g(f(x))` and `x %>% f %>% g`.
+Perhaps the easiest way to see this is with a matrix. `m2_matrix()` creates a matrix on the M2 side from input on the R side. In the following, to make things more clear we use [**magrittr**'s pipe operator](https://github.com/tidyverse/magrittr), with which the following calls are semantically equivalent: `g(f(x))` and `x %>% f %>% g`.
 
 ``` r
 library(magrittr)
@@ -337,12 +335,12 @@ m2_meta(mat)
 # M2 Ring: ZZ[], grevlex order
 ```
 
-Since a matrix of integers is an object in R, it's represented as one. Since a ring is not, it's an `NA`. When dealing with M2, object like rings, that is to say objects without R analogues, are more common than those like integer matrices.
+Since a matrix of integers is an object in R, it's represented as one, and consequently we can compute with it directly as it if it were a matrix; it is. On the other hand, since a ring is not, it's an `NA`. When dealing with M2, object like rings, that is to say objects without R analogues, are more common than those like integer matrices.
 
 Creating your own **m2r** wrapper
 ---------------------------------
 
-To create your own wrapper function of something in Macaulay2, you'll need to create an R file that looks like the one below. This will create both value (e.g. `f`) and reference/pointer (e.g. `f.`) versions of the function. As a good example of these at work, see the scripts for [`factor_n()`](https://github.com/musicman3320/m2r/blob/master/R/factor_n.R) or [`factor_poly()`](https://github.com/musicman3320/m2r/blob/master/R/factor_poly.R).
+We've already wrapped a number of Macaulay2 functions; for a list of functions in **m2r**, check out `ls("package:m2r")`. But the list is very far from exhaustive. To create your own wrapper function of a Macaulay2 command, you'll need to create an R file that looks like the one below. This will create both value (e.g. `f`) and reference/pointer (e.g. `f.`) versions of the function. As a good example of these at work, see the scripts for [`factor_n()`](https://github.com/musicman3320/m2r/blob/master/R/factor_n.R) or [`factor_poly()`](https://github.com/musicman3320/m2r/blob/master/R/factor_poly.R).
 
 ``` r
 #' Function documentation header
