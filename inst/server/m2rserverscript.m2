@@ -30,7 +30,6 @@ while true do (
   if m2rintinline == "" then break;
   
   m2rintlog(concatenate("Command:\n", m2rintinline));
-  m2rintlog("");
 
   m2rintretcode = 0;
   m2rintoutvalsucceeded = false;
