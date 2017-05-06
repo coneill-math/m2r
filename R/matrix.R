@@ -29,8 +29,8 @@
 #' mat_chars
 #'
 #'
-#' mat <- m2_matrix(matrix(c(1,2),nrow=1))
-#' (m2_kernel(mat))
+#' (mat <- m2_matrix(matrix(c(1,2),nrow=1)))
+#' m2_kernel(mat)
 #' }
 
 
@@ -171,7 +171,7 @@ m2_parse_function.m2_map <- function(x) {
 
 
 
-#' @rdname ring
+#' @rdname m2_matrix
 #' @export
 print.m2_matrix <- function(x, ...){
 
@@ -206,16 +206,31 @@ m2_parse_function.m2_image <- function(x) {
   )
 }
 
-#' @rdname ring
+
+
+#' @rdname m2_matrix
 #' @export
 print.m2_image <- function(x, ...){
-  cat("M2 Image\n")
-  print.m2_matrix(x)
+  # cat("M2 Image\n")
+  print.m2_matrix(x, ...)
 
   invisible(x)
 }
 
+
+
+
+
+
+
+
+
+
+
+#' @rdname m2_matrix
+#' @export
 m2_kernel <- function(mat, name, code = FALSE) {
+
   # run m2
   args <- as.list(match.call())[-1]
   eargs <- lapply(args, eval, envir = parent.frame())
@@ -223,9 +238,13 @@ m2_kernel <- function(mat, name, code = FALSE) {
   if (code) return(invisible(pointer))
 
   # parse output
-  parsed_out <- m2_parse(pointer)
+  m2_parse(pointer)
 }
 
+
+
+#' @rdname m2_matrix
+#' @export
 m2_kernel. <- function(mat, name, code = FALSE) {
   if ((class(mat)[1] != "m2_matrix") && (class(mat)[1] != "m2_pointer")) {
     stop(print("Class of matrix must be m2_matrix or m2_pointer"))
