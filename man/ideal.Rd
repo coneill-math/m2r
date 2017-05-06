@@ -58,4 +58,3 @@ is.m2_ideal_pointer(I.)
 
 }
 }
-

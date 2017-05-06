@@ -145,4 +145,3 @@ gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), raw_chars = TRUE)
 \seealso{
 \code{\link{mp}}
 }
-

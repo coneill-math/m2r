@@ -3,11 +3,10 @@
 \docType{package}
 \name{m2r}
 \alias{m2r}
-\alias{m2r-package}
 \alias{package-m2r}
+\alias{m2r-package}
 \title{Macaulay2 in R}
 \description{
 Back-end connections to Macaulay2
 (\url{http://www.math.uiuc.edu/Macaulay2/})
 }
-

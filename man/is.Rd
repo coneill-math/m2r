@@ -3,18 +3,18 @@
 \name{is}
 \alias{is}
 \alias{is.m2}
-\alias{is.m2_array}
-\alias{is.m2_ideal}
-\alias{is.m2_ideal_pointer}
-\alias{is.m2_list}
-\alias{is.m2_matrix}
-\alias{is.m2_module}
-\alias{is.m2_option}
 \alias{is.m2_pointer}
+\alias{is.ring}
 \alias{is.m2_polynomialring}
 \alias{is.m2_polynomialring_pointer}
+\alias{is.m2_ideal}
+\alias{is.m2_ideal_pointer}
+\alias{is.m2_module}
+\alias{is.m2_option}
+\alias{is.m2_matrix}
+\alias{is.m2_list}
+\alias{is.m2_array}
 \alias{is.m2_sequence}
-\alias{is.ring}
 \title{Macaulay2 object tests}
 \usage{
 is.m2(x)
@@ -64,4 +64,3 @@ is.ring(mp("x+1"))
 
 }
 }
-

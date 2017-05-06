@@ -56,4 +56,3 @@ factor_poly(p, QQxyz)
 
 }
 }
-
