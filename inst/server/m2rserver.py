@@ -56,11 +56,11 @@ with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as serversocket:
 				logfilename = generateLogFileName()
 				
 				# launch M2 docker instance
-				cmd = ["docker", "start", containername]
-				cmd = cmd + [";", "docker", "exec", containername, "M2", "--script", "/m2rserverscript.m2", str(openport)]#, "&>" + logfilename]
-				cmd = cmd + [";", "docker", "stop", containername]
-				cmd = cmd + [";", "docker", "rm", containername]
-				# cmd = cmd + [";", "aws", "s3", "cp", logfilename, "s3://my_bucket/my_folder/my_file.ext"]
+				cmd = ["docker", "start", containername, "&>/dev/null"]
+				cmd = cmd + [";", "docker", "exec", containername, "M2", "--script", "/m2rserverscript.m2", str(openport), "&>" + logfilename]
+				cmd = cmd + [";", "docker", "stop", containername, "&>/dev/null"]
+				cmd = cmd + [";", "docker", "rm", containername, "&>/dev/null"]
+				cmd = cmd + [";", "aws", "s3", "cp", logfilename, "s3://m2r-dev-logs/logfiles/"]
 				Popen(" ".join(cmd), shell=True)
 				# p.terminate()
 				

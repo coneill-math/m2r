@@ -13,8 +13,8 @@ m2rintlog = (m2rinttoprint) -> (
     m2rintthedate = read m2rintdateinout;
     print(concatenate(substring(m2rintthedate, 0, length m2rintthedate - 1), m2rinttoprint));
     close m2rintdateinout;
-  )
-)
+  );
+);
 
 m2rintlog("Session begins");
 
@@ -60,11 +60,11 @@ while true do (
   );
 
   m2rintnumlines = 1 + #select("\n", m2rintoutline);
-  m2rintoutinfo = concatenate(m2rintretcode, 
-                          " ", m2rintnumlines, 
+  m2rintoutinfo = concatenate(toString(m2rintretcode), 
+                          " ", toString(m2rintnumlines), 
                           " ", toString(m2rintvarname), 
                           " ", toString(m2rintoutclass), 
-                          " ", toString(m2rintoutclassclass))
+                          " ", toString(m2rintoutclassclass));
 
   m2rintinout << m2rintoutinfo << "\n" << m2rintoutline << "\n" << flush;
   
