@@ -112,8 +112,10 @@ m2_listen_code <- function (port, timeout) {
 
 start_m2 <- function(port = 27436L, timeout = 10, attempts = 10) {
 
+  # TODO: should switch based on default
+
   for(i in seq.int(0,attempts-1)) {
-    if (do_start_m2(port, timeout) == 0) break
+    if (do_start_m2_local(port, timeout) == 0) break
     if (i == attempts - 1) {
       message(sprintf("%s attempts made at connecting. Aborting start_m2", attempts))
     } else {
@@ -126,23 +128,45 @@ start_m2 <- function(port = 27436L, timeout = 10, attempts = 10) {
 
 
 
+do_start_m2_cloud <- function() {
+
+  hostname = "ec2-35-166-88-148.us-west-2.compute.amazonaws.com"
+
+  port = do_request_port_m2(hostname = hostname, port = 27435L)
+
+  do_connect_server_m2(hostname = hostname, port = port)
+}
 
 
-
-do_start_m2 <- function(port = 27436L, timeout = 10) {
+do_start_m2_local <- function(port = 27436L, timeout = 10) {
 
   # only start if not already running
   if (!is.null(get_m2_con())) return(invisible(0))
 
   message("Starting M2")
 
+  do_launch_local_m2(port = port, timeout = timeout)
+
+  do_connect_server_m2(port = port, timeout = timeout)
+
+  set_m2r_option(m2_procid = strtoi(m2("processID()")))
+
+  invisible(0L)
+}
+
+
+
+
+
+do_launch_local_m2 <- function(port = 27436L, timeout = 10) {
+
   # prep for m2 server process
   if(is.mac() || is.unix()) {
-
+    # cat(file.path2(get_m2_path(), "M2"), args = c("--script", system.file("server", "m2rserverscript.m2", package = "m2r"), toString(port)))
     system2(
-      file.path2(get_m2_path(), "M2"),
-      stdout = NULL, stderr = NULL,
-      stdin = write_to_temp(m2_listen_code(port, timeout)),
+      file.path2(get_m2_path(), "M2"), args = c("--script", system.file("server", "m2rserverscript.m2", package = "m2r"), toString(port)),
+      stdout = NULL, stderr = NULL, stdin = "",
+      # stdin = write_to_temp(m2_listen_code(port, timeout)),
       wait = FALSE
     )
 
@@ -174,20 +198,26 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
     )
 
     # creates a process that dies immediately
-#     system2(
-#       "cmd.exe",
-#       paste(
-#         "/K",# env.exe",
-#         file.path2(get_m2_path(), "env.exe"),
-#         "PATH=/cygdrive/c/cygwin/lib/lapack /usr/bin/M2"
-#         # file.path2(get_m2_path(), "M2.exe")
-#       ),
-#       stdout = NULL, stderr = NULL,
-#       stdin = write_to_temp(m2_listen_code(port, timeout)),
-#       wait = FALSE
-#     )
+    #     system2(
+    #       "cmd.exe",
+    #       paste(
+    #         "/K",# env.exe",
+    #         file.path2(get_m2_path(), "env.exe"),
+    #         "PATH=/cygdrive/c/cygwin/lib/lapack /usr/bin/M2"
+    #         # file.path2(get_m2_path(), "M2.exe")
+    #       ),
+    #       stdout = NULL, stderr = NULL,
+    #       stdin = write_to_temp(m2_listen_code(port, timeout)),
+    #       wait = FALSE
+    #     )
 
   }
+
+}
+
+
+
+do_request_port_m2 <- function(hostname = "ec2-35-166-88-148.us-west-2.compute.amazonaws.com", port = 27435L, timeout = 10) {
 
   # initialize client socket
   con <- NULL
@@ -196,7 +226,7 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
     tryCatch(
       con <- suppressWarnings(
         socketConnection(
-          host = "localhost", port = port,
+          host = hostname, port = port,
           blocking = FALSE, server = FALSE,
           open = "r+", timeout = 60*60*24*7
         )
@@ -214,6 +244,79 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
 
   if (is.null(con)) return(invisible(1L))
 
+  repeat {
+    # read output info
+    port_number <- readLines(con, 1)
+
+    if (length(port_number) > 0) break
+
+    i <- i + 1
+    if (timeout > 0 && i >= timeout * 2000) {
+      break
+    } else {
+      Sys.sleep(0.0005)
+    }
+  }
+
+  close(con)
+
+  if (length(port_number) == 0 || port_number == "0") {
+    stop(sprintf("Macaulay2 cloud is full: please try again later."))
+  }
+
+  return(strtoi(port_number))
+
+}
+
+
+
+do_connect_server_m2 <- function(hostname = "localhost", port = 27436L, timeout = 10) {
+
+  # initialize client socket
+  con <- NULL
+  for (i in 0:(20*timeout)) {
+
+    tryCatch(
+      con <- suppressWarnings(
+        socketConnection(
+          host = hostname, port = port,
+          blocking = FALSE, server = FALSE,
+          open = "r+", timeout = 60*60*24*7
+        )
+      ),
+      error = function(e) {  }
+    )
+
+    if (!is.null(con)) {
+      break
+    } else {
+      Sys.sleep(0.05)
+    }
+
+  }
+
+  if (is.null(con)) return(invisible(1L))
+
+  repeat {
+    # read output info
+    server_version <- readLines(con, 1)
+
+    if (length(server_version) > 0) break
+
+    i <- i + 1
+    if (timeout > 0 && i >= 2000*timeout) {
+      break
+    } else {
+      Sys.sleep(0.0005)
+    }
+  }
+
+  if (server_version != m2_version_number()) {
+    close(con)
+    stop(sprintf("Internal error: server version is %s and client version is %s.",
+                 server_version, m2_version_number()))
+  }
+
   # set options
   set_m2r_option(
     m2_con = con,
@@ -221,18 +324,10 @@ do_start_m2 <- function(port = 27436L, timeout = 10) {
     m2_timeout = timeout
   )
 
-  server_version <- readLines(get_m2_con(), 1)
-  if (server_version != m2_version_number()) {
-    stop(sprintf("Internal error: server version is %s and client version is %s.",
-                 server_version, m2_version_number()))
-  }
-  set_m2r_option(m2_procid = strtoi(m2("processID()")))
+  set_m2r_option(m2_procid = -1L)
 
   invisible(0L)
 }
-
-
-
 
 
 
@@ -249,7 +344,8 @@ stop_m2 <- function() {
 
     # not elegant, but a necessary safety measure
     Sys.sleep(0.01)
-    tools::pskill(get_m2_procid())
+    if (get_m2_procid() >= 0)
+      tools::pskill(get_m2_procid())
 
     set_m2r_option(m2_con = NULL, m2_procid = NULL)
 
@@ -309,7 +405,7 @@ m2. <- function(code, timeout = -1) {
     if (length(outinfo) > 0) break
 
     i <- i + 1
-    if (timeout > 0 && i >= timeout * 20) {
+    if (timeout > 0 && i >= timeout * 2000) {
       break
     } else {
       Sys.sleep(0.0005)
