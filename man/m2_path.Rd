@@ -6,15 +6,18 @@
 \alias{get_m2_path}
 \alias{get_m2_con}
 \alias{get_m2_procid}
+\alias{get_m2_port}
 \title{Set path to Macaulay2 (M2)}
 \usage{
-set_m2_path(path)
+set_m2_path(path = NULL)
 
 get_m2_path()
 
 get_m2_con()
 
 get_m2_procid()
+
+get_m2_port()
 }
 \arguments{
 \item{path}{A character string, the path to M2}
@@ -22,7 +25,7 @@ get_m2_procid()
 \value{
 An invisible character string, the path found.  More
   importantly, the function has the side effect of setting the
-  option "m2_path"
+  global m2r option "m2_path"
 }
 \description{
 This function sets the path to external programs either by (1)
@@ -48,21 +51,23 @@ it's not present, it does the same for .bashrc and then .profile.
 In any case, once it has its best guess at your path, it looks
 for "M2".
 
-On Windows, m2r just uses Sys.which() on "whereis" to determine
-where M2 is.
+On Windows, m2r just defaults to the cloud implementation. Local
+M2 instances are not currently supported on Windows.
 }
 \examples{
 
 \dontrun{ requires Macaulay2
 
-getOption("m2_path")
+
+getOption("m2r")
+get_m2_path()
 set_m2_path()
 
 
 ## each of these functions can be used statically as well
-(m2_path <- getOption("m2_path"))
+(m2_path <- get_m2_path())
 set_m2_path("/path/to/m2/directory")
-getOption("m2_path")
+get_m2_path()
 set_m2_path(m2_path) # undoes example
 
 

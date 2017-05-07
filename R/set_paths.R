@@ -22,13 +22,13 @@
 #' In any case, once it has its best guess at your path, it looks
 #' for "M2".
 #'
-#' On Windows, m2r just uses Sys.which() on "whereis" to determine
-#' where M2 is.
+#' On Windows, m2r just defaults to the cloud implementation. Local
+#' M2 instances are not currently supported on Windows.
 #'
 #' @param path A character string, the path to M2
 #' @return An invisible character string, the path found.  More
 #'   importantly, the function has the side effect of setting the
-#'   option "m2_path"
+#'   global m2r option "m2_path"
 #' @export
 #' @name m2_path
 #' @author David Kahle \email{david.kahle@@gmail.com}
@@ -36,14 +36,16 @@
 #'
 #' \dontrun{ requires Macaulay2
 #'
-#' getOption("m2_path")
+#'
+#' getOption("m2r")
+#' get_m2_path()
 #' set_m2_path()
 #'
 #'
 #' ## each of these functions can be used statically as well
-#' (m2_path <- getOption("m2_path"))
+#' (m2_path <- get_m2_path())
 #' set_m2_path("/path/to/m2/directory")
-#' getOption("m2_path")
+#' get_m2_path()
 #' set_m2_path(m2_path) # undoes example
 #'
 #'
@@ -52,7 +54,7 @@
 
 #' @rdname m2_path
 #' @export
-set_m2_path <- function(path){
+set_m2_path <- function(path = NULL){
 
   if(missing(path) && interactive()){
 
@@ -86,7 +88,6 @@ get_m2_path <- function() getOption("m2r")$m2_path
 
 
 
-
 #' @rdname m2_path
 #' @export
 get_m2_con <- function() getOption("m2r")$m2_con
@@ -96,6 +97,12 @@ get_m2_con <- function() getOption("m2r")$m2_con
 #' @rdname m2_path
 #' @export
 get_m2_procid <- function() getOption("m2r")$m2_procid
+
+
+
+#' @rdname m2_path
+#' @export
+get_m2_port <- function() getOption("m2r")$m2_port
 
 
 
