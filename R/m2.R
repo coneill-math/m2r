@@ -130,9 +130,9 @@ start_m2 <- function(port = 27436L, timeout = 10, attempts = 10) {
 
 do_start_m2_cloud <- function() {
 
-  hostname = "ec2-35-166-88-148.us-west-2.compute.amazonaws.com"
+  hostname <- "ec2-52-10-66-241.us-west-2.compute.amazonaws.com"
 
-  port = do_request_port_m2(hostname = hostname, port = 27435L)
+  port <- do_request_port_m2(hostname = hostname, port = 27435L)
 
   do_connect_server_m2(hostname = hostname, port = port)
 }
