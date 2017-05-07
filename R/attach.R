@@ -5,7 +5,7 @@
 		unix_search_and_set("M2", "Macaulay2", "m2_path")
 	}
 
-	# find M2 on a PC - directs to EC2 immediately
+	# find M2 on a PC - directs to cloud immediately
 	if(is.win()){
 
 		# if(!any(stringr::str_detect(tolower(list.files("C:\\")), "cygwin"))){
@@ -81,7 +81,7 @@ startup_check_for_program <- function(){
 	}
 
 	if(is.null(get_m2_path())){
-		psms("  M2 not found. Set the location with set_m2_path()")
+		psms("  M2 not found; defaulting to cloud. Set the location with set_m2_path()")
 		return(invisible(FALSE))
 	}
 
