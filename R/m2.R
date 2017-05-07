@@ -127,10 +127,10 @@ start_m2 <- function(
       }
     }
 
-  } else { # default to ec2
+  } else { # default to cloud
 
     cloud_out <- do_start_m2_cloud(hostname)
-    if(cloud_out == 1L) stop("m2r unable to connect to the EC2 instance, are you online?")
+    if(cloud_out == 1L) stop("m2r unable to connect to the cloud instance, are you online?")
 
   }
 
@@ -203,7 +203,7 @@ request_port <- function(
 
   }
 
-  if (is.null(con)) stop("m2r unable to connect to the EC2 instance, are you online?")
+  if (is.null(con)) stop("m2r unable to connect to the cloud instance, are you online?")
 
   repeat {
     # read output info
