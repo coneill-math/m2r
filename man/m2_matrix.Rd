@@ -3,11 +3,23 @@
 \name{m2_matrix}
 \alias{m2_matrix}
 \alias{m2_matrix.}
+\alias{print.m2_matrix}
+\alias{print.m2_image}
+\alias{m2_kernel}
+\alias{m2_kernel.}
 \title{Create a new matrix in Macaulay2}
 \usage{
 m2_matrix(mat, ring, name, code = FALSE)
 
 m2_matrix.(mat, ring, name, code = FALSE)
+
+\method{print}{m2_matrix}(x, ...)
+
+\method{print}{m2_image}(x, ...)
+
+m2_kernel(mat, name, code = FALSE)
+
+m2_kernel.(mat, name, code = FALSE)
 }
 \arguments{
 \item{mat}{a matrix}
@@ -18,6 +30,10 @@ m2_matrix.(mat, ring, name, code = FALSE)
 on the M2 side}
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
+
+\item{x}{formal argument for print method}
+
+\item{...}{...}
 }
 \value{
 a reference to a Macaulay2 ring
@@ -44,6 +60,8 @@ mat_chars <- sapply(m2_matrix(mat), print, silent = TRUE)
 dim(mat_chars) <- c(2, 3)
 mat_chars
 
-}
-}
 
+(mat <- m2_matrix(matrix(c(1,2),nrow=1)))
+m2_kernel(mat)
+}
+}

@@ -30,4 +30,3 @@ str_m2.default(R)
 }
 
 }
-

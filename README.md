@@ -44,13 +44,15 @@ You can check the variables defined in the M2 session with `m2_ls()`:
 m2_ls()
 #  [1] "a"                      "m2o1"                  
 #  [3] "m2o2"                   "m2o3"                  
-#  [5] "m2o4"                   "m2rintoutline"         
-#  [7] "m2rintretcode"          "m2rintruncount"        
-#  [9] "m2rintoutclassclass"    "m2rintoutvalsucceeded" 
-# [11] "m2rintinout"            "m2rintinline"          
-# [13] "m2rintoutval"           "m2rintoutlinesucceeded"
-# [15] "m2rintvarname"          "m2rintoutclass"        
-# [17] "m2rintnumlines"
+#  [5] "m2o4"                   "m2rintthedate"         
+#  [7] "m2rintoutinfo"          "m2rintoutline"         
+#  [9] "m2rintretcode"          "m2rintruncount"        
+# [11] "m2rintoutclassclass"    "m2rintoutvalsucceeded" 
+# [13] "m2rintlog"              "m2rintinout"           
+# [15] "m2rintopenport"         "m2rintinline"          
+# [17] "m2rintoutval"           "m2rintoutlinesucceeded"
+# [19] "m2rintdateinout"        "m2rintvarname"         
+# [21] "m2rintoutclass"         "m2rintnumlines"
 ```
 
 You can also check if variables exist with `m2_exists()`:
@@ -267,8 +269,7 @@ mat %>% m2_matrix. %>% m2_parse
 # [3,]    3    6
 # M2 Matrix over ZZ[]
 mat %>% m2_matrix. %>% m2_parse %>% str
-#  int [1:3, 1:2] 1 2 3 4 5 6
-#  - attr(*, "class")= chr [1:3] "m2_matrix" "m2" "matrix"
+#  'm2_matrix' int [1:3, 1:2] 1 2 3 4 5 6
 #  - attr(*, "m2_name")= chr "m2rintmatrix00000003"
 #  - attr(*, "m2_meta")=List of 1
 #   ..$ ring:Classes 'm2_polynomialring', 'm2'  atomic [1:1] NA
@@ -317,7 +318,6 @@ But a matrix of integers isn't:
 mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2))
 str(mat)
 #  m2_matrix [1:3, 1:2] 1 2 3 4 5 6
-#  - attr(*, "class")= chr [1:3] "m2_matrix" "m2" "matrix"
 #  - attr(*, "m2_name")= chr "m2rintmatrix00000005"
 #  - attr(*, "m2_meta")=List of 1
 #   ..$ ring:Classes 'm2_polynomialring', 'm2'  atomic [1:1] NA

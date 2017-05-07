@@ -7,3 +7,4 @@ figures/
 .gitignore
 .Rproj.user
 .git
+old/
