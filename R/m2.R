@@ -110,45 +110,64 @@ m2_listen_code <- function (port, timeout) {
 
 
 
-start_m2 <- function(port = 27436L, timeout = 10, attempts = 10) {
+start_m2 <- function(
+  port = 27436L, timeout = 10, attempts = 10,
+  hostname = "ec2-52-10-66-241.us-west-2.compute.amazonaws.com"
+) {
 
-  # TODO: should switch based on default
+  if(!is.null(get_m2_path())) { # m2 not found locally
 
-  for(i in seq.int(0,attempts-1)) {
-    if (do_start_m2_local(port, timeout) == 0) break
-    if (i == attempts - 1) {
-      message(sprintf("%s attempts made at connecting. Aborting start_m2", attempts))
-    } else {
-      message(sprintf("Unable to connect to M2 on port %s. Attempting to connect on port %s", port, port + 1))
-      port = port + 1
+    for(i in seq.int(0,attempts-1)) {
+      if (do_start_m2_local(port, timeout) == 0L) break
+      if (i == attempts - 1) {
+        message(sprintf("%s attempts made at connecting. Aborting start_m2", attempts))
+      } else {
+        message(sprintf("Unable to connect to M2 on port %s. Attempting to connect on port %s", port, port + 1))
+        port = port + 1
+      }
     }
+
+  } else { # default to ec2
+
+    cloud_out <- do_start_m2_cloud(hostname)
+    if(cloud_out == 1L) stop("m2r unable to connect to the EC2 instance, are you online?")
+
   }
 
 }
 
 
 
-do_start_m2_cloud <- function() {
+do_start_m2_cloud <- function(hostname = "ec2-52-10-66-241.us-west-2.compute.amazonaws.com") {
 
-  hostname = "ec2-35-166-88-148.us-west-2.compute.amazonaws.com"
+  port <- request_port(hostname = hostname, port = 27435L)
 
-  port = do_request_port_m2(hostname = hostname, port = 27435L)
+  connect_to_m2_server(hostname = hostname, port = port)
 
-  do_connect_server_m2(hostname = hostname, port = port)
 }
 
 
 do_start_m2_local <- function(port = 27436L, timeout = 10) {
 
-  # only start if not already running
-  if (!is.null(get_m2_con())) return(invisible(0))
+  # if already running M2, break
+  if (!is.null(get_m2_con())) return(invisible(0L))
 
+  # launch M2 on local server
   message("Starting M2")
+  if(is.mac() || is.unix()) {
+    system2(
+      file.path2(get_m2_path(), "M2"), args = c("--script", system.file("server", "m2rserverscript.m2", package = "m2r"), toString(port)),
+      stdout = NULL, stderr = NULL, stdin = "",
+      wait = FALSE
+    )
+  } else if(is.win()) {
+    stop("Running local instances of M2 is not yet supported.")
+  }
 
-  do_launch_local_m2(port = port, timeout = timeout)
+  # connect to local server
+  connect_to_m2_server(port = port, timeout = timeout)
 
-  do_connect_server_m2(port = port, timeout = timeout)
-
+  # post process id to m2r global options
   set_m2r_option(m2_procid = strtoi(m2("processID()")))
 
   invisible(0L)
@@ -158,66 +177,12 @@ do_start_m2_local <- function(port = 27436L, timeout = 10) {
 
 
 
-do_launch_local_m2 <- function(port = 27436L, timeout = 10) {
-
-  # prep for m2 server process
-  if(is.mac() || is.unix()) {
-    # cat(file.path2(get_m2_path(), "M2"), args = c("--script", system.file("server", "m2rserverscript.m2", package = "m2r"), toString(port)))
-    system2(
-      file.path2(get_m2_path(), "M2"), args = c("--script", system.file("server", "m2rserverscript.m2", package = "m2r"), toString(port)),
-      stdout = NULL, stderr = NULL, stdin = "",
-      # stdin = write_to_temp(m2_listen_code(port, timeout)),
-      wait = FALSE
-    )
-
-  } else if(is.win()) {
-
-    # this works from dos command line with some complaining
-    # env.exe PATH=/usr/bin:/cygdrive/c/cygwin/lib/lapack /usr/bin/M2
-
-    # i've tried the following.... (and more)
-    # env.exe PATH=/usr/bin:$PATH:/cygdrive/c/cygwin/lib/lapack /usr/bin/M2
-    # env.exe PATH=/usr/bin:$PATH:/cygdrive/c/cygwin/lib/lapack:/usr/share/Macaulay2:/usr/share/doc/Macaulay2:/usr/share/Macaulay2/Core /usr/bin/M2
-
-    # ...but i can't stop the complaining unless i use
-    # env.exe PATH=/usr/bin:/cygdrive/c/cygwin/lib/lapack /usr/bin/M2 --no-setup
-    # note: if you run that, "exit" won't work in M2, you have to kill the process
-    # manually from the task manager
-
-    # this launches M2 with no errors... but kills it immediately
-    # system("cmd /K C:\\cygwin\\bin\\env.exe PATH=/usr/bin:$PATH:/usr/share/Macaulay2/Core:/usr/share/doc/Macaulay2:/cygdrive/c/cygwin/lib/lapack /usr/bin/M2 --no-setup")
-
-    # and this launches the persistent session, but otherwise doesn't work.
-    # e.g. m2("1+1") hangs
-    system2(
-      "cmd",
-      "/K C:\\cygwin\\bin\\env.exe PATH=/cygdrive/c/cygwin/lib/lapack:/usr/bin /usr/bin/M2 --no-setup",
-      stdout = NULL, stderr = NULL,
-      stdin = write_to_temp(m2_listen_code(port, timeout)),
-      wait = FALSE
-    )
-
-    # creates a process that dies immediately
-    #     system2(
-    #       "cmd.exe",
-    #       paste(
-    #         "/K",# env.exe",
-    #         file.path2(get_m2_path(), "env.exe"),
-    #         "PATH=/cygdrive/c/cygwin/lib/lapack /usr/bin/M2"
-    #         # file.path2(get_m2_path(), "M2.exe")
-    #       ),
-    #       stdout = NULL, stderr = NULL,
-    #       stdin = write_to_temp(m2_listen_code(port, timeout)),
-    #       wait = FALSE
-    #     )
-
-  }
-
-}
 
 
-
-do_request_port_m2 <- function(hostname = "ec2-35-166-88-148.us-west-2.compute.amazonaws.com", port = 27435L, timeout = 10) {
+request_port <- function(
+  hostname = "ec2-52-10-66-241.us-west-2.compute.amazonaws.com",
+  port = 27435L, timeout = 10
+) {
 
   # initialize client socket
   con <- NULL
@@ -234,15 +199,11 @@ do_request_port_m2 <- function(hostname = "ec2-35-166-88-148.us-west-2.compute.a
       error = function(e) {  }
     )
 
-    if (!is.null(con)) {
-      break
-    } else {
-      Sys.sleep(0.05)
-    }
+    if (!is.null(con)) { break } else { Sys.sleep(0.05) }
 
   }
 
-  if (is.null(con)) return(invisible(1L))
+  if (is.null(con)) stop("m2r unable to connect to the EC2 instance, are you online?")
 
   repeat {
     # read output info
@@ -261,7 +222,7 @@ do_request_port_m2 <- function(hostname = "ec2-35-166-88-148.us-west-2.compute.a
   close(con)
 
   if (length(port_number) == 0 || port_number == "0") {
-    stop(sprintf("Macaulay2 cloud is full: please try again later."))
+    stop(sprintf("Macaulay2 cloud is full; please try again later."))
   }
 
   return(strtoi(port_number))
@@ -270,7 +231,7 @@ do_request_port_m2 <- function(hostname = "ec2-35-166-88-148.us-west-2.compute.a
 
 
 
-do_connect_server_m2 <- function(hostname = "localhost", port = 27436L, timeout = 10) {
+connect_to_m2_server <- function(hostname = "localhost", port = 27436L, timeout = 10) {
 
   # initialize client socket
   con <- NULL
