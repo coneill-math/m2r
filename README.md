@@ -433,5 +433,5 @@ Here's how you can install the current *developmental* version of **m2r**. Remem
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("musicman3320/m2r")
+devtools::install_github("coneill-math/m2r")
 ```
