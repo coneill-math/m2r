@@ -30,6 +30,10 @@ m2_kernel.(mat, name, code = FALSE)
 on the M2 side}
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
+
+\item{x}{formal argument for print method}
+
+\item{...}{...}
 }
 \value{
 a reference to a Macaulay2 ring

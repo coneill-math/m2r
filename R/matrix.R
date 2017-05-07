@@ -7,6 +7,8 @@
 #' @param name the \code{m2_name} of the object, which is it's name
 #'   on the M2 side
 #' @param code return only the M2 code? (default: \code{FALSE})
+#' @param x formal argument for print method
+#' @param ... ...
 #' @return a reference to a Macaulay2 ring
 #' @name m2_matrix
 #' @examples
