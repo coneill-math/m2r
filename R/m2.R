@@ -54,59 +54,6 @@ m2_version_number <- function() {
 }
 
 
-m2_listen_code <- function (port, timeout) {
-  sprintf("
-    m2rintinout = openInOut \"$:%d\";
-    m2rintruncount = 0;
-    m2rintinout << \"%s\" << \"\\n\" << flush;
-    while true do (
-      m2rintinline = read m2rintinout;
-      if m2rintinline == \"\" then break;
-
-      m2rintretcode = 0;
-      m2rintoutvalsucceeded = false;
-      m2rintoutlinesucceeded = false;
-      m2rintruncount = m2rintruncount + 1;
-
-      try (
-        m2rintoutval_m2rintruncount = value(m2rintinline);
-        m2rintoutvalsucceeded = true;
-
-        m2rintoutclass = class m2rintoutval_m2rintruncount;
-        m2rintoutclassclass = class m2rintoutclass;
-
-        m2rintvarname = \"m2o\" | toString(m2rintruncount);
-        value(m2rintvarname | \" = m2rintoutval_m2rintruncount;\");
-
-        m2rintoutline = toExternalString m2rintoutval_m2rintruncount;
-        m2rintoutlinesucceeded = true;
-      );
-
-      if not m2rintoutvalsucceeded then (
-        m2rintoutline = \"Macaulay2 Error!\";
-        m2rintretcode = 1;
-      ) else if not m2rintoutlinesucceeded then (
-        m2rintoutline = \"Macaulay2 toExternalString Error!\";
-        m2rintretcode = 2;
-      );
-
-      m2rintnumlines = 1 + #select(\"\\n\", m2rintoutline);
-
-      m2rintinout << m2rintretcode << \" \" << m2rintnumlines << \" \"
-                  << toString(m2rintvarname) << \" \"
-                  << toString(m2rintoutclass) << \" \"
-                  << toString(m2rintoutclassclass) << \"\\n\"
-                  << m2rintoutline << \"\\n\" << flush;
-    );
-    close m2rintinout;
-  ", port, m2_version_number())
-}
-# cat(m2_listen_code(27436L, 10))
-
-
-
-
-
 
 
 
@@ -114,6 +61,9 @@ start_m2 <- function(
   port = 27436L, timeout = 10, attempts = 10,
   hostname = "ec2-52-10-66-241.us-west-2.compute.amazonaws.com"
 ) {
+
+  # if already running M2, break
+  if (!is.null(get_m2_con())) return(invisible(0L))
 
   if(!is.null(get_m2_path())) { # m2 not found locally
 
@@ -139,6 +89,9 @@ start_m2 <- function(
 
 
 do_start_m2_cloud <- function(hostname = "ec2-52-10-66-241.us-west-2.compute.amazonaws.com") {
+
+  # if already running M2, break
+  if (!is.null(get_m2_con())) return(invisible(0L))
 
   port <- request_port(hostname = hostname, port = 27435L)
 
@@ -305,8 +258,7 @@ stop_m2 <- function() {
 
     # not elegant, but a necessary safety measure
     Sys.sleep(0.01)
-    if (get_m2_procid() >= 0)
-      tools::pskill(get_m2_procid())
+    if (get_m2_procid() >= 0) tools::pskill(get_m2_procid())
 
     set_m2r_option(m2_con = NULL, m2_procid = NULL)
 
