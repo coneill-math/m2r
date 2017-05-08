@@ -110,7 +110,7 @@ do_start_m2_local <- function(port = 27436L, timeout = 10) {
   if(is.mac() || is.unix()) {
     system2(
       file.path2(get_m2_path(), "M2"), args = c("--script", system.file("server", "m2rserverscript.m2", package = "m2r"), toString(port)),
-      stdout = NULL, stderr = NULL, stdin = "",
+      stdout = "/Users/chris/Downloads/out.txt", stderr = "/Users/chris/Downloads/outerr.txt", stdin = "",
       wait = FALSE
     )
   } else if(is.win()) {
@@ -118,12 +118,13 @@ do_start_m2_local <- function(port = 27436L, timeout = 10) {
   }
 
   # connect to local server
-  connect_to_m2_server(port = port, timeout = timeout)
+  retval <- connect_to_m2_server(port = port, timeout = timeout)
 
-  # post process id to m2r global options
-  set_m2r_option(m2_procid = strtoi(m2("processID()")))
+  if (retval == 0)
+    # post process id to m2r global options
+    set_m2r_option(m2_procid = strtoi(m2("processID()")))
 
-  invisible(0L)
+  return(retval)
 }
 
 

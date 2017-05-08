@@ -26,8 +26,12 @@ m2rintlog(concatenate("Connection received on port ", toString m2rintopenport));
 m2rintlog("");
 
 while true do (
+  --while (not isReady m2rintinout) do (
+  --  run "sleep 0.05";
+  --);
+  --wait m2rintinout;
   m2rintinline = read m2rintinout;
-  if m2rintinline == "" then break;
+  if (atEndOfFile m2rintinout or m2rintinline == "") then break;
   
   m2rintlog(concatenate("Command:\n", m2rintinline));
 
