@@ -49,6 +49,10 @@
 #' set_m2_path(m2_path) # undoes example
 #'
 #'
+#' ## if you'd like to use the cloud, after you library(m2r)
+#' ## and before you use m2() type
+#' set_m2_path(NULL)
+#'
 #' }
 
 
