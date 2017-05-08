@@ -110,7 +110,7 @@ do_start_m2_local <- function(port = 27436L, timeout = 10) {
   if(is.mac() || is.unix()) {
     system2(
       file.path2(get_m2_path(), "M2"), args = c("--script", system.file("server", "m2rserverscript.m2", package = "m2r"), toString(port)),
-      stdout = "/Users/chris/Downloads/out.txt", stderr = "/Users/chris/Downloads/outerr.txt", stdin = "",
+      stdout = NULL, stderr = NULL, stdin = "",
       wait = FALSE
     )
   } else if(is.win()) {
