@@ -93,11 +93,20 @@ do_start_m2_cloud <- function(hostname = "ec2-52-10-66-241.us-west-2.compute.ama
   # if already running M2, break
   if (!is.null(get_m2_con())) return(invisible(0L))
 
+  # launch M2 on cloud
+  message("Connecting to M2 in the cloud... ", appendLF = FALSE)
+
+  # request port
   port <- request_port(hostname = hostname, port = 27435L)
 
-  connect_to_m2_server(hostname = hostname, port = port)
+  # connect to local server
+  out <- connect_to_m2_server(hostname = hostname, port = port)
+  message("done.")
 
+  # return
+  out
 }
+
 
 
 do_start_m2_local <- function(port = 27436L, timeout = 10) {
@@ -106,7 +115,7 @@ do_start_m2_local <- function(port = 27436L, timeout = 10) {
   if (!is.null(get_m2_con())) return(invisible(0L))
 
   # launch M2 on local server
-  message("Starting M2")
+  message("Starting M2... ", appendLF = FALSE)
   if(is.mac() || is.unix()) {
     system2(
       file.path2(get_m2_path(), "M2"), args = c("--script", system.file("server", "m2rserverscript.m2", package = "m2r"), toString(port)),
@@ -118,13 +127,14 @@ do_start_m2_local <- function(port = 27436L, timeout = 10) {
   }
 
   # connect to local server
-  retval <- connect_to_m2_server(port = port, timeout = timeout)
+  out <- connect_to_m2_server(port = port, timeout = timeout)
+  message("done.")
 
-  if (retval == 0)
-    # post process id to m2r global options
-    set_m2r_option(m2_procid = strtoi(m2("processID()")))
+  # post process id to m2r global options
+  if (out == 0) set_m2r_option(m2_procid = strtoi(m2("processID()")))
 
-  return(retval)
+  # return
+  out
 }
 
 

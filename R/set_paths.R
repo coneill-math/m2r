@@ -56,9 +56,14 @@
 #' # alternatively, if you have already been using m2, do:
 #' stop_m2()
 #' set_m2_path(NULL)
+#' m2("1+1")
 #'
 #'
 #' }
+
+
+
+
 
 
 #' @rdname m2_path
