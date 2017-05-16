@@ -61,13 +61,13 @@ unix_find <- function(exec, where){
 startup_check_for_program <- function(){
 
 	if(!is.null(get_m2_path())){
-		psms("  M2 found in %s", get_m2_path())
+		psms("M2 found in %s", get_m2_path())
 		return(invisible(FALSE))
 	}
 
 	if(is.null(get_m2_path())){
-		psms("  M2 not found; defaulting to cloud.")
-	  psms("  Use set_m2r_path(\"/path/to/m2\") to run M2 locally.")
+		psms("M2 not found; defaulting to cloud.")
+	  psms("Use set_m2r_path(\"/path/to/m2\") to run M2 locally.")
 		return(invisible(FALSE))
 	}
 
@@ -97,6 +97,8 @@ unix_search_and_set <- function(exec, baseName, optionName){
       ".bashrc"
   	} else if(file.exists("~/.profile")){
       ".profile"
+  	} else {
+  	  return(invisible(FALSE))
   	}
 
   # PATH <- system(sprintf("source ~/%s; echo $PATH", profile_to_look_for), intern = TRUE)
@@ -115,7 +117,7 @@ unix_search_and_set <- function(exec, baseName, optionName){
   }
 
   # break in a failure
-  if(is.na(found_path)) return()
+  if(is.na(found_path)) return(invisible(FALSE))
 
   # set option and exit
   set_m2r_option(m2_path = dirname(found_path))

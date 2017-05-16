@@ -3,6 +3,7 @@
 \name{m2_call}
 \alias{m2_call}
 \alias{m2_version_number}
+\alias{stop_m2}
 \alias{reset_m2}
 \alias{m2}
 \alias{m2.}
@@ -11,7 +12,10 @@
 \usage{
 m2_version_number()
 
-reset_m2(port = 27436L, timeout = 10)
+stop_m2()
+
+reset_m2(port = 27436L, timeout = 10, attempts = 10,
+  hostname = "ec2-52-10-66-241.us-west-2.compute.amazonaws.com")
 
 m2(code, timeout = -1)
 

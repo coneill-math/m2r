@@ -248,7 +248,8 @@ connect_to_m2_server <- function(hostname = "localhost", port = 27436L, timeout 
 
 
 
-
+#' @export
+#' @rdname m2_call
 stop_m2 <- function() {
 
   if (!is.null(get_m2_con())) { # for detaching when m2 never run
@@ -272,10 +273,13 @@ stop_m2 <- function() {
 
 #' @export
 #' @rdname m2_call
-reset_m2 <- function(port = 27436L, timeout = 10) {
+reset_m2 <- function(
+  port = 27436L, timeout = 10, attempts = 10,
+  hostname = "ec2-52-10-66-241.us-west-2.compute.amazonaws.com"
+) {
 
   stop_m2()
-  start_m2(port, timeout)
+  start_m2(port, timeout, attempts, hostname)
 
 }
 
