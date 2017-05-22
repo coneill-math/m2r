@@ -41,6 +41,9 @@
 #' # m2_ls()
 #' # m2(paste("class", m2_name(R)))
 #'
+#' m2_ls()
+#' m2_ls(all.names = TRUE)
+#'
 #'
 #' }
 
@@ -114,11 +117,19 @@ m2_exists <- function(name) {
 
 #' @rdname m2_utility
 #' @export
-m2_ls <- function() {
-  parsed_out <- m2("userSymbols()")
-  parsed_out <- str_sub(parsed_out, 2, -2)
-  parsed_out <- str_split(parsed_out, ",")[[1]]
-  str_sub(parsed_out, 8)
+m2_ls <- function(all.names = FALSE) {
+  out <- m2("userSymbols()")
+  out <- str_sub(out, 2, -2)
+  out <- str_split(out, ",")[[1]]
+
+  # "symbols m2o1" -> "m2o1"
+  out <- str_sub(out, 8)
+
+  # remove internals
+  if(!all.names) out <- out[!str_detect(out, "m2rint")]
+
+  # return
+  out
 }
 
 
