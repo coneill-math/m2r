@@ -25,7 +25,7 @@ m2_structure(x = NA, m2_name, m2_class, m2_meta, base_class)
 
 m2_exists(name)
 
-m2_ls()
+m2_ls(all.names = FALSE)
 
 m2_rm(name)
 
@@ -80,6 +80,9 @@ m2_meta(x, "b")
 # m2_rm(m2_name(R))
 # m2_ls()
 # m2(paste("class", m2_name(R)))
+
+m2_ls()
+m2_ls(all.names = TRUE)
 
 
 }
