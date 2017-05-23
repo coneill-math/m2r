@@ -125,8 +125,11 @@ m2_ls <- function(all.names = FALSE) {
   # "symbols m2o1" -> "m2o1"
   out <- str_sub(out, 8)
 
-  # remove internals
-  if(!all.names) out <- out[!str_detect(out, "m2rint")]
+  # remove internals and m2o#'s
+  if(!all.names) {
+    out <- out[!str_detect(out, "m2rint")]
+    out <- out[!str_detect(out, "m2o[0-9]+")]
+  }
 
   # return
   out
