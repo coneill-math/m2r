@@ -117,7 +117,7 @@ do_start_m2_local <- function(port = 27436L, timeout = 10, attempts = 10) {
   openPortFound <- FALSE
   for (i in seq.int(0, attempts-1)) {
 
-    out <- system(paste0("netstat -an | fgrep .", port, " | wc -l"), intern = TRUE)
+    out <- system(paste0("netstat -an | grep '[\\.:]", port, "' | wc -l"), intern = TRUE)
     if (as.integer(out) == 0) break()
     # openPortFound <- TRUE
     # tempservercon <- NULL
