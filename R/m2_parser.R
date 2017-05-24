@@ -44,8 +44,10 @@ m2_parse <- function(s) {
   ret <- m2_parse_internal(tokens)
   ret <- ret$result
 
-  if (is.m2_pointer(s) && is.m2(ret) &&
-      !is.null(m2_name(ret)) && m2_name(ret) == "") {
+  if (
+    is.m2_pointer(s) && is.m2(ret) &&
+    !is.null(m2_name(ret)) && m2_name(ret) == ""
+  ) {
     m2_name(ret) <- m2_name(s)
   }
 
@@ -193,7 +195,7 @@ m2_parse_internal <- function(tokens, start = 1) {
     i <- i + 3
 
   } else if (substr(tokens[i], 1, 1) %in% 0:9) {
-    # integer
+    # positive integer
 
     ret <- as.integer(tokens[i])
     i <- i + 1
