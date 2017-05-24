@@ -65,17 +65,10 @@ start_m2 <- function(
   # if already running M2, break
   if (!is.null(get_m2_con())) return(invisible(0L))
 
-  if(!is.null(get_m2_path())) { # m2 not found locally
+  if(!is.null(get_m2_path())) { # m2 found locally
 
-    for(i in seq.int(0,attempts-1)) {
-      if (do_start_m2_local(port, timeout) == 0L) break
-      if (i == attempts - 1) {
-        message(sprintf("%s attempts made at connecting. Aborting start_m2", attempts))
-      } else {
-        message(sprintf("Unable to connect to M2 on port %s. Attempting to connect on port %s", port, port + 1))
-        port = port + 1
-      }
-    }
+    if (do_start_m2_local(port, timeout, attempts) != 0L)
+      stop("m2r unable to connect to local instance")
 
   } else { # default to cloud
 
@@ -109,10 +102,40 @@ do_start_m2_cloud <- function(hostname = "ec2-52-10-66-241.us-west-2.compute.ama
 
 
 
-do_start_m2_local <- function(port = 27436L, timeout = 10) {
+do_start_m2_local <- function(port = 27436L, timeout = 10, attempts = 10) {
 
   # if already running M2, break
   if (!is.null(get_m2_con())) return(invisible(0L))
+
+  # find the first open port
+  openPortFound <- FALSE
+  for (i in seq.int(0, attempts-1)) {
+
+    out <- system(paste0("netstat -an | fgrep .", port, " | wc -l"), intern = TRUE)
+    if (as.integer(out) == 0) break()
+    # openPortFound <- TRUE
+    # tempservercon <- NULL
+    # tryCatch(
+    #   tempservercon <- suppressWarnings(
+    #     socketConnection(
+    #       port = port, blocking = FALSE,
+    #       server = TRUE, open = "r+", timeout = 1
+    #     )
+    #   ),
+    #   error = function(e) { openPortFound <- FALSE }
+    # )
+    # if (!is.null(tempservercon)) close(tempservercon)
+    # if (openPortFound) break()
+
+    if (i == attempts - 1) {
+      message(sprintf("%s attempts made at connecting. Aborting start_m2", attempts))
+      return(invisible(1L))
+    } else {
+      message(sprintf("Unable to connect to M2 on port %s. Attempting to connect on port %s", port, port + 1))
+      port <- port + 1
+    }
+
+  }
 
   # launch M2 on local server
   message("Starting M2... ", appendLF = FALSE)
