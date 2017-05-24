@@ -192,11 +192,25 @@ m2_parse_internal <- function(tokens, start = 1) {
     ret <- tokens[i+1]
     i <- i + 3
 
-  } else if (substr(tokens[i], 1, 1) %in% (seq(10)-1)) {
-    # number
+  } else if (substr(tokens[i], 1, 1) %in% 0:9) {
+    # integer
 
-    ret <- strtoi(tokens[i])
+    ret <- as.integer(tokens[i])
     i <- i + 1
+
+  } else if (tokens[i] == ".") {
+    # positive float
+
+    ret <- as.numeric( str_split(tokens[i+1], "p[0-9]+e")[[1]] )
+    ret <- ret[1] * 10^(ret[2]-nchar(ret[1]))
+    i <- i + 2
+
+  } else if (tokens[i] == "-" && i != length(tokens) && tokens[i+1] == ".") {
+    # negative float
+
+    ret <- as.numeric( str_split(tokens[i+2], "p[0-9]+e")[[1]] )
+    ret <- -ret[1] * 10^(ret[2]-nchar(ret[1]))
+    i <- i + 3
 
   } else if (tokens[i] == "-") {
     # -expression
