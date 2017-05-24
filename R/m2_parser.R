@@ -389,8 +389,15 @@ m2_parse_function.m2_monoid <- function(x) {
 }
 
 
-
-
+m2_parse_function.m2_tocc <- function(x) {
+  # m2_structure(
+  #   complex(real = x[[1]], imaginary = x[[2]]),
+  #   m2_name = "",
+  #   m2_class = "m2_ideal",
+  #   m2_meta = list(rmap = x[[1]])
+  # )
+  complex(real = x[[1]], imaginary = x[[2]])
+}
 
 
 # x is an object being applied (as a function) to params
