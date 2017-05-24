@@ -49,25 +49,31 @@
 #' }
 
 
-m2_version_number <- function() {
+m2r_version_number <- function() {
   "1.0.0"
 }
 
+m2r_cloud_url <- function() {
+  "ec2-52-10-66-241.us-west-2.compute.amazonaws.com"
+}
 
 
 
 
 start_m2 <- function(
   port = 27436L, timeout = 10, attempts = 10,
-  hostname = "ec2-52-10-66-241.us-west-2.compute.amazonaws.com"
+  hostname = m2r_cloud_url()
 ) {
+
+  # don't increment port if supplied
+  if (!missing(port)) attempts <- 1
 
   # if already running M2, break
   if (!is.null(get_m2_con())) return(invisible(0L))
 
-  if(!is.null(get_m2_path())) { # m2 found locally
+  if(!is.null(get_m2_path()) && missing(hostname)) { # m2 found locally
 
-    if (do_start_m2_local(port, timeout, attempts) != 0L)
+    if (do_start_m2_local(port = port, timeout = timeout, attempts = attempts) != 0L)
       stop("m2r unable to connect to local instance")
 
   } else { # default to cloud
@@ -81,7 +87,7 @@ start_m2 <- function(
 
 
 
-do_start_m2_cloud <- function(hostname = "ec2-52-10-66-241.us-west-2.compute.amazonaws.com") {
+do_start_m2_cloud <- function(hostname = m2r_cloud_url()) {
 
   # if already running M2, break
   if (!is.null(get_m2_con())) return(invisible(0L))
@@ -128,10 +134,10 @@ do_start_m2_local <- function(port = 27436L, timeout = 10, attempts = 10) {
     # if (openPortFound) break()
 
     if (i == attempts - 1) {
-      message(sprintf("%s attempts made at connecting. Aborting start_m2", attempts))
+      message(sprintf("%s attempts made at finding an open port. Aborting start_m2", attempts))
       return(invisible(1L))
     } else {
-      message(sprintf("Unable to connect to M2 on port %s. Attempting to connect on port %s", port, port + 1))
+      # message(sprintf("Unable to connect to M2 on port %s. Attempting to connect on port %s", port, port + 1))
       port <- port + 1
     }
 
@@ -167,7 +173,7 @@ do_start_m2_local <- function(port = 27436L, timeout = 10, attempts = 10) {
 
 
 request_port <- function(
-  hostname = "ec2-52-10-66-241.us-west-2.compute.amazonaws.com",
+  hostname = m2r_cloud_url(),
   port = 27435L, timeout = 10
 ) {
 
@@ -259,10 +265,10 @@ connect_to_m2_server <- function(hostname = "localhost", port = 27436L, timeout 
     }
   }
 
-  if (server_version != m2_version_number()) {
+  if (server_version != m2r_version_number()) {
     close(con)
     stop(sprintf("Internal error: server version is %s and client version is %s.",
-                 server_version, m2_version_number()))
+                 server_version, m2r_version_number()))
   }
 
   # set options
