@@ -1,14 +1,10 @@
 .onAttach <- function(...) {
 
 	# find M2 on a Mac or Linux
-	if(is.mac() || is.linux()){
-		unix_search_and_set("M2", "Macaulay2", "m2_path")
-	}
+	if (is.mac() || is.linux()) unix_search_and_set("M2", "Macaulay2", "m2_path")
 
 	# find M2 on a PC - directs to cloud immediately
-	if(is.win()){
-		win_search_and_set("m2")
-	}
+	if (is.win()) win_search_and_set("m2")
 
 	# check that the programs were found
 	startup_check_for_program()
