@@ -18,7 +18,14 @@ knitr::opts_chunk$set(
 <!-- NOTE: you have to kill any R M2 process before knitting this. -->
 
 
-# __m2r__
+# __m2r__ – Macaulay2 in R
+
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/m2r)](https://cran.r-project.org/package=m2r)
+
+
+
+
+## Overview
 
 __m2r__ is a new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2 (M2)](http://www.math.uiuc.edu/Macaulay2/).
 
@@ -62,10 +69,7 @@ You can also check if variables exist with `m2_exists()`:
 m2_exists("a")
 m2_exists(c("a","b"))
 ```
-Notice that there are many variables returned by `m2_ls()` that we didn't make.  Most of those are created internally by __m2r__ in order to facilitate the connection, so you won't want to access them.  Others, however, are ok to access directly:
-```{r m2o3}
-m2("m2o3")
-```
+
 
 Apart from the basic connection to M2, __m2r__ has basic data structures and methods to reference and manipulate the M2 objects within R. For more on this, see the __m2r__ internals section below.
 
@@ -303,7 +307,7 @@ f. <- function(esntl_parm_1, esntl_parm_2, code = FALSE, ...) {
 
 ## Acknowledgements
 
-  This material is based upon work supported by the National Science Foundation under [Grant No. 1321794](http://nsf.gov/awardsearch/showAward?AWD_ID=1321794).
+This material is based upon work supported by the National Science Foundation under [Grant No. 1321794](http://nsf.gov/awardsearch/showAward?AWD_ID=1321794).
 
 ## Installation
 

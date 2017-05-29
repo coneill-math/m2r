@@ -1,7 +1,12 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- NOTE: you have to kill any R M2 process before knitting this. -->
-**m2r**
-=======
+**m2r** – Macaulay2 in R
+========================
+
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/m2r)](https://cran.r-project.org/package=m2r)
+
+Overview
+--------
 
 **m2r** is a new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2 (M2)](http://www.math.uiuc.edu/Macaulay2/).
 
@@ -18,14 +23,14 @@ Getting started
 library(m2r)
 # Loading required package: mpoly
 # Loading required package: stringr
-#   M2 found in /Applications/Macaulay2-1.9.2/bin
+# M2 found in /Applications/Macaulay2-1.9.2/bin
 ```
 
 When loaded, **m2r** initializes a persistent connection to a back-end Macaulay2 session. The basic function in R that accesses this connection is `m2()`, which simply accepts a character string that is run by the Macaulay2 session.
 
 ``` r
 m2("1 + 1")
-# Starting M2
+# Starting M2... done.
 # [1] "2"
 ```
 
@@ -42,17 +47,7 @@ You can check the variables defined in the M2 session with `m2_ls()`:
 
 ``` r
 m2_ls()
-#  [1] "a"                      "m2o1"                  
-#  [3] "m2o2"                   "m2o3"                  
-#  [5] "m2o4"                   "m2rintthedate"         
-#  [7] "m2rintoutinfo"          "m2rintoutline"         
-#  [9] "m2rintretcode"          "m2rintruncount"        
-# [11] "m2rintoutclassclass"    "m2rintoutvalsucceeded" 
-# [13] "m2rintlog"              "m2rintinout"           
-# [15] "m2rintopenport"         "m2rintinline"          
-# [17] "m2rintoutval"           "m2rintoutlinesucceeded"
-# [19] "m2rintdateinout"        "m2rintvarname"         
-# [21] "m2rintoutclass"         "m2rintnumlines"
+# [1] "a"
 ```
 
 You can also check if variables exist with `m2_exists()`:
@@ -62,13 +57,6 @@ m2_exists("a")
 # [1] TRUE
 m2_exists(c("a","b"))
 # [1]  TRUE FALSE
-```
-
-Notice that there are many variables returned by `m2_ls()` that we didn't make. Most of those are created internally by **m2r** in order to facilitate the connection, so you won't want to access them. Others, however, are ok to access directly:
-
-``` r
-m2("m2o3")
-# [1] "1"
 ```
 
 Apart from the basic connection to M2, **m2r** has basic data structures and methods to reference and manipulate the M2 objects within R. For more on this, see the **m2r** internals section below.
@@ -239,7 +227,7 @@ For example, we've seen that `factor_n()` computes the prime decomposition of a 
 factor_n.(x)
 # M2 Pointer Object
 #   ExternalString : new Product from {new Power from {2,5},new Power fro...
-#          M2 Name : m2o204
+#          M2 Name : m2o203
 #         M2 Class : Product (WrapperType)
 ```
 
