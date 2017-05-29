@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- NOTE: you have to kill any R M2 process before knitting this. -->
 
 
-# __m2r__
+# __m2r__ – Macaulay2 in R
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/m2r)](https://cran.r-project.org/package=m2r)
 
@@ -307,7 +307,7 @@ f. <- function(esntl_parm_1, esntl_parm_2, code = FALSE, ...) {
 
 ## Acknowledgements
 
-  This material is based upon work supported by the National Science Foundation under [Grant No. 1321794](http://nsf.gov/awardsearch/showAward?AWD_ID=1321794).
+This material is based upon work supported by the National Science Foundation under [Grant No. 1321794](http://nsf.gov/awardsearch/showAward?AWD_ID=1321794).
 
 ## Installation
 

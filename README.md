@@ -1,7 +1,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- NOTE: you have to kill any R M2 process before knitting this. -->
-**m2r**
-=======
+**m2r** – Macaulay2 in R
+========================
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/m2r)](https://cran.r-project.org/package=m2r)
 
