@@ -2,7 +2,7 @@
 % Please edit documentation in R/m2.R
 \name{m2_call}
 \alias{m2_call}
-\alias{m2_version_number}
+\alias{m2r_version_number}
 \alias{stop_m2}
 \alias{reset_m2}
 \alias{m2}
@@ -10,7 +10,7 @@
 \alias{print.m2_pointer}
 \title{Call and reset a Macaulay2 process}
 \usage{
-m2_version_number()
+m2r_version_number()
 
 stop_m2()
 
