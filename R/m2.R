@@ -62,7 +62,7 @@ m2r_cloud_url <- function() {
 
 start_m2 <- function(
   port = 27436L, timeout = 10, attempts = 10,
-  hostname = m2r_cloud_url()
+  cloud = FALSE, hostname = m2r_cloud_url()
 ) {
 
   # don't increment port if supplied
@@ -71,7 +71,7 @@ start_m2 <- function(
   # if already running M2, break
   if (!is.null(get_m2_con())) return(invisible(0L))
 
-  if(!is.null(get_m2_path()) && missing(hostname)) { # m2 found locally
+  if(!is.null(get_m2_path()) && !cloud && missing(hostname)) { # m2 found locally
 
     if (do_start_m2_local(port = port, timeout = timeout, attempts = attempts) != 0L)
       stop("m2r unable to connect to local instance")
@@ -103,7 +103,7 @@ do_start_m2_cloud <- function(hostname = m2r_cloud_url()) {
   message("done.")
 
   # return
-  out
+  invisible(out)
 }
 
 
