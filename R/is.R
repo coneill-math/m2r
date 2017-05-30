@@ -71,6 +71,11 @@ is.m2_matrix <- function (x) inherits(x, "m2_matrix")
 
 #' @export
 #' @rdname is
+is.m2_matrix_pointer <- function (x) is.m2_pointer(x) && (m2_meta(x, "m2_class") == "Matrix")
+
+
+#' @export
+#' @rdname is
 is.m2_list <- function (x) inherits(x, "m2_list")
 
 

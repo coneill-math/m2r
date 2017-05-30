@@ -30,6 +30,11 @@
 #' dim(mat_chars) <- c(2, 3)
 #' mat_chars
 #'
+#' (mat <- m2_matrix.(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
+#'
+#' m2_numrows(mat)
+#' m2_numcols(mat)
+#' m2_parse(mat)
 #'
 #' (mat <- m2_matrix(matrix(c(1,2),nrow=1)))
 #' m2_kernel(mat)
@@ -108,6 +113,74 @@ m2_matrix. <- function(mat, ring, name, code = FALSE) {
 }
 
 
+
+#' @rdname m2_matrix
+#' @export
+m2_numrows <- function(x, code = FALSE, ...) {
+
+  # make mat_param
+  if (is.m2_matrix(x)) {
+    mat_param <- m2_name(x)
+  } else if (is.m2_matrix_pointer(x)) {
+    mat_param <- m2_name(x)
+  } else {
+    stop("input must be a matrix")
+  }
+
+  # construct code and message
+  m2_code <- sprintf("numrows(%s)", mat_param)
+  if(code) { message(m2_code); return(invisible(m2_code)) }
+
+  # run m2 and return
+  m2_parse(m2.(m2_code))
+
+}
+
+
+
+#' @rdname m2_matrix
+#' @export
+m2_numcols <- function(x, code = FALSE, ...) {
+
+  # make mat_param
+  if (is.m2_matrix(x)) {
+    mat_param <- m2_name(x)
+  } else if (is.m2_matrix_pointer(x)) {
+    mat_param <- m2_name(x)
+  } else {
+    stop("input must be a matrix")
+  }
+
+  # construct code and message
+  m2_code <- sprintf("numcols(%s)", mat_param)
+  if(code) { message(m2_code); return(invisible(m2_code)) }
+
+  # run m2 and return
+  m2_parse(m2.(m2_code))
+
+}
+
+
+
+#' @rdname m2_matrix
+#' @export
+m2_length <- function(x, code = FALSE, ...) {
+
+  # make x_param
+  if (is.m2(x)) {
+    x_param <- m2_name(x)
+  } else {
+    stop("input must be an m2 object")
+  }
+
+  # construct code and message
+  m2_code <- sprintf("length(%s)", x_param)
+  if(code) { message(m2_code); return(invisible(m2_code)) }
+
+  # run m2 and return
+  m2_parse(m2.(m2_code))
+
+}
 
 
 
