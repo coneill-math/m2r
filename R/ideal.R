@@ -174,7 +174,12 @@ print.m2_ideal <- function(x, ...) {
   )
 
   # ideal stuff
-  cat("M2 Ideal of", s, "with generators:", "\n")
+  if (length(m2_meta(x, "gens")) > 1) {
+    with_gen <- "with generators:"
+  } else {
+    with_gen <- "with generator:"
+  }
+  cat("M2 Ideal of", s, with_gen, "\n")
   gens_strings <- print(m2_meta(x, "gens"), silent = TRUE)
   cat(paste("<", paste(gens_strings, collapse = ",  "), ">"))
   # cat(str_pad(gens_strings, nchar(gens_strings)+2, side = "left"), sep = "\n")
