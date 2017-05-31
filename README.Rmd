@@ -122,6 +122,27 @@ gb_(poly_chars, ring = R)
 
 `gb_()` is significantly easier to code with than `gb()` in the sense that its inputs and outputs are more predictable, so we strongly recommend that you use `gb_()`, especially inside of other functions and packages. 
 
+As far as other kinds of computations are concerned, we present a potpurri of examples below.
+
+Ideal saturation:
+```{r saturation}
+QQxy <- ring(c("x", "y"), "QQ")
+I <- ideal("x y", QQxy)
+saturate(I, "x^2")
+```
+
+Primary decomposition:
+```{r primary-decomposition}
+I <- ideal(c("x (x + 1)", "y"), QQxy)
+primary_decomposition(I)
+```
+
+Dimension:
+```{r dimension}
+I <- ideal("y - (x+1)", QQxy) 
+dimension(I)
+```
+
 
 
 
