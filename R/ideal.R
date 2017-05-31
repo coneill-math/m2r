@@ -53,6 +53,12 @@
 #' saturate(I,J)
 #' saturate(I,mp("x"))
 #'
+#' # primaryDecomposition
+#' QQxy <- ring(c("x","y"), "QQ")
+#' I <- ideal(c("(x^2 + 1)*(x^2 + 2)", "y + 1"))
+#' primaryDecomposition(I)
+#' primaryDecomposition.(I)
+#'
 #' }
 
 
@@ -72,15 +78,8 @@ ideal <- function(x, ring, raw_chars = FALSE, code = FALSE, ...) {
   parsed_out <- m2_parse(pointer)
 
   # construct R-side ideal, class and return
-  m2_structure(
-    m2_name = m2_name(pointer),
-    m2_class = "m2_ideal",
-    m2_meta = list(
-      ring = m2_meta(m2_meta(parsed_out, "rmap"), "ring"),
-      gens = structure(m2_meta(parsed_out, "rmap")[1,], class = "mpolyList")
-    )
-  )
-
+  m2_name(parsed_out) <- m2_name(pointer)
+  parsed_out
 }
 
 
@@ -155,12 +154,24 @@ m2_parse_function.m2_ideal <- function(x) {
   m2_structure(
     m2_name = "",
     m2_class = "m2_ideal",
-    m2_meta = list(rmap = x[[1]])
+    m2_meta = list(
+      ring = m2_meta(x[[1]], "ring"),
+      gens = structure(x[[1]][1,], class = "mpolyList")
+    )
   )
 }
 
 
-m2_parse_function.m2_monomialideal <- m2_parse_function.m2_ideal
+m2_parse_function.m2_monomialideal <- function(x) {
+  m2_structure(
+    m2_name = "",
+    m2_class = "m2_ideal",
+    m2_meta = list(
+      ring = m2_meta(x[[1]], "ring"),
+      gens = structure(x[[1]][1,], class = "mpolyList")
+    )
+  )
+}
 
 
 
@@ -215,15 +226,9 @@ radical <- function(ideal, code = FALSE, ...) {
   parsed_out <- m2_parse(pointer)
 
   # construct R-side ideal, class and return
-  m2_structure(
-    m2_name = m2_name(pointer),
-    m2_class = "m2_ideal",
-    m2_meta = list(
-      ring = m2_meta(m2_meta(parsed_out, "rmap"), "ring"),
-      gens = structure(m2_meta(parsed_out, "rmap")[1,], class = "mpolyList"),
-      radical_of = ideal
-    )
-  )
+  m2_name(parsed_out) <- m2_name(pointer)
+  m2_meta(parsed_out, "radical_of") <- ideal
+  parsed_out
 
 }
 
@@ -268,15 +273,9 @@ saturate <- function(ideal, saturate_by, code = FALSE, ...) {
   parsed_out <- m2_parse(pointer)
 
   # construct R-side ideal, class and return
-  m2_structure(
-    m2_name = m2_name(pointer),
-    m2_class = "m2_ideal",
-    m2_meta = list(
-      ring = m2_meta(m2_meta(parsed_out, "rmap"), "ring"),
-      gens = structure(m2_meta(parsed_out, "rmap")[1,], class = "mpolyList"),
-      saturation_of = ideal
-    )
-  )
+  m2_name(parsed_out) <- m2_name(pointer)
+  m2_meta(parsed_out, "saturation_of") <- ideal
+  parsed_out
 
 }
 
@@ -318,4 +317,54 @@ saturate. <- function(ideal, saturate_by, code = FALSE, ...) {
   out
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+#' @rdname ideal
+#' @export
+primaryDecomposition <- function(ideal, code = FALSE, ...) {
+
+  # run primaryDecomposition.
+  args <- as.list(match.call())[-1]
+  eargs <- lapply(args, eval, envir = parent.frame())
+  pointer <- do.call(primaryDecomposition., eargs)
+  if(code) return(invisible(pointer))
+
+  # parse output
+  parsed_out <- m2_parse(pointer)
+
+  # construct R-side ideal, class and return
+  parsed_out
+
+}
+
+
+
+#' @rdname ideal
+#' @export
+primaryDecomposition. <- function(ideal, code = FALSE, ...) {
+
+  # arg check
+  if (!is.m2_ideal(ideal) && !is.m2_ideal_pointer(ideal))
+    stop("unrecognized input ideal. see ?ideal", call. = FALSE)
+
+  # construct code and message
+  m2_code <- sprintf("primaryDecomposition(%s)", m2_name(ideal))
+  if(code) { message(m2_code); return(invisible(m2_code)) }
+
+  # run m2
+  out <- m2.(m2_code)
+
+  # return
+  out
+}
 
