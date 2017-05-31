@@ -44,6 +44,11 @@
 #' radical(I)
 #' radical.(I)
 #'
+#' # dimension
+#' QQxy <- ring(c("x","y"), "QQ")
+#' I <- ideal(c("(x^2 + 1)^2 y", "y + 1"))
+#' dimension(I)
+#'
 #' # saturation
 #' QQxy <- ring(c("x", "y", "z"), "QQ")
 #' I <- ideal(c("x^2", "y^4", "z + 1"))
@@ -376,5 +381,30 @@ primaryDecomposition. <- function(ideal, code = FALSE, ...) {
 
   # return
   out
+}
+
+
+
+
+
+
+
+#' @rdname ideal
+#' @export
+dimension <- function(ideal, code = FALSE, ...) {
+
+  # arg check
+  if (!is.m2_ideal(ideal) && !is.m2_ideal_pointer(ideal))
+    stop("unrecognized input ideal. see ?ideal", call. = FALSE)
+
+  # construct code and message
+  m2_code <- sprintf("dim(%s)", m2_name(ideal))
+  if(code) { message(m2_code); return(invisible(m2_code)) }
+
+  # run m2
+  out <- m2.(m2_code)
+
+  # parse and return
+  m2_parse(out)
 }
 
