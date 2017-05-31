@@ -28,6 +28,11 @@ m2.(code, timeout = -1)
 
 \item{timeout}{number of seconds before aborting}
 
+\item{attempts}{numer of times to try to make connection}
+
+\item{hostname}{the remote host to connect to; defaults to
+the Amazon EC2 instance}
+
 \item{code}{Macaulay2 code}
 
 \item{x}{formal argument for print method}
