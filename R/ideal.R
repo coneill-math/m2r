@@ -12,6 +12,8 @@
 #'   \code{\link{mp}}. (e.g. \code{"x*y+3"} instead of \code{"x y +
 #'   3"})
 #' @param code return only the M2 code? (default: \code{FALSE})
+#' @param ideal an ideal object of class \code{m2_ideal} or
+#'   \code{m2_ideal_pointer}
 #' @param ... ...
 #' @return a reference to a Macaulay2 ideal
 #' @name ideal
@@ -35,6 +37,12 @@
 #' is.m2_ideal(I.)
 #' is.m2_ideal_pointer(I)
 #' is.m2_ideal_pointer(I.)
+#'
+#' # radical
+#' QQxy <- ring(c("x","y"), "QQ")
+#' I <- ideal(c("(x^2 + 1)^2 y", "y + 1"))
+#' radical(I)
+#' radical.(I)
 #'
 #' }
 
@@ -166,5 +174,65 @@ print.m2_ideal <- function(x, ...) {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+#' @rdname ideal
+#' @export
+radical <- function(ideal, code = FALSE, ...) {
+
+  # run ideal.
+  args <- as.list(match.call())[-1]
+  eargs <- lapply(args, eval, envir = parent.frame())
+  pointer <- do.call(radical., eargs)
+  if(code) return(invisible(pointer))
+
+  # parse output
+  parsed_out <- m2_parse(pointer)
+
+  # construct R-side ideal, class and return
+  m2_structure(
+    m2_name = m2_name(pointer),
+    m2_class = "m2_ideal",
+    m2_meta = list(
+      ring = m2_meta(m2_meta(parsed_out, "rmap"), "ring"),
+      gens = structure(m2_meta(parsed_out, "rmap")[1,], class = "mpolyList"),
+      radical_of = ideal
+    )
+  )
+
+}
+
+
+
+#' @rdname ideal
+#' @export
+radical. <- function(ideal, code = FALSE, ...) {
+
+  # arg check
+  if (!is.m2_ideal(ideal) && !is.m2_ideal_pointer(ideal))
+    stop("unrecognized input ideal. see ?ideal", call. = FALSE)
+
+  # make radical ideal name
+  radical_name <- name_and_increment("ideal", "m2_ideal_count")
+
+  # construct code and message
+  m2_code <- sprintf("%s = radical(%s)", radical_name, m2_name(ideal))
+  if(code) { message(m2_code); return(invisible(m2_code)) }
+
+  # run m2
+  out <- m2.(m2_code)
+
+  # change name and return
+  m2_name(out) <- radical_name
+  out
+}
 
 

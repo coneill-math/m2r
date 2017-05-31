@@ -4,6 +4,8 @@
 \alias{ideal}
 \alias{ideal.}
 \alias{print.m2_ideal}
+\alias{radical}
+\alias{radical.}
 \title{Create a new ideal in Macaulay2}
 \usage{
 ideal(x, ring, raw_chars = FALSE, code = FALSE, ...)
@@ -11,6 +13,10 @@ ideal(x, ring, raw_chars = FALSE, code = FALSE, ...)
 ideal.(x, ring, raw_chars = FALSE, code = FALSE, ...)
 
 \method{print}{m2_ideal}(x, ...)
+
+radical(ideal, code = FALSE, ...)
+
+radical.(ideal, code = FALSE, ...)
 }
 \arguments{
 \item{x}{a listing of polynomials. several formats are accepted,
@@ -28,6 +34,9 @@ formated for M2 use directly, as opposed to for
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 
 \item{...}{...}
+
+\item{ideal}{an ideal object of class \code{m2_ideal} or
+\code{m2_ideal_pointer}}
 }
 \value{
 a reference to a Macaulay2 ideal
@@ -55,6 +64,12 @@ is.m2_ideal(I)
 is.m2_ideal(I.)
 is.m2_ideal_pointer(I)
 is.m2_ideal_pointer(I.)
+
+# radical
+QQxy <- ring(c("x","y"), "QQ")
+I <- ideal(c("(x^2 + 1)^2 y", "y + 1"))
+radical(I)
+radical.(I)
 
 }
 }
