@@ -10,6 +10,7 @@
 \alias{saturate.}
 \alias{primary_decomposition}
 \alias{primary_decomposition.}
+\alias{dimension}
 \title{Create a new ideal in Macaulay2}
 \usage{
 ideal(x, ring, raw_chars = FALSE, code = FALSE, ...)
@@ -29,6 +30,8 @@ saturate.(ideal, saturate_by, code = FALSE, ...)
 primary_decomposition(ideal, code = FALSE, ...)
 
 primary_decomposition.(ideal, code = FALSE, ...)
+
+dimension(ideal, code = FALSE, ...)
 }
 \arguments{
 \item{x}{a listing of polynomials. several formats are accepted,
@@ -82,6 +85,18 @@ QQxy <- ring(c("x","y"), "QQ")
 I <- ideal(c("(x^2 + 1)^2 y", "y + 1"))
 radical(I)
 radical.(I)
+
+# dimension
+ring(c("x","y","z"), "QQ")
+I <- ideal(c("(x^2 + 1)^2 y", "y + 1"))
+dimension(I)
+
+I <- ideal("y - (x+1)", ring(c("x", "y"), "QQ")) # a line
+dimension(I)
+
+I <- ideal("z - (x+y+1)", ring(c("x", "y", "z"), "QQ")) # a plane
+dimension(I)
+
 
 # saturation
 QQxy <- ring(c("x", "y", "z"), "QQ")
