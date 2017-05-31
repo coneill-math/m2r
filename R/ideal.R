@@ -151,6 +151,15 @@ m2_parse_function.m2_ideal <- function(x) {
 }
 
 
+m2_parse_function.m2_monomialideal <- function(x) {
+  m2_structure(
+    m2_name = "",
+    m2_class = "m2_ideal",
+    m2_meta = list(rmap = x[[1]])
+  )
+}
+
+
 
 #' @rdname ideal
 #' @export
