@@ -4,6 +4,9 @@
 #'
 #' @param port port for Macaulay2 socket
 #' @param timeout number of seconds before aborting
+#' @param attempts numer of times to try to make connection
+#' @param hostname the remote host to connect to; defaults to
+#'   the Amazon EC2 instance
 #' @param code Macaulay2 code
 #' @param x formal argument for print method
 #' @param ... ...

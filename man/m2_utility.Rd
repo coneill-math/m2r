@@ -49,6 +49,10 @@ if there is no relevant method for the other classes (e.g.
 \code{m2})}
 
 \item{name}{a string; the name of a M2 object}
+
+\item{all.names}{if \code{TRUE}, all registered Macaulay2
+variables, including ones internally used by m2r, will be
+returned}
 }
 \description{
 Utility tools for M2

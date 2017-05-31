@@ -12,6 +12,9 @@
 #'   if there is no relevant method for the other classes (e.g.
 #'   \code{m2})
 #' @param m2_meta  \code{m2_meta}  M2 attribute
+#' @param all.names if \code{TRUE}, all registered Macaulay2
+#'   variables, including ones internally used by m2r, will be
+#'   returned
 #' @name m2_utility
 #' @examples
 #'
