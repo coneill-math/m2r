@@ -67,11 +67,17 @@
 #' saturate(I, "x") # remove x = 0 from solution
 #' ideal("(x-1) (x+1)")
 #'
-#' # primaryDecomposition
+#' # primary_decomposition
 #' QQxy <- ring(c("x","y"), "QQ")
-#' I <- ideal(c("(x^2 + 1)*(x^2 + 2)", "y + 1"))
-#' primaryDecomposition(I)
-#' primaryDecomposition.(I)
+#' I <- ideal(c("(x^2 + 1) (x^2 + 2)", "y + 1"))
+#' primary_decomposition(I)
+#' primary_decomposition.(I)
+#'
+#' I <- ideal(c("x (x + 1)", "y"), ring(c("x","y"), "QQ"))
+#' primary_decomposition(I)
+#'
+#' I <- ideal(c("x^2", "x y"), ring(c("x","y"), "QQ"))
+#' primary_decomposition(I)
 #'
 #' }
 
@@ -346,12 +352,12 @@ saturate. <- function(ideal, saturate_by, code = FALSE, ...) {
 
 #' @rdname ideal
 #' @export
-primaryDecomposition <- function(ideal, code = FALSE, ...) {
+primary_decomposition <- function(ideal, code = FALSE, ...) {
 
-  # run primaryDecomposition.
+  # run primary_decomposition.
   args <- as.list(match.call())[-1]
   eargs <- lapply(args, eval, envir = parent.frame())
-  pointer <- do.call(primaryDecomposition., eargs)
+  pointer <- do.call(primary_decomposition., eargs)
   if(code) return(invisible(pointer))
 
   # parse output
@@ -366,7 +372,7 @@ primaryDecomposition <- function(ideal, code = FALSE, ...) {
 
 #' @rdname ideal
 #' @export
-primaryDecomposition. <- function(ideal, code = FALSE, ...) {
+primary_decomposition. <- function(ideal, code = FALSE, ...) {
 
   # arg check
   if (!is.m2_ideal(ideal) && !is.m2_ideal_pointer(ideal))
