@@ -3,6 +3,9 @@
 \name{m2_matrix}
 \alias{m2_matrix}
 \alias{m2_matrix.}
+\alias{m2_numrows}
+\alias{m2_numcols}
+\alias{m2_length}
 \alias{print.m2_matrix}
 \alias{print.m2_image}
 \alias{m2_kernel}
@@ -12,6 +15,12 @@
 m2_matrix(mat, ring, name, code = FALSE)
 
 m2_matrix.(mat, ring, name, code = FALSE)
+
+m2_numrows(x, code = FALSE, ...)
+
+m2_numcols(x, code = FALSE, ...)
+
+m2_length(x, code = FALSE, ...)
 
 \method{print}{m2_matrix}(x, ...)
 
@@ -60,6 +69,11 @@ mat_chars <- sapply(m2_matrix(mat), print, silent = TRUE)
 dim(mat_chars) <- c(2, 3)
 mat_chars
 
+(mat <- m2_matrix.(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
+
+m2_numrows(mat)
+m2_numcols(mat)
+m2_parse(mat)
 
 (mat <- m2_matrix(matrix(c(1,2),nrow=1)))
 m2_kernel(mat)
