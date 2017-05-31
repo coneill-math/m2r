@@ -12,7 +12,7 @@
 #'   \code{\link{mp}}. (e.g. \code{"x*y+3"} instead of \code{"x y +
 #'   3"})
 #' @param code return only the M2 code? (default: \code{FALSE})
-#' @param ideal an ideal object of class \code{m2_ideal} or
+#' @param ideal,saturate_by an ideal object of class \code{m2_ideal} or
 #'   \code{m2_ideal_pointer}
 #' @param ... ...
 #' @return a reference to a Macaulay2 ideal
@@ -45,13 +45,22 @@
 #' radical.(I)
 #'
 #' # saturation
-#' QQxy <- ring(c("x","y", "z"), "QQ")
+#' QQxy <- ring(c("x", "y", "z"), "QQ")
 #' I <- ideal(c("x^2", "y^4", "z + 1"))
-#' J <- ideal(c("x^6"))
+#' J <- ideal("x^6")
 #' saturate(I)
 #' saturate.(I)
-#' saturate(I,J)
-#' saturate(I,mp("x"))
+#' saturate(I, J)
+#' saturate(I, mp("x"))
+#' saturate(I, "x")
+#'
+#'
+#' saturate(ideal("x y", ring(c("x", "y"), "QQ")), "x^2")
+#'
+#' ring("x", "QQ")
+#' I <- ideal("(x-1) x (x+1)") # solution over R is x = -1, 0, 1
+#' saturate(I, "x") # remove x = 0 from solution
+#' ideal("(x-1) (x+1)")
 #'
 #' # primaryDecomposition
 #' QQxy <- ring(c("x","y"), "QQ")
@@ -290,11 +299,12 @@ saturate. <- function(ideal, saturate_by, code = FALSE, ...) {
     stop("unrecognized input ideal. see ?ideal", call. = FALSE)
 
   if (!missing(saturate_by)) {
-    if (is.m2_ideal(saturate_by) ||
-      is.m2_ideal_pointer(saturate_by)) {
+    if (is.m2_ideal(saturate_by) || is.m2_ideal_pointer(saturate_by)) {
       second_param <- paste0(",", m2_name(saturate_by))
     } else if (is.mpoly(saturate_by)) {
       second_param <- paste0(",", mpolyList_to_m2_str(saturate_by))
+    } else if (is.character(saturate_by)) {
+      second_param <- paste0(",", mpolyList_to_m2_str(mp(saturate_by)))
     } else {
       stop("unrecognized input saturate_by. see ?ideal", call. = FALSE)
     }
