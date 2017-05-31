@@ -44,6 +44,15 @@
 #' radical(I)
 #' radical.(I)
 #'
+#' # saturation
+#' QQxy <- ring(c("x","y", "z"), "QQ")
+#' I <- ideal(c("x^2", "y^4", "z + 1"))
+#' J <- ideal(c("x^6"))
+#' saturate(I)
+#' saturate.(I)
+#' saturate(I,J)
+#' saturate(I,mp("x"))
+#'
 #' }
 
 
@@ -151,13 +160,7 @@ m2_parse_function.m2_ideal <- function(x) {
 }
 
 
-m2_parse_function.m2_monomialideal <- function(x) {
-  m2_structure(
-    m2_name = "",
-    m2_class = "m2_ideal",
-    m2_meta = list(rmap = x[[1]])
-  )
-}
+m2_parse_function.m2_monomialideal <- m2_parse_function.m2_ideal
 
 
 
@@ -202,7 +205,7 @@ print.m2_ideal <- function(x, ...) {
 #' @export
 radical <- function(ideal, code = FALSE, ...) {
 
-  # run ideal.
+  # run radical.
   args <- as.list(match.call())[-1]
   eargs <- lapply(args, eval, envir = parent.frame())
   pointer <- do.call(radical., eargs)
@@ -246,6 +249,72 @@ radical. <- function(ideal, code = FALSE, ...) {
 
   # change name and return
   m2_name(out) <- radical_name
+  out
+}
+
+
+
+#' @rdname ideal
+#' @export
+saturate <- function(ideal, saturate_by, code = FALSE, ...) {
+
+  # run saturate.
+  args <- as.list(match.call())[-1]
+  eargs <- lapply(args, eval, envir = parent.frame())
+  pointer <- do.call(saturate., eargs)
+  if(code) return(invisible(pointer))
+
+  # parse output
+  parsed_out <- m2_parse(pointer)
+
+  # construct R-side ideal, class and return
+  m2_structure(
+    m2_name = m2_name(pointer),
+    m2_class = "m2_ideal",
+    m2_meta = list(
+      ring = m2_meta(m2_meta(parsed_out, "rmap"), "ring"),
+      gens = structure(m2_meta(parsed_out, "rmap")[1,], class = "mpolyList"),
+      saturation_of = ideal
+    )
+  )
+
+}
+
+
+
+#' @rdname ideal
+#' @export
+saturate. <- function(ideal, saturate_by, code = FALSE, ...) {
+
+  # arg check
+  if (!is.m2_ideal(ideal) && !is.m2_ideal_pointer(ideal))
+    stop("unrecognized input ideal. see ?ideal", call. = FALSE)
+
+  if (!missing(saturate_by)) {
+    if (is.m2_ideal(saturate_by) ||
+      is.m2_ideal_pointer(saturate_by)) {
+      second_param <- paste0(",", m2_name(saturate_by))
+    } else if (is.mpoly(saturate_by)) {
+      second_param <- paste0(",", mpolyList_to_m2_str(saturate_by))
+    } else {
+      stop("unrecognized input saturate_by. see ?ideal", call. = FALSE)
+    }
+  } else {
+    second_param <- ""
+  }
+
+  # make saturation ideal name
+  saturate_name <- name_and_increment("ideal", "m2_ideal_count")
+
+  # construct code and message
+  m2_code <- sprintf("%s = saturate(%s%s)", saturate_name, m2_name(ideal), second_param)
+  if(code) { message(m2_code); return(invisible(m2_code)) }
+
+  # run m2
+  out <- m2.(m2_code)
+
+  # change name and return
+  m2_name(out) <- saturate_name
   out
 }
 
