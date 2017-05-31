@@ -8,6 +8,8 @@
 \alias{radical.}
 \alias{saturate}
 \alias{saturate.}
+\alias{primary_decomposition}
+\alias{primary_decomposition.}
 \title{Create a new ideal in Macaulay2}
 \usage{
 ideal(x, ring, raw_chars = FALSE, code = FALSE, ...)
@@ -23,6 +25,10 @@ radical.(ideal, code = FALSE, ...)
 saturate(ideal, saturate_by, code = FALSE, ...)
 
 saturate.(ideal, saturate_by, code = FALSE, ...)
+
+primary_decomposition(ideal, code = FALSE, ...)
+
+primary_decomposition.(ideal, code = FALSE, ...)
 }
 \arguments{
 \item{x}{a listing of polynomials. several formats are accepted,
@@ -94,6 +100,18 @@ ring("x", "QQ")
 I <- ideal("(x-1) x (x+1)") # solution over R is x = -1, 0, 1
 saturate(I, "x") # remove x = 0 from solution
 ideal("(x-1) (x+1)")
+
+# primary_decomposition
+QQxy <- ring(c("x","y"), "QQ")
+I <- ideal(c("(x^2 + 1) (x^2 + 2)", "y + 1"))
+primary_decomposition(I)
+primary_decomposition.(I)
+
+I <- ideal(c("x (x + 1)", "y"), ring(c("x","y"), "QQ"))
+primary_decomposition(I)
+
+I <- ideal(c("x^2", "x y"), ring(c("x","y"), "QQ"))
+primary_decomposition(I)
 
 }
 }
