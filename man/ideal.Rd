@@ -6,6 +6,8 @@
 \alias{print.m2_ideal}
 \alias{radical}
 \alias{radical.}
+\alias{saturate}
+\alias{saturate.}
 \title{Create a new ideal in Macaulay2}
 \usage{
 ideal(x, ring, raw_chars = FALSE, code = FALSE, ...)
@@ -17,6 +19,10 @@ ideal.(x, ring, raw_chars = FALSE, code = FALSE, ...)
 radical(ideal, code = FALSE, ...)
 
 radical.(ideal, code = FALSE, ...)
+
+saturate(ideal, saturate_by, code = FALSE, ...)
+
+saturate.(ideal, saturate_by, code = FALSE, ...)
 }
 \arguments{
 \item{x}{a listing of polynomials. several formats are accepted,
@@ -35,7 +41,7 @@ formated for M2 use directly, as opposed to for
 
 \item{...}{...}
 
-\item{ideal}{an ideal object of class \code{m2_ideal} or
+\item{ideal, saturate_by}{an ideal object of class \code{m2_ideal} or
 \code{m2_ideal_pointer}}
 }
 \value{
@@ -70,6 +76,24 @@ QQxy <- ring(c("x","y"), "QQ")
 I <- ideal(c("(x^2 + 1)^2 y", "y + 1"))
 radical(I)
 radical.(I)
+
+# saturation
+QQxy <- ring(c("x", "y", "z"), "QQ")
+I <- ideal(c("x^2", "y^4", "z + 1"))
+J <- ideal("x^6")
+saturate(I)
+saturate.(I)
+saturate(I, J)
+saturate(I, mp("x"))
+saturate(I, "x")
+
+
+saturate(ideal("x y", ring(c("x", "y"), "QQ")), "x^2")
+
+ring("x", "QQ")
+I <- ideal("(x-1) x (x+1)") # solution over R is x = -1, 0, 1
+saturate(I, "x") # remove x = 0 from solution
+ideal("(x-1) (x+1)")
 
 }
 }
