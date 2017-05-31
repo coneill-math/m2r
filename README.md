@@ -132,6 +132,41 @@ gb_(poly_chars, ring = R)
 
 `gb_()` is significantly easier to code with than `gb()` in the sense that its inputs and outputs are more predictable, so we strongly recommend that you use `gb_()`, especially inside of other functions and packages.
 
+As far as other kinds of computations are concerned, we present a potpurri of examples below.
+
+Ideal saturation:
+
+``` r
+QQxy <- ring(c("x", "y"), "QQ")
+I <- ideal("x y", QQxy)
+saturate(I, "x^2")
+# M2 Ideal of ring QQ[x,y] (grevlex) with generator: 
+# < y >
+```
+
+Primary decomposition:
+
+``` r
+I <- ideal(c("x (x + 1)", "y"), QQxy)
+primary_decomposition(I)
+# [[1]]
+# M2 Ideal of ring QQ[x,y] (grevlex) with generators: 
+# < y,  x >
+# [[2]]
+# M2 Ideal of ring QQ[x,y] (grevlex) with generators: 
+# < y,  x  +  1 >
+# attr(,"class")
+# [1] "m2_list" "m2"
+```
+
+Dimension:
+
+``` r
+I <- ideal("y - (x+1)", QQxy) 
+dimension(I)
+# [1] 1
+```
+
 Factoring integers and polynomials
 ----------------------------------
 
@@ -227,7 +262,7 @@ For example, we've seen that `factor_n()` computes the prime decomposition of a 
 factor_n.(x)
 # M2 Pointer Object
 #   ExternalString : new Product from {new Power from {2,5},new Power fro...
-#          M2 Name : m2o203
+#          M2 Name : m2o401
 #         M2 Class : Product (WrapperType)
 ```
 
@@ -280,7 +315,7 @@ It may be helpful to think of every `m2` object as being a missing value (`NA`, 
 r <- ring(c("x","y"), "QQ")
 str(r)
 # Classes 'm2_polynomialring', 'm2'  atomic [1:1] NA
-#   ..- attr(*, "m2_name")= chr "m2rintring00000004"
+#   ..- attr(*, "m2_name")= chr "m2rintring00000005"
 #   ..- attr(*, "m2_meta")=List of 3
 #   .. ..$ vars    : chr [1:2] "x" "y"
 #   .. ..$ coefring: chr "QQ"
@@ -288,7 +323,7 @@ str(r)
 class(r)
 # [1] "m2_polynomialring" "m2"
 m2_name(r)
-# [1] "m2rintring00000004"
+# [1] "m2rintring00000005"
 m2_meta(r)
 # $vars
 # [1] "x" "y"
