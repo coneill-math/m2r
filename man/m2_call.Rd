@@ -3,6 +3,7 @@
 \name{m2_call}
 \alias{m2_call}
 \alias{m2r_version_number}
+\alias{start_m2}
 \alias{stop_m2}
 \alias{reset_m2}
 \alias{m2}
@@ -11,6 +12,9 @@
 \title{Call and reset a Macaulay2 process}
 \usage{
 m2r_version_number()
+
+start_m2(port = 27436L, timeout = 10, attempts = 10, cloud = FALSE,
+  hostname = m2r_cloud_url())
 
 stop_m2()
 
@@ -29,6 +33,8 @@ m2.(code, timeout = -1)
 \item{timeout}{number of seconds before aborting}
 
 \item{attempts}{numer of times to try to make connection}
+
+\item{cloud}{use a cloud?}
 
 \item{hostname}{the remote host to connect to; defaults to
 the Amazon EC2 instance}
