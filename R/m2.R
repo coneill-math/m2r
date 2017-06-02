@@ -5,6 +5,7 @@
 #' @param port port for Macaulay2 socket
 #' @param timeout number of seconds before aborting
 #' @param attempts numer of times to try to make connection
+#' @param cloud use a cloud?
 #' @param hostname the remote host to connect to; defaults to
 #'   the Amazon EC2 instance
 #' @param code Macaulay2 code
@@ -62,7 +63,8 @@ m2r_cloud_url <- function() {
 
 
 
-
+#' @export
+#' @rdname m2_call
 start_m2 <- function(
   port = 27436L, timeout = 10, attempts = 10,
   cloud = FALSE, hostname = m2r_cloud_url()
