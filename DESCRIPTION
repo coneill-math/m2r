@@ -11,7 +11,7 @@ Description: Persistent interface to Macaulay2 (<http://www.math.uiuc.edu/Macaul
 License: GPL-2
 LazyData: TRUE
 Depends:
-    mpoly (>= 1.0.3)
+    mpoly (>= 1.0.4)
 Imports:
     stringr,
     memoise,
