@@ -137,6 +137,7 @@ gb <- function(..., ring, degree_limit, raw_chars = FALSE, code = FALSE) {
 
   # run standard evaluation gb
   do.call("gb_", args)
+
 }
 
 
@@ -155,7 +156,7 @@ gb <- function(..., ring, degree_limit, raw_chars = FALSE, code = FALSE) {
 # value version of f (standard user version)
 #' @rdname gb
 #' @export
-gb_ <- function(x, ring, degree_limit,  raw_chars = FALSE, code = FALSE, ...) {
+gb_ <- function(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...) {
 
   # run m2
   args <- as.list(match.call())[-1]

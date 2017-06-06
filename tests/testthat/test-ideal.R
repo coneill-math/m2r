@@ -1,8 +1,8 @@
-context("ideal ")
+context("ideal_ ")
 
 
 
-test_that("ideal takes a variety of params",{
+test_that("ideal_ takes a variety of params",{
 
   param2 <- list(
     ring (c("x","y"), "QQ"),
@@ -20,7 +20,7 @@ test_that("ideal takes a variety of params",{
 
   apply(expand.grid(param1, param2), 1, FUN = function(x) {
 
-    I <- ideal(x[[c(1,1)]], x[[2]], raw_chars = x[[c(1,2)]])
+    I <- ideal_(x[[c(1,1)]], x[[2]], raw_chars = x[[c(1,2)]])
 
     obj <- m2_structure(
       m2_name = m2_name(I),
@@ -39,7 +39,7 @@ test_that("ideal takes a variety of params",{
 
 
 
-test_that("ideal errors with certain params",{
+test_that("ideal_ errors with certain params",{
 
   param1 <- list(
     list(c(mp("x+y"), mp("x^2+y^2")), FALSE),
@@ -57,7 +57,7 @@ test_that("ideal errors with certain params",{
     if (x[[c(1,2)]]) msg <- "Macaulay2 Error"
 
     expect_error(
-      ideal(x[[c(1,1)]], x[[2]], raw_chars = x[[c(1,2)]]),
+      ideal_(x[[c(1,1)]], x[[2]], raw_chars = x[[c(1,2)]]),
       msg
     )
 
@@ -70,10 +70,10 @@ test_that("ideal errors with certain params",{
 
 
 
-context("ideal.")
+context("ideal_.")
 
 
-test_that("ideal. takes a variety of params",{
+test_that("ideal_. takes a variety of params",{
 
   param1 <- list(
     list(c("x+y", "x^2+y^2"), FALSE),
@@ -91,7 +91,7 @@ test_that("ideal. takes a variety of params",{
 
   apply(expand.grid(param1, param2), 1, FUN = function(x) {
 
-    I <- ideal.(x[[c(1,1)]], x[[2]], raw_chars = x[[c(1,2)]])
+    I <- ideal_.(x[[c(1,1)]], x[[2]], raw_chars = x[[c(1,2)]])
 
     obj <- m2_structure(
       m2_name = m2_name(I),
@@ -116,7 +116,7 @@ test_that("ideal. takes a variety of params",{
 
 
 
-test_that("ideal. errors with certain params",{
+test_that("ideal_. errors with certain params",{
 
   param1 <- list(
     list(c(mp("x+y"), mp("x^2+y^2")), FALSE),
@@ -134,7 +134,7 @@ test_that("ideal. errors with certain params",{
     if (x[[c(1,2)]]) msg <- "Macaulay2 Error"
 
     expect_error(
-      ideal.(x[[c(1,1)]], x[[2]], raw_chars = x[[c(1,2)]]),
+      ideal_.(x[[c(1,1)]], x[[2]], raw_chars = x[[c(1,2)]]),
       msg
     )
 
