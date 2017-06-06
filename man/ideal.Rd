@@ -2,7 +2,8 @@
 % Please edit documentation in R/ideal.R
 \name{ideal}
 \alias{ideal}
-\alias{ideal.}
+\alias{ideal_}
+\alias{ideal_.}
 \alias{print.m2_ideal}
 \alias{radical}
 \alias{radical.}
@@ -13,9 +14,11 @@
 \alias{dimension}
 \title{Create a new ideal in Macaulay2}
 \usage{
-ideal(x, ring, raw_chars = FALSE, code = FALSE, ...)
+ideal(..., ring, raw_chars = FALSE, code = FALSE)
 
-ideal.(x, ring, raw_chars = FALSE, code = FALSE, ...)
+ideal_(x, ring, raw_chars = FALSE, code = FALSE, ...)
+
+ideal_.(x, ring, raw_chars = FALSE, code = FALSE, ...)
 
 \method{print}{m2_ideal}(x, ...)
 
@@ -34,8 +37,7 @@ primary_decomposition.(ideal, code = FALSE, ...)
 dimension(ideal, code = FALSE, ...)
 }
 \arguments{
-\item{x}{a listing of polynomials. several formats are accepted,
-see examples.}
+\item{...}{...}
 
 \item{ring}{the referent ring in Macaulay2}
 
@@ -48,7 +50,8 @@ formated for M2 use directly, as opposed to for
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 
-\item{...}{...}
+\item{x}{a listing of polynomials. several formats are accepted,
+see examples.}
 
 \item{ideal, saturate_by}{an ideal object of class \code{m2_ideal} or
 \code{m2_ideal_pointer}}
@@ -63,18 +66,24 @@ Create a new ideal in Macaulay2
 
 \dontrun{ requires Macaulay2
 
-(QQxy <- ring(c("x","y"), coefring = "QQ"))
-ideal(   c("x+y", "x^2+y^2") , QQxy)
-ideal(mp(c("x+y", "x^2+y^2")), QQxy)
+ring(c("x","y"), coefring = "QQ")
+ideal("x+y", "x^2+y^2", ring = QQxy)
 
-ideal(mp(c("x+y", "x^2+y^2")), QQxy, code = TRUE)
+(QQxy <- ring(c("x","y"), coefring = "QQ"))
+(QQxyz <- ring(c("x","y","z"), coefring = "QQ"))
+
+# standard evaluation version
+ideal_(   c("x+y", "x^2+y^2") , QQxy)
+ideal_(mp(c("x+y", "x^2+y^2")), QQxy)
+
+ideal_(mp(c("x+y", "x^2+y^2")), QQxy, code = TRUE)
 
 (QQxy. <- ring.(c("x","y"), coefring = "QQ"))
-ideal(   c("x+y", "x^2+y^2") , QQxy.)
-ideal(mp(c("x+y", "x^2+y^2")), QQxy.)
+ideal_(   c("x+y", "x^2+y^2") , QQxy.)
+ideal_(mp(c("x+y", "x^2+y^2")), QQxy.)
 
-I  <- ideal (c("x+y", "x^2+y^2"), QQxy.)
-I. <- ideal.(c("x+y", "x^2+y^2"), QQxy.)
+I  <- ideal_ (c("x+y", "x^2+y^2"), QQxy.)
+I. <- ideal_.(c("x+y", "x^2+y^2"), QQxy.)
 is.m2_ideal(I)
 is.m2_ideal(I.)
 is.m2_ideal_pointer(I)
@@ -82,26 +91,26 @@ is.m2_ideal_pointer(I.)
 
 # radical
 QQxy <- ring(c("x","y"), "QQ")
-I <- ideal(c("(x^2 + 1)^2 y", "y + 1"))
+I <- ideal_(c("(x^2 + 1)^2 y", "y + 1"))
 radical(I)
 radical.(I)
 
 # dimension
 ring(c("x","y","z"), "QQ")
-I <- ideal(c("(x^2 + 1)^2 y", "y + 1"))
+I <- ideal_(c("(x^2 + 1)^2 y", "y + 1"))
 dimension(I)
 
-I <- ideal("y - (x+1)", ring(c("x", "y"), "QQ")) # a line
+I <- ideal_("y - (x+1)", ring(c("x", "y"), "QQ")) # a line
 dimension(I)
 
-I <- ideal("z - (x+y+1)", ring(c("x", "y", "z"), "QQ")) # a plane
+I <- ideal_("z - (x+y+1)", ring(c("x", "y", "z"), "QQ")) # a plane
 dimension(I)
 
 
 # saturation
 QQxy <- ring(c("x", "y", "z"), "QQ")
-I <- ideal(c("x^2", "y^4", "z + 1"))
-J <- ideal("x^6")
+I <- ideal_(c("x^2", "y^4", "z + 1"))
+J <- ideal_("x^6")
 saturate(I)
 saturate.(I)
 saturate(I, J)
@@ -109,7 +118,7 @@ saturate(I, mp("x"))
 saturate(I, "x")
 
 
-saturate(ideal("x y", ring(c("x", "y"), "QQ")), "x^2")
+saturate(ideal_("x y", ring(c("x", "y"), "QQ")), "x^2")
 
 ring("x", "QQ")
 I <- ideal("(x-1) x (x+1)") # solution over R is x = -1, 0, 1
@@ -118,14 +127,14 @@ ideal("(x-1) (x+1)")
 
 # primary_decomposition
 QQxy <- ring(c("x","y"), "QQ")
-I <- ideal(c("(x^2 + 1) (x^2 + 2)", "y + 1"))
+I <- ideal("(x^2 + 1) (x^2 + 2)", "y + 1")
 primary_decomposition(I)
 primary_decomposition.(I)
 
-I <- ideal(c("x (x + 1)", "y"), ring(c("x","y"), "QQ"))
+I <- ideal("x (x + 1)", "y")
 primary_decomposition(I)
 
-I <- ideal(c("x^2", "x y"), ring(c("x","y"), "QQ"))
+I <- ideal("x^2", "x y")
 primary_decomposition(I)
 
 }

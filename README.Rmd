@@ -92,7 +92,7 @@ __m2r__ currently has basic support for [rings](https://en.wikipedia.org/wiki/Ri
 ```
 and [ideals](https://en.wikipedia.org/wiki/Ideal_(ring_theory)) of rings:
 ```{r ideal}
-(I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), R))
+(I <- ideal("t^4 - x", "t^3 - y", "t^2 - z", ring = R))
 ```
 
 You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well.  The basic function to do this is `gb()`:
@@ -126,20 +126,20 @@ As far as other kinds of computations are concerned, we present a potpurri of ex
 
 Ideal saturation:
 ```{r saturation}
-QQxy <- ring(c("x", "y"), "QQ")
-I <- ideal("x y", QQxy)
+ring(c("x", "y"), "QQ")
+I <- ideal("x y")
 saturate(I, "x^2")
 ```
 
 Primary decomposition:
 ```{r primary-decomposition}
-I <- ideal(c("x (x + 1)", "y"), QQxy)
+I <- ideal("x (x + 1)", "y")
 primary_decomposition(I)
 ```
 
 Dimension:
 ```{r dimension}
-I <- ideal("y - (x+1)", QQxy) 
+I <- ideal("y - (x+1)") 
 dimension(I)
 ```
 
