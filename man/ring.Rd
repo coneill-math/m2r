@@ -2,16 +2,20 @@
 % Please edit documentation in R/ring.R
 \name{ring}
 \alias{ring}
-\alias{ring.}
+\alias{ring_}
+\alias{ring_.}
 \alias{m2_coefrings}
 \alias{m2_termorders}
 \alias{print.m2_polynomialring}
 \title{Create a new ring in Macaulay2}
 \usage{
-ring(vars, coefring = m2_coefrings(), order = m2_termorders(),
+ring(..., coefring = m2_coefrings(), order = m2_termorders(),
+  code = FALSE)
+
+ring_(vars, coefring = m2_coefrings(), order = m2_termorders(),
   code = FALSE, ...)
 
-ring.(vars, coefring = m2_coefrings(), order = m2_termorders(),
+ring_.(vars, coefring = m2_coefrings(), order = m2_termorders(),
   code = FALSE, ...)
 
 m2_coefrings()
@@ -21,7 +25,7 @@ m2_termorders()
 \method{print}{m2_polynomialring}(x, ...)
 }
 \arguments{
-\item{vars}{vector of variable names}
+\item{...}{...}
 
 \item{coefring}{coefficient ring (default: \code{"CC"})}
 
@@ -29,7 +33,7 @@ m2_termorders()
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 
-\item{...}{...}
+\item{vars}{vector of variable names}
 
 \item{x}{formal argument for print method}
 }
@@ -46,10 +50,17 @@ Create a new ring in Macaulay2
 ##### basic usage
 ########################################
 
-ring(c("x", "y"))
-ring(c("x", "y"), code = TRUE)
+ring("x", "y")
+ring("x", "y", coefring = "QQ")
 
-(myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
+
+##### standard evaluation
+########################################
+
+ring_(c("x", "y"))
+ring_(c("x", "y"), code = TRUE)
+
+(myring <- ring_(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 
 m2_name(myring)
 m2_meta(myring, "vars")
@@ -59,8 +70,8 @@ m2_meta(myring, "order")
 ##### other options
 ########################################
 
-ring.(c("x", "y"))
-ring.(c("x", "y"), code = TRUE)
+ring_.(c("x", "y"))
+ring_.(c("x", "y"), code = TRUE)
 
 }
 }
