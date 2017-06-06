@@ -1,4 +1,3 @@
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- NOTE: you have to kill any R M2 process before knitting this. -->
 **m2r** – Macaulay2 in R
 ========================
@@ -67,7 +66,7 @@ Rings, ideals, and Grobner bases
 **m2r** currently has basic support for [rings](https://en.wikipedia.org/wiki/Ring_(mathematics)) (think: [polynomial rings](https://en.wikipedia.org/wiki/Polynomial_ring)):
 
 ``` r
-(R <- ring(c("t", "x", "y", "z"), "QQ"))
+(R <- ring("t", "x", "y", "z", coefring = "QQ"))
 # M2 Ring: QQ[t,x,y,z], grevlex order
 ```
 
@@ -113,14 +112,14 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 You can compute the basis respective of different [monomial orders](https://en.wikipedia.org/wiki/Monomial_order) as well. The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
 
 ``` r
-R <- ring(c("x","y","t","z"), order = "lex")
+R <- ring("x", "y", "t", "z", order = "lex")
 gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
 # t^2  -  z
 # -1 t z  +  y
 # -1 z^2  +  x
 ```
 
-On a technical level, `gb()` uses [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html). A more stable way to use the function is to use its standard evaluation version `gb_()`. `gb_()` accepts first a data structure describing the polynomials or ideal, then the referent ring, and then a number of other objects. At a basic level this simply changes the previous syntax to
+On a technical level, `ring()`, `ideal()`, and `gb()` use [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html). A more stable way to use these functions is to use their standard evaluation versions `ring_()`, `ideal_()`, and `gb_()`. Each accepts first a data structure describing the relevant object of interest first as its own object. For example, at a basic level this simply changes the previous syntax to
 
 ``` r
 poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
@@ -137,9 +136,8 @@ As far as other kinds of computations are concerned, we present a potpurri of ex
 Ideal saturation:
 
 ``` r
-ring(c("x", "y"), "QQ")
-# M2 Ring: QQ[x,y], grevlex order
-I <- ideal("x y")
+R <- ring("x", "y", coefring = "QQ")
+I <- ideal("x y", ring = R)
 saturate(I, "x^2")
 # M2 Ideal of ring QQ[x,y] (grevlex) with generator: 
 # < y >
@@ -148,7 +146,7 @@ saturate(I, "x^2")
 Primary decomposition:
 
 ``` r
-I <- ideal("x (x + 1)", "y")
+I <- ideal("x (x + 1)", "y", ring = R)
 primary_decomposition(I)
 # [[1]]
 # M2 Ideal of ring QQ[x,y] (grevlex) with generators: 
@@ -163,7 +161,7 @@ primary_decomposition(I)
 Dimension:
 
 ``` r
-I <- ideal("y - (x+1)") 
+I <- ideal("y - (x+1)", ring = R) 
 dimension(I)
 # [1] 1
 ```
@@ -187,7 +185,7 @@ factor_n(x)
 You can also [factor polynomials](https://en.wikipedia.org/wiki/Factorization) over rings using `factor_poly()`:
 
 ``` r
-QQxy <- ring(c("x","y"), "QQ")
+QQxy <- ring("x", "y", coefring = "QQ")
 factor_poly("x^4 - y^4", QQxy)
 # $factor
 # x  -  y
@@ -313,12 +311,14 @@ mat %>% m2_matrix    # = m2_parse(m2_matrix.(mat))
 It may be helpful to think of every `m2` object as being a missing value (`NA`, a `logical(1)`) with two M2 attributes: their name (`m2_name`) and a capture-all named list (`m2_meta`). These can be accessed with `m2_name()` and `m2_meta()`. For example, a ring, having no analogous object in R, is an `NA` with attributes:
 
 ``` r
-r <- ring(c("x","y"), "QQ")
+r <- ring("x", "y", coefring = "QQ")
 str(r)
 # Classes 'm2_polynomialring', 'm2'  atomic [1:1] NA
 #   ..- attr(*, "m2_name")= chr "m2rintring00000005"
 #   ..- attr(*, "m2_meta")=List of 3
-#   .. ..$ vars    : chr [1:2] "x" "y"
+#   .. ..$ vars    :List of 2
+#   .. .. ..$ : chr "x"
+#   .. .. ..$ : chr "y"
 #   .. ..$ coefring: chr "QQ"
 #   .. ..$ order   : chr "grevlex"
 class(r)
@@ -327,7 +327,12 @@ m2_name(r)
 # [1] "m2rintring00000005"
 m2_meta(r)
 # $vars
-# [1] "x" "y"
+# $vars[[1]]
+# [1] "x"
+# 
+# $vars[[2]]
+# [1] "y"
+# 
 # 
 # $coefring
 # [1] "QQ"

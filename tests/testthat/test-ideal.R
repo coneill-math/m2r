@@ -1,3 +1,7 @@
+context("ideal  ")
+
+
+
 context("ideal_ ")
 
 
@@ -5,8 +9,8 @@ context("ideal_ ")
 test_that("ideal_ takes a variety of params",{
 
   param2 <- list(
-    ring (c("x","y"), "QQ"),
-    ring.(c("x","y"), "QQ")
+    ring_ (c("x","y"), "QQ"),
+    ring_.(c("x","y"), "QQ")
   )
 
   param1 <- list(
@@ -47,8 +51,8 @@ test_that("ideal_ errors with certain params",{
   )
 
   param2 <- list(
-    ring (c("x","y"), "QQ"),
-    ring.(c("x","y"), "QQ")
+    ring_ (c("x","y"), "QQ"),
+    ring_.(c("x","y"), "QQ")
   )
 
   apply(expand.grid(param1, param2), 1, FUN = function(x) {
@@ -85,8 +89,8 @@ test_that("ideal_. takes a variety of params",{
   )
 
   param2 <- list(
-    ring (c("x","y"), "QQ"),
-    ring.(c("x","y"), "QQ")
+    ring_ (c("x","y"), "QQ"),
+    ring_.(c("x","y"), "QQ")
   )
 
   apply(expand.grid(param1, param2), 1, FUN = function(x) {
@@ -124,8 +128,8 @@ test_that("ideal_. errors with certain params",{
   )
 
   param2 <- list(
-    ring (c("x","y"), "QQ"),
-    ring.(c("x","y"), "QQ")
+    ring_ (c("x","y"), "QQ"),
+    ring_.(c("x","y"), "QQ")
   )
 
   apply(expand.grid(param1, param2), 1, FUN = function(x) {
