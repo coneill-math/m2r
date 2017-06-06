@@ -38,8 +38,8 @@ m2_parse <- function(s) {
     tokens <- m2_tokenize(s)
   }
 
-  forget(mem_m2.)
-  forget(mem_m2_parse)
+  memoise::forget(mem_m2.)
+  memoise::forget(mem_m2_parse)
 
   ret <- m2_parse_internal(tokens)
   ret <- ret$result
@@ -51,8 +51,8 @@ m2_parse <- function(s) {
     m2_name(ret) <- m2_name(s)
   }
 
-  forget(mem_m2.)
-  forget(mem_m2_parse)
+  memoise::forget(mem_m2.)
+  memoise::forget(mem_m2_parse)
 
   ret
 
@@ -158,8 +158,8 @@ m2_tokenize <- function(s) {
 
 
 # only used for ring parsing!  Don't get greedy!!!!
-mem_m2. <- memoise(function(x) m2.(x))
-mem_m2_parse <- memoise(function(x) m2_parse(x))
+mem_m2. <- memoise::memoise(function(x) m2.(x))
+mem_m2_parse <- memoise::memoise(function(x) m2_parse(x))
 
 
 m2_parse_internal <- function(tokens, start = 1) {
