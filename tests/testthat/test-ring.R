@@ -1,10 +1,14 @@
-context("ring ")
+context("ring  ")
+
+
+
+context("ring_ ")
 
 
 
 
 
-test_that("ring(formats)",{
+test_that("ring_(formats)",{
 
   param1 <- list(
     c("x"),
@@ -18,7 +22,7 @@ test_that("ring(formats)",{
 
   apply(expand.grid(param1, param2, param3), 1, FUN = function(x) {
 
-    R <- ring(x[[1]], coefring = x[[2]], order = x[[3]])
+    R <- ring_(x[[1]], coefring = x[[2]], order = x[[3]])
 
     expected_output <- m2_structure(
       m2_name = m2_name(R),

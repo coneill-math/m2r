@@ -5,8 +5,8 @@ test_that("factor_poly(formats)", {
 
   # this MUST come first!
   param2 <- list(
-    ring (c("x","y"), "QQ"),
-    ring.(c("x","y"), "QQ")
+    ring_ (c("x","y"), "QQ"),
+    ring_.(c("x","y"), "QQ")
   )
 
   param1 <- list(
@@ -35,7 +35,7 @@ test_that("factor_poly(1)", {
 
   # this MUST come first!
   param2 <- list(
-    ring (c("x","y"), "QQ")
+    ring_ (c("x","y"), "QQ")
   )
 
   param1 <- list(
@@ -70,8 +70,8 @@ test_that("factor_poly(formats)", {
 
   # this MUST come first!
   param2 <- list(
-    ring (c("x","y"), "QQ"),
-    ring.(c("x","y"), "QQ")
+    ring_ (c("x","y"), "QQ"),
+    ring_.(c("x","y"), "QQ")
   )
 
   param1 <- list(

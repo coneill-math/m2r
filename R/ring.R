@@ -17,10 +17,17 @@
 #' ##### basic usage
 #' ########################################
 #'
-#' ring(c("x", "y"))
-#' ring(c("x", "y"), code = TRUE)
+#' ring("x", "y")
+#' ring("x", "y", coefring = "QQ")
 #'
-#' (myring <- ring(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
+#'
+#' ##### standard evaluation
+#' ########################################
+#'
+#' ring_(c("x", "y"))
+#' ring_(c("x", "y"), code = TRUE)
+#'
+#' (myring <- ring_(c("x1","x2","x3","y"), coefring = "QQ", order = "lex"))
 #'
 #' m2_name(myring)
 #' m2_meta(myring, "vars")
@@ -30,31 +37,63 @@
 #' ##### other options
 #' ########################################
 #'
-#' ring.(c("x", "y"))
-#' ring.(c("x", "y"), code = TRUE)
+#' ring_.(c("x", "y"))
+#' ring_.(c("x", "y"), code = TRUE)
 #'
 #' }
 
 
 
 
+
+
+
+
+
 #' @rdname ring
 #' @export
-ring <- function(
-  vars,
-  coefring = m2_coefrings(),
-  order = m2_termorders(),
-  code = FALSE,
-  ...
+ring <- function(..., coefring = m2_coefrings(), order = m2_termorders(),
+  code = FALSE
+) {
+
+  # grab args
+  x <- list(vars = lapply(pryr::dots(...), eval, envir = parent.frame()))
+  otherArgs <- as.list(match.call(expand.dots = FALSE))[-c(1:2)]
+
+  # eval
+  args <- lapply(c(x, otherArgs), eval)
+
+  # run standard evaluation gb
+  do.call("ring_", args)
+
+}
+
+
+
+
+
+
+
+
+#' @rdname ring
+#' @export
+ring_ <- function(vars, coefring = m2_coefrings(), order = m2_termorders(),
+  code = FALSE, ...
 ) {
 
   # arg checking
   coefring <- match.arg(coefring)
   order <- match.arg(order)
 
-  # run ring.
-  pointer <- ring.(vars, coefring, order, code)
+  # run ideal.
+  args <- as.list(match.call())[-1]
+  eargs <- lapply(args, eval, envir = parent.frame())
+  pointer <- do.call(ring_., eargs)
   if(code) return(invisible(pointer))
+
+  # run ring.
+  # pointer <- ring_.(vars, coefring, order, code)
+  # if(code) return(invisible(pointer))
 
   # construct R-side ring, class and return
   m2_structure(
@@ -73,12 +112,8 @@ ring <- function(
 
 #' @rdname ring
 #' @export
-ring. <- function(
-  vars,
-  coefring = m2_coefrings(),
-  order = m2_termorders(),
-  code = FALSE,
-  ...
+ring_. <- function(vars, coefring = m2_coefrings(), order = m2_termorders(),
+  code = FALSE, ...
 ) {
 
   # check args
