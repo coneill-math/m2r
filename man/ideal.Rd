@@ -138,7 +138,7 @@ I <- ideal("x (x + 1)", "y")
 primary_decomposition(I)
 
 ring("x", "y", "z", coefring = "QQ")
-I <- ideal("x y", "x z")
+(I <- ideal("x y", "x z"))
 primary_decomposition(I)
 
 }
