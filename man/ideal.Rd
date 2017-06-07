@@ -69,11 +69,11 @@ Create a new ideal in Macaulay2
 
 \dontrun{ requires Macaulay2
 
-ring(c("x","y"), coefring = "QQ")
+QQxy <- ring("x", "y", coefring = "QQ")
 ideal("x+y", "x^2+y^2", ring = QQxy)
 
-(QQxy <- ring(c("x","y"), coefring = "QQ"))
-(QQxyz <- ring(c("x","y","z"), coefring = "QQ"))
+(QQxy <- ring("x", "y", coefring = "QQ"))
+(QQxyz <- ring("x", "y", "z", coefring = "QQ"))
 
 # standard evaluation version
 ideal_(   c("x+y", "x^2+y^2") , QQxy)
@@ -81,7 +81,7 @@ ideal_(mp(c("x+y", "x^2+y^2")), QQxy)
 
 ideal_(mp(c("x+y", "x^2+y^2")), QQxy, code = TRUE)
 
-(QQxy. <- ring.(c("x","y"), coefring = "QQ"))
+(QQxy. <- ring_.(c("x","y"), coefring = "QQ"))
 ideal_(   c("x+y", "x^2+y^2") , QQxy.)
 ideal_(mp(c("x+y", "x^2+y^2")), QQxy.)
 
@@ -93,27 +93,31 @@ is.m2_ideal_pointer(I)
 is.m2_ideal_pointer(I.)
 
 # radical
-QQxy <- ring(c("x","y"), "QQ")
-I <- ideal_(c("(x^2 + 1)^2 y", "y + 1"))
+ring("x", "y", coefring = "QQ")
+I <- ideal("(x^2 + 1)^2 y", "y + 1")
 radical(I)
 radical.(I)
 
 # dimension
-ring(c("x","y","z"), "QQ")
+ring("x", "y", "z", coefring = "QQ")
 I <- ideal_(c("(x^2 + 1)^2 y", "y + 1"))
 dimension(I)
 
-I <- ideal_("y - (x+1)", ring(c("x", "y"), "QQ")) # a line
+# dimension of a line
+ring("x", "y", coefring = "QQ")
+I <- ideal("y - (x+1)")
 dimension(I)
 
-I <- ideal_("z - (x+y+1)", ring(c("x", "y", "z"), "QQ")) # a plane
+# dimension of a plane
+ring("x", "y", "z", coefring = "QQ")
+I <- ideal_("z - (x+y+1)")
 dimension(I)
 
 
 # saturation
-QQxy <- ring(c("x", "y", "z"), "QQ")
-I <- ideal_(c("x^2", "y^4", "z + 1"))
-J <- ideal_("x^6")
+ring("x", "y", "z", coefring = "QQ")
+I <- ideal("x^2", "y^4", "z + 1")
+J <- ideal("x^6")
 saturate(I)
 saturate.(I)
 saturate(I, J)
@@ -121,12 +125,16 @@ saturate(I, mp("x"))
 saturate(I, "x")
 
 
-saturate(ideal_("x y", ring(c("x", "y"), "QQ")), "x^2")
+ring("x", "y", coefring = "QQ")
+saturate(ideal_("x y"), "x^2")
 
-ring("x", "QQ")
-I <- ideal("(x-1) x (x+1)") # solution over R is x = -1, 0, 1
+# saturation removes parts of varieties
+# solution over R is x = -1, 0, 1
+ring("x", coefring = "QQ")
+I <- ideal("(x-1) x (x+1)")
 saturate(I, "x") # remove x = 0 from solution
 ideal("(x-1) (x+1)")
+
 
 # primary_decomposition
 ring("x", "y", "z", coefring = "QQ")
@@ -137,8 +145,6 @@ primary_decomposition.(I)
 I <- ideal("x (x + 1)", "y")
 primary_decomposition(I)
 
-
-ring("x", "y", "z", coefring = "QQ")
 (I <- ideal("x z", "y z"))  # variety = z axis union x-y plane
 dimension(I) # =  max dimension of irreducible components
 (Is <- primary_decomposition(I))
