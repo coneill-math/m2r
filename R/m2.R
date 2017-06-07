@@ -401,7 +401,7 @@ m2. <- function(code, timeout = -1) {
     stop("Command timed out, M2 connection lost")
   } else if (retcode == 1L) {
     # user's code string errored, alert them
-    stop(output)
+    stop(output, call. = FALSE)
   } else if (retcode == 2L) {
     # toExternalString failed, make ext_str NULL
     output <- NULL
