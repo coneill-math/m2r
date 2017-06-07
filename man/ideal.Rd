@@ -5,6 +5,7 @@
 \alias{ideal_}
 \alias{ideal_.}
 \alias{print.m2_ideal}
+\alias{print.m2_ideal_list}
 \alias{radical}
 \alias{radical.}
 \alias{saturate}
@@ -21,6 +22,8 @@ ideal_(x, ring, raw_chars = FALSE, code = FALSE, ...)
 ideal_.(x, ring, raw_chars = FALSE, code = FALSE, ...)
 
 \method{print}{m2_ideal}(x, ...)
+
+\method{print}{m2_ideal_list}(x, ...)
 
 radical(ideal, code = FALSE, ...)
 
@@ -126,7 +129,7 @@ saturate(I, "x") # remove x = 0 from solution
 ideal("(x-1) (x+1)")
 
 # primary_decomposition
-QQxy <- ring(c("x","y"), "QQ")
+ring("x", "y", "z", coefring = "QQ")
 I <- ideal("(x^2 + 1) (x^2 + 2)", "y + 1")
 primary_decomposition(I)
 primary_decomposition.(I)
@@ -134,7 +137,8 @@ primary_decomposition.(I)
 I <- ideal("x (x + 1)", "y")
 primary_decomposition(I)
 
-I <- ideal("x^2", "x y")
+ring("x", "y", "z", coefring = "QQ")
+I <- ideal("x y", "x z")
 primary_decomposition(I)
 
 }

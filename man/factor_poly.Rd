@@ -35,7 +35,7 @@ Factor a polynomial
 ##### basic usage
 ########################################
 
-(QQxy <- ring(c("x","y"), "QQ"))
+(QQxy <- ring("x", "y", coefring = "QQ"))
 factor_poly("x^4 - y^4", QQxy)
 
 p <- mp("x^4 - y^4")
@@ -45,7 +45,7 @@ factor_poly(p, QQxy, code = TRUE)
 mp("(x-y) (x+y) (x^2+y^2)")
 
 
-(QQxyz <- ring(c("x","y", "z"), "QQ", "lex"))
+(QQxyz <- ring("x","y", "z", coefring = "QQ", order = "lex"))
 (p <- mp("(x^2 - y) (x^2 + y) (x + y)^2 (x - z)^2"))
 factor_poly.(p, QQxyz)
 factor_poly(p, QQxyz)
