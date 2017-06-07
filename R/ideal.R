@@ -89,9 +89,13 @@
 #' I <- ideal("x (x + 1)", "y")
 #' primary_decomposition(I)
 #'
+#'
 #' ring("x", "y", "z", coefring = "QQ")
-#' (I <- ideal("x y", "x z"))
-#' primary_decomposition(I)
+#' (I <- ideal("x z", "y z"))  # variety = z axis union x-y plane
+#' dimension(I) # =  max dimension of irreducible components
+#' (Is <- primary_decomposition(I))
+#' dimension(Is)
+#'
 #'
 #' }
 
@@ -469,6 +473,7 @@ primary_decomposition. <- function(ideal, code = FALSE, ...) {
   # run m2
   out <- m2.(m2_code)
   m2_name(out) <- ideal_list_name
+  class(out) <- c("m2_ideal_list_pointer", class(out))
 
   # return
   out
@@ -485,11 +490,17 @@ primary_decomposition. <- function(ideal, code = FALSE, ...) {
 dimension <- function(ideal, code = FALSE, ...) {
 
   # arg check
-  if (!is.m2_ideal(ideal) && !is.m2_ideal_pointer(ideal))
-    stop("unrecognized input ideal. see ?ideal", call. = FALSE)
+  if (!(
+    is.m2_ideal(ideal) || is.m2_ideal_pointer(ideal) ||
+    is.m2_ideal_list(ideal) || is.m2_ideal_list_pointer(ideal)
+  )) stop("unrecognized input ideal. see ?ideal", call. = FALSE)
 
   # construct code and message
-  m2_code <- sprintf("dim(%s)", m2_name(ideal))
+  if(is.m2_ideal(ideal) || is.m2_ideal_pointer(ideal)) {
+    m2_code <- sprintf("dim(%s)", m2_name(ideal))
+  } else { # an ideal list or ideal list pointer
+    m2_code <- sprintf("apply(%s, dim)", m2_name(ideal))
+  }
   if(code) { message(m2_code); return(invisible(m2_code)) }
 
   # run m2

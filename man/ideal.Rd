@@ -137,9 +137,13 @@ primary_decomposition.(I)
 I <- ideal("x (x + 1)", "y")
 primary_decomposition(I)
 
+
 ring("x", "y", "z", coefring = "QQ")
-(I <- ideal("x y", "x z"))
-primary_decomposition(I)
+(I <- ideal("x z", "y z"))  # variety = z axis union x-y plane
+dimension(I) # =  max dimension of irreducible components
+(Is <- primary_decomposition(I))
+dimension(Is)
+
 
 }
 }

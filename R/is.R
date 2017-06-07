@@ -53,6 +53,13 @@ is.m2_ideal <- function (x) inherits(x, "m2_ideal")
 is.m2_ideal_pointer <- function (x) is.m2_pointer(x) && (m2_meta(x, "m2_class") == "Ideal")
 # is.m2_ideal_pointer <- function (x) is.m2_pointer(x) && (m2_meta(x, "m2_class") == "PolynomialRing")
 
+#' @export
+#' @rdname is
+is.m2_ideal_list <- function (x) inherits(x, "m2_ideal_list")
+
+#' @export
+#' @rdname is
+is.m2_ideal_list_pointer <- function (x) inherits(x, "m2_ideal_list_pointer")
 
 #' @export
 #' @rdname is
