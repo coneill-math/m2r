@@ -1,1 +1,0 @@
-m2r requires the Macaulay2 software library be installed, which on Windows will also require CygWin.  See http://www.math.uiuc.edu/Macaulay2/Downloads/ for details.
