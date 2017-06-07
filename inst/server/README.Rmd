@@ -40,8 +40,7 @@ Next, install [docker](https://www.docker.com) on your machine. Your
 method of doing this will depend on what distribution you use. For the
 Amazon Linux AMI,
 [yum](https://en.wikipedia.org/wiki/Yellowdog_Updater,_Modified)
-should work.
-
+should work, see instructions [here](https://docs.docker.com/engine/installation/linux/centos/).
 Once docker has been installed, run
 ```{bash eval=FALSE}
 docker pull sommars/m2r

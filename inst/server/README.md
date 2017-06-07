@@ -24,9 +24,7 @@ echo 'cd /home/ec2-user/m2rserver; python m2rserver.py' >> /etc/rc.local
 <!-- ``` -->
 The last line will cause the server to start when the system boots. Reboot the instance, and the python script will start listening for a connection.
 
-Next, install [docker](https://www.docker.com) on your machine. Your method of doing this will depend on what distribution you use. For the Amazon Linux AMI, [yum](https://en.wikipedia.org/wiki/Yellowdog_Updater,_Modified) should work.
-
-Once docker has been installed, run
+Next, install [docker](https://www.docker.com) on your machine. Your method of doing this will depend on what distribution you use. For the Amazon Linux AMI, [yum](https://en.wikipedia.org/wiki/Yellowdog_Updater,_Modified) should work, see instructions [here](https://docs.docker.com/engine/installation/linux/centos/). Once docker has been installed, run
 
 ``` bash
 docker pull sommars/m2r
