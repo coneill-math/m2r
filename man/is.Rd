@@ -9,6 +9,8 @@
 \alias{is.m2_polynomialring_pointer}
 \alias{is.m2_ideal}
 \alias{is.m2_ideal_pointer}
+\alias{is.m2_ideal_list}
+\alias{is.m2_ideal_list_pointer}
 \alias{is.m2_module}
 \alias{is.m2_option}
 \alias{is.m2_matrix}
@@ -31,6 +33,10 @@ is.m2_polynomialring_pointer(x)
 is.m2_ideal(x)
 
 is.m2_ideal_pointer(x)
+
+is.m2_ideal_list(x)
+
+is.m2_ideal_list_pointer(x)
 
 is.m2_module(x)
 

@@ -74,7 +74,7 @@ and [ideals](https://en.wikipedia.org/wiki/Ideal_(ring_theory)) of rings:
 
 ``` r
 (I <- ideal("t^4 - x", "t^3 - y", "t^2 - z", ring = R))
-# M2 Ideal of ring QQ[t,x,y,z] (grevlex) with generators: 
+# M2 Ideal of ring QQ[t,x,y,z] (grevlex) with generators : 
 # < t^4  -  x,  t^3  -  y,  t^2  -  z >
 ```
 
@@ -139,7 +139,7 @@ Ideal saturation:
 R <- ring("x", "y", coefring = "QQ")
 I <- ideal("x y", ring = R)
 saturate(I, "x^2")
-# M2 Ideal of ring QQ[x,y] (grevlex) with generator: 
+# M2 Ideal of ring QQ[x,y] (grevlex) with generator : 
 # < y >
 ```
 
@@ -148,14 +148,9 @@ Primary decomposition:
 ``` r
 I <- ideal("x (x + 1)", "y", ring = R)
 primary_decomposition(I)
-# [[1]]
-# M2 Ideal of ring QQ[x,y] (grevlex) with generators: 
+# M2 List of ideals of QQ[x,y] (grevlex) : 
 # < y,  x >
-# [[2]]
-# M2 Ideal of ring QQ[x,y] (grevlex) with generators: 
 # < y,  x  +  1 >
-# attr(,"class")
-# [1] "m2_list" "m2"
 ```
 
 Dimension:
