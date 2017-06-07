@@ -81,7 +81,7 @@
 #' ideal("(x-1) (x+1)")
 #'
 #' # primary_decomposition
-#' QQxy <- ring(c("x","y"), "QQ")
+#' ring("x", "y", "z", coefring = "QQ")
 #' I <- ideal("(x^2 + 1) (x^2 + 2)", "y + 1")
 #' primary_decomposition(I)
 #' primary_decomposition.(I)
@@ -89,7 +89,8 @@
 #' I <- ideal("x (x + 1)", "y")
 #' primary_decomposition(I)
 #'
-#' I <- ideal("x^2", "x y")
+#' ring("x", "y", "z", coefring = "QQ")
+#' (I <- ideal("x y", "x z"))
 #' primary_decomposition(I)
 #'
 #' }
@@ -238,6 +239,17 @@ m2_parse_function.m2_monomialideal <- function(x) {
   )
 }
 
+# m2_parse_function.m2_ideal_list <- function(x) {
+#   m2_structure(
+#     m2_name = "",
+#     m2_class = "m2_ideal_list",
+#     m2_meta = list(
+#       ring = m2_meta(x[[1]], "ring"),
+#       gens = structure(x[[1]][1,], class = "mpolyList")
+#     )
+#   )
+# }
+
 
 
 #' @rdname ideal
@@ -254,9 +266,9 @@ print.m2_ideal <- function(x, ...) {
 
   # ideal stuff
   if (length(m2_meta(x, "gens")) > 1) {
-    with_gen <- "with generators:"
+    with_gen <- "with generators :"
   } else {
-    with_gen <- "with generator:"
+    with_gen <- "with generator :"
   }
   cat("M2 Ideal of", s, with_gen, "\n")
   gens_strings <- print(m2_meta(x, "gens"), silent = TRUE)
@@ -271,7 +283,27 @@ print.m2_ideal <- function(x, ...) {
 
 
 
+#' @rdname ideal
+#' @export
+print.m2_ideal_list <- function(x, ...) {
 
+  # from print.m2_polynomialring
+  s <- sprintf(
+    "%s[%s] (%s)",
+    m2_meta(m2_meta(x, "ring"), "coefring"),
+    paste(m2_meta(m2_meta(x, "ring"), "vars"), collapse = ","),
+    m2_meta(m2_meta(x, "ring"), "order")
+  )
+
+  cat("M2 List of ideals of", s, ":", "\n")
+  lapply(x, function(ideal){
+    gens_strings <- print(m2_meta(ideal, "gens"), silent = TRUE)
+    cat(paste("<", paste(gens_strings, collapse = ",  "), ">\n"))
+  })
+
+  invisible(x)
+
+}
 
 
 
@@ -408,7 +440,11 @@ primary_decomposition <- function(ideal, code = FALSE, ...) {
   # parse output
   parsed_out <- m2_parse(pointer)
 
-  # construct R-side ideal, class and return
+  # construct m2 ideal list, class and return
+  m2_name(parsed_out) <- m2_name(pointer)
+  attr(parsed_out, "m2_meta") <- list(ring = m2_meta(ideal, "ring"))
+  # m2_meta(parsed_out, "ring") <-  m2_meta(ideal, "ring")
+  class(parsed_out) <- c("m2_ideal_list", class(parsed_out))
   parsed_out
 
 }
@@ -423,12 +459,16 @@ primary_decomposition. <- function(ideal, code = FALSE, ...) {
   if (!is.m2_ideal(ideal) && !is.m2_ideal_pointer(ideal))
     stop("unrecognized input ideal. see ?ideal", call. = FALSE)
 
+  # make resulting structure name
+  ideal_list_name <- name_and_increment("ideallist", "m2_ideal_list_count")
+
   # construct code and message
-  m2_code <- sprintf("primaryDecomposition(%s)", m2_name(ideal))
+  m2_code <- sprintf("%s = primaryDecomposition(%s)", ideal_list_name, m2_name(ideal))
   if(code) { message(m2_code); return(invisible(m2_code)) }
 
   # run m2
   out <- m2.(m2_code)
+  m2_name(out) <- ideal_list_name
 
   # return
   out
