@@ -66,14 +66,14 @@ Rings, ideals, and Grobner bases
 **m2r** currently has basic support for [rings](https://en.wikipedia.org/wiki/Ring_(mathematics)) (think: [polynomial rings](https://en.wikipedia.org/wiki/Polynomial_ring)):
 
 ``` r
-(R <- ring("t", "x", "y", "z", coefring = "QQ"))
+(QQtxyz <- ring("t", "x", "y", "z", coefring = "QQ"))
 # M2 Ring: QQ[t,x,y,z], grevlex order
 ```
 
 and [ideals](https://en.wikipedia.org/wiki/Ideal_(ring_theory)) of rings:
 
 ``` r
-(I <- ideal("t^4 - x", "t^3 - y", "t^2 - z", ring = R))
+(I <- ideal("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz))
 # M2 Ideal of ring QQ[t,x,y,z] (grevlex) with generators : 
 # < t^4  -  x,  t^3  -  y,  t^2  -  z >
 ```
@@ -93,7 +93,7 @@ gb(I)
 Perhaps an easier way to do this is just to list off the polynomials as character strings:
 
 ``` r
-gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
+gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz)
 # z^2  -  x
 # z t  -  y
 # -1 z x  +  y^2
@@ -112,24 +112,22 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 You can compute the basis respective of different [monomial orders](https://en.wikipedia.org/wiki/Monomial_order) as well. The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
 
 ``` r
-QQxyzt <- ring("t", "x", "y", "z", order = "lex")
-gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQxyzt)
-# y^2  -  z^3
+gb("t^4 - x", "t^3 - y", "t^2 - z", ring = ring("x", "y", "t", "z", order = "lex"))
+# t^2  -  z
+# -1 t z  +  y
 # -1 z^2  +  x
-# -1 y  +  z t
-# y t  -  z^2
-# -1 z  +  t^2
 ```
 
 On a technical level, `ring()`, `ideal()`, and `gb()` use [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html). A more stable way to use these functions is to use their standard evaluation versions `ring_()`, `ideal_()`, and `gb_()`. Each accepts first a data structure describing the relevant object of interest first as its own object. For example, at a basic level this simply changes the previous syntax to
 
 ``` r
 poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
-gb_(poly_chars, ring = QQxyzt)
-# y^2  -  z^3
-# -1 z^2  +  x
-# -1 y  +  z t
-# y t  -  z^2
+gb_(poly_chars, ring = QQtxyz)
+# z^2  -  x
+# z t  -  y
+# -1 z x  +  y^2
+# -1 x  +  t y
+# -1 z y  +  x t
 # -1 z  +  t^2
 ```
 
@@ -270,7 +268,7 @@ For example, we've seen that `factor_n()` computes the prime decomposition of a 
 factor_n.(x)
 # M2 Pointer Object
 #   ExternalString : new Product from {new Power from {2,5},new Power fro...
-#          M2 Name : m2o453
+#          M2 Name : m2o455
 #         M2 Class : Product (WrapperType)
 ```
 

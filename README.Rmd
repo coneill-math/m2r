@@ -86,11 +86,11 @@ Apart from the basic connection to M2, __m2r__ has basic data structures and met
 
 __m2r__ currently has basic support for [rings](https://en.wikipedia.org/wiki/Ring_(mathematics)) (think: [polynomial rings](https://en.wikipedia.org/wiki/Polynomial_ring)):
 ```{r ring}
-(R <- ring("t", "x", "y", "z", coefring = "QQ"))
+(QQtxyz <- ring("t", "x", "y", "z", coefring = "QQ"))
 ```
 and [ideals](https://en.wikipedia.org/wiki/Ideal_(ring_theory)) of rings:
 ```{r ideal}
-(I <- ideal("t^4 - x", "t^3 - y", "t^2 - z", ring = R))
+(I <- ideal("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz))
 ```
 
 You can compute [Grobner bases](https://en.wikipedia.org/wiki/Gröbner_basis) as well.  The basic function to do this is `gb()`:
@@ -99,7 +99,7 @@ gb(I)
 ```
 Perhaps an easier way to do this is just to list off the polynomials as character strings:
 ```{r basic_grobner}
-gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
+gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz)
 ```
 The result is an `mpolyList` object, from the [__mpoly__ package](https://github.com/dkahle/mpoly).  You can see the M2 code by adding `code = TRUE`:
 ```{r grobner_code}
@@ -108,14 +108,13 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 
 You can compute the basis respective of different [monomial orders](https://en.wikipedia.org/wiki/Monomial_order) as well.  The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
 ```{r grobner_order}
-QQxyzt <- ring("t", "x", "y", "z", order = "lex")
-gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQxyzt)
+gb("t^4 - x", "t^3 - y", "t^2 - z", ring = ring("x", "y", "t", "z", order = "lex"))
 ```
 
 On a technical level, `ring()`, `ideal()`, and `gb()` use [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html).  A more stable way to use these functions is to use their standard evaluation versions `ring_()`, `ideal_()`, and `gb_()`.  Each accepts first a data structure describing the relevant object of interest first as its own object.  For example, at a basic level this simply changes the previous syntax to
 ```{r gb_}
 poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
-gb_(poly_chars, ring = QQxyzt)
+gb_(poly_chars, ring = QQtxyz)
 ```
 
 `gb_()` is significantly easier to code with than `gb()` in the sense that its inputs and outputs are more predictable, so we strongly recommend that you use `gb_()`, especially inside of other functions and packages. 
