@@ -108,7 +108,7 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 
 You can compute the basis respective of different [monomial orders](https://en.wikipedia.org/wiki/Monomial_order) as well.  The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
 ```{r grobner_order}
-QQxyzt <- ring("x", "y", "t", "z", order = "lex")
+QQxyzt <- ring("t", "x", "y", "z", order = "lex")
 gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQxyzt)
 ```
 

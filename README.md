@@ -112,11 +112,13 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 You can compute the basis respective of different [monomial orders](https://en.wikipedia.org/wiki/Monomial_order) as well. The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
 
 ``` r
-QQxyzt <- ring("x", "y", "t", "z", order = "lex")
+QQxyzt <- ring("t", "x", "y", "z", order = "lex")
 gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQxyzt)
-# t^2  -  z
-# -1 t z  +  y
+# y^2  -  z^3
 # -1 z^2  +  x
+# -1 y  +  z t
+# y t  -  z^2
+# -1 z  +  t^2
 ```
 
 On a technical level, `ring()`, `ideal()`, and `gb()` use [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html). A more stable way to use these functions is to use their standard evaluation versions `ring_()`, `ideal_()`, and `gb_()`. Each accepts first a data structure describing the relevant object of interest first as its own object. For example, at a basic level this simply changes the previous syntax to
@@ -124,9 +126,11 @@ On a technical level, `ring()`, `ideal()`, and `gb()` use [nonstandard evaluatio
 ``` r
 poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
 gb_(poly_chars, ring = QQxyzt)
-# t^2  -  z
-# -1 t z  +  y
+# y^2  -  z^3
 # -1 z^2  +  x
+# -1 y  +  z t
+# y t  -  z^2
+# -1 z  +  t^2
 ```
 
 `gb_()` is significantly easier to code with than `gb()` in the sense that its inputs and outputs are more predictable, so we strongly recommend that you use `gb_()`, especially inside of other functions and packages.
@@ -266,7 +270,7 @@ For example, we've seen that `factor_n()` computes the prime decomposition of a 
 factor_n.(x)
 # M2 Pointer Object
 #   ExternalString : new Product from {new Power from {2,5},new Power fro...
-#          M2 Name : m2o457
+#          M2 Name : m2o453
 #         M2 Class : Product (WrapperType)
 ```
 
