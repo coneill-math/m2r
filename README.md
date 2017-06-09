@@ -112,8 +112,8 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 You can compute the basis respective of different [monomial orders](https://en.wikipedia.org/wiki/Monomial_order) as well. The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
 
 ``` r
-R <- ring("x", "y", "t", "z", order = "lex")
-gb("t^4 - x", "t^3 - y", "t^2 - z", ring = R)
+QQxyzt <- ring("x", "y", "t", "z", order = "lex")
+gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQxyzt)
 # t^2  -  z
 # -1 t z  +  y
 # -1 z^2  +  x
@@ -123,7 +123,7 @@ On a technical level, `ring()`, `ideal()`, and `gb()` use [nonstandard evaluatio
 
 ``` r
 poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
-gb_(poly_chars, ring = R)
+gb_(poly_chars, ring = QQxyzt)
 # t^2  -  z
 # -1 t z  +  y
 # -1 z^2  +  x
@@ -136,27 +136,38 @@ As far as other kinds of computations are concerned, we present a potpurri of ex
 Ideal saturation:
 
 ``` r
-R <- ring("x", "y", coefring = "QQ")
-I <- ideal("x y", ring = R)
-saturate(I, "x^2")
-# M2 Ideal of ring QQ[x,y] (grevlex) with generator : 
-# < y >
+QQx <- ring("x", coefring = "QQ")
+I <- ideal("(x-1) x (x+1)", ring = QQx)
+saturate(I, "x") # = (x-1) (x+1)
+# M2 Ideal of ring QQ[x] (grevlex) with generator : 
+# < x^2  -  1 >
+```
+
+Radicalization:
+
+``` r
+I <- ideal("x^2", ring = QQx)
+radical(I)
+# M2 Ideal of ring QQ[x] (grevlex) with generator : 
+# < x >
 ```
 
 Primary decomposition:
 
 ``` r
-I <- ideal("x (x + 1)", "y", ring = R)
+QQxyz <- ring("x", "y", "z", coefring = "QQ")
+I <- ideal("x z", "y z", ring = QQxyz)
 primary_decomposition(I)
-# M2 List of ideals of QQ[x,y] (grevlex) : 
-# < y,  x >
-# < y,  x  +  1 >
+# M2 List of ideals of QQ[x,y,z] (grevlex) : 
+# < z >
+# < x,  y >
 ```
 
 Dimension:
 
 ``` r
-I <- ideal("y - (x+1)", ring = R) 
+QQxy <- ring("x", "y", coefring = "QQ")
+I <- ideal("y - (x+1)", ring = QQxy) 
 dimension(I)
 # [1] 1
 ```
@@ -180,7 +191,6 @@ factor_n(x)
 You can also [factor polynomials](https://en.wikipedia.org/wiki/Factorization) over rings using `factor_poly()`:
 
 ``` r
-QQxy <- ring("x", "y", coefring = "QQ")
 factor_poly("x^4 - y^4", QQxy)
 # $factor
 # x  -  y
@@ -256,7 +266,7 @@ For example, we've seen that `factor_n()` computes the prime decomposition of a 
 factor_n.(x)
 # M2 Pointer Object
 #   ExternalString : new Product from {new Power from {2,5},new Power fro...
-#          M2 Name : m2o401
+#          M2 Name : m2o457
 #         M2 Class : Product (WrapperType)
 ```
 
@@ -309,7 +319,7 @@ It may be helpful to think of every `m2` object as being a missing value (`NA`, 
 r <- ring("x", "y", coefring = "QQ")
 str(r)
 # Classes 'm2_polynomialring', 'm2'  atomic [1:1] NA
-#   ..- attr(*, "m2_name")= chr "m2rintring00000005"
+#   ..- attr(*, "m2_name")= chr "m2rintring00000006"
 #   ..- attr(*, "m2_meta")=List of 3
 #   .. ..$ vars    :List of 2
 #   .. .. ..$ : chr "x"
@@ -319,7 +329,7 @@ str(r)
 class(r)
 # [1] "m2_polynomialring" "m2"
 m2_name(r)
-# [1] "m2rintring00000005"
+# [1] "m2rintring00000006"
 m2_meta(r)
 # $vars
 # $vars[[1]]
