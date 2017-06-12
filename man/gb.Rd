@@ -2,11 +2,14 @@
 % Please edit documentation in R/gb.R
 \name{gb}
 \alias{gb}
+\alias{gb.}
 \alias{gb_}
 \alias{gb_.}
 \title{Compute a Grobner basis with Macaulay2}
 \usage{
 gb(..., ring, degree_limit, raw_chars = FALSE, code = FALSE)
+
+gb.(..., ring, degree_limit, raw_chars = FALSE, code = FALSE)
 
 gb_(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...)
 
@@ -54,15 +57,22 @@ evaluation equivalent.
 ########################################
 
 # the last ring evaluated is the one used in the computation
-(QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
+(QQtxyz <- ring("t","x","y","z", coefring = "QQ"))
 gb("t^4 - x", "t^3 - y", "t^2 - z")
 gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 
 # standard evaluation version
 gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
 
+# reference nonstandard evaluation version
+gb.("t^4 - x", "t^3 - y", "t^2 - z")
+
+# reference standard evaluation version
+gb_.(c("t^4 - x", "t^3 - y", "t^2 - z"))
+
+
 # different rings
-(QQxyzt <- ring(c("x","y","z","t"), coefring = "QQ"))
+(QQxyzt <- ring("x", "y", "z", "t", coefring = "QQ"))
 gb("t^4 - x", "t^3 - y", "t^2 - z")
 
 # you can specify a specific ring apart from the last used
@@ -71,10 +81,10 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz)
 gb("t^4 - x", "t^3 - y", "t^2 - z")
 
 # gb of an ideal
-(QQtxyz <- ring(c("t","x","y","z"), coefring = "QQ"))
-I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz)
+(QQtxyz <- ring("t", "x", "y", "z", coefring = "QQ"))
+I <- ideal("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz)
 gb(I)
-ideal(gb(I), QQtxyz)
+ideal_(gb(I), QQtxyz)
 
 
 ##### more advanced usage
@@ -85,14 +95,15 @@ gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = "QQ[t,x,y,z]")
 gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = "QQ[t,x,y,z]", code = TRUE)
 
 # interaction with pointers
-(QQtxyz. <- ring.(c("t","x","y","z"), coefring = "QQ"))
+(QQtxyz. <- ring.("t", "x", "y", "z", coefring = "QQ"))
 gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = QQtxyz., code = TRUE)
 
-I <- ideal(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
+I <- ideal("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz.)
 gb_(I)
 
-I. <- ideal.(c("t^4 - x", "t^3 - y", "t^2 - z"), QQtxyz.)
+I. <- ideal.("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz.)
 gb_(I.)
+gb_.(I.)
 
 
 ##### still broken
@@ -100,16 +111,8 @@ gb_(I.)
 
 gb("x*y", "x*z", "x", raw_chars = TRUE)
 
-
-
-
-
-
 gb_(mp(c("x y - z^2", "y^2 - w^2")))
 
-gb(c("x y-z^2", "y^2-w^2"), ring = "QQ[w,x,y,z]")
-gb(mp("x y-z^2"), mp("y^2-w^2"), ring = "QQ[w,x,y,z]")
-gb(mp("x y-z^2"), mp("y^2-w^2"), degree_limit = 2)
 
 
 
@@ -128,7 +131,7 @@ gb_(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]")
 
 
 
-(QQtxyz <- ring(c("t", "x","y","z"), coefring = "QQ"))
+(QQtxyz <- ring("t", "x", "y", "z", coefring = "QQ"))
 gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), QQtxyz, code = TRUE)
 gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), QQtxyz)
 gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , QQtxyz)

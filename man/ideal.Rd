@@ -2,6 +2,7 @@
 % Please edit documentation in R/ideal.R
 \name{ideal}
 \alias{ideal}
+\alias{ideal.}
 \alias{ideal_}
 \alias{ideal_.}
 \alias{print.m2_ideal}
@@ -17,6 +18,8 @@
 \usage{
 ideal(..., ring, raw_chars = FALSE, code = FALSE)
 
+ideal.(..., ring, raw_chars = FALSE, code = FALSE)
+
 ideal_(x, ring, raw_chars = FALSE, code = FALSE, ...)
 
 ideal_.(x, ring, raw_chars = FALSE, code = FALSE, ...)
@@ -25,9 +28,9 @@ ideal_.(x, ring, raw_chars = FALSE, code = FALSE, ...)
 
 \method{print}{m2_ideal_list}(x, ...)
 
-radical(ideal, code = FALSE, ...)
+radical(ideal, ring, code = FALSE, ...)
 
-radical.(ideal, code = FALSE, ...)
+radical.(ideal, ring, code = FALSE, ...)
 
 saturate(ideal, saturate_by, code = FALSE, ...)
 

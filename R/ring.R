@@ -72,6 +72,28 @@ ring <- function(..., coefring = m2_coefrings(), order = m2_termorders(),
 
 
 
+#' @rdname ring
+#' @export
+ring. <- function(..., coefring = m2_coefrings(), order = m2_termorders(),
+  code = FALSE
+) {
+
+  # grab args
+  x <- list(vars = lapply(pryr::dots(...), eval, envir = parent.frame()))
+  otherArgs <- as.list(match.call(expand.dots = FALSE))[-c(1:2)]
+
+  # eval
+  args <- lapply(c(x, otherArgs), eval)
+
+  # run standard evaluation gb
+  do.call("ring_.", args)
+
+}
+
+
+
+
+
 
 
 
