@@ -570,6 +570,22 @@ m2_parse_sequence <- function(tokens, start = 1, save_paren = FALSE) {
 
 
 
+print.m2_integer <- function(object, ...) {
+  class(object) <- "numeric"
+  print(object)
+}
+
+
+print.m2_inexactfieldfamily <- function(object, ...) {
+  class(object) <- "numeric"
+  print(object)
+}
+
+
+print.m2_string <- function(object, ...) {
+  class(object) <- "character"
+  print(object)
+}
 
 
 
