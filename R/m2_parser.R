@@ -191,25 +191,34 @@ m2_parse_internal <- function(tokens, start = 1) {
     # string: "stuff"
 
     error_on_fail(tokens[i+2] == "\"", "Parsing error: malformed string.")
-    ret <- tokens[i+1]
+    ret <- m2_structure(tokens[i+1], m2_class = "m2_string")
     i <- i + 3
 
   } else if (substr(tokens[i], 1, 1) %in% 0:9) {
     # positive integer
 
-    ret <- as.integer(tokens[i])
+    ret <- m2_structure(
+      as.integer(tokens[i]),
+      m2_class = "m2_integer"
+    )
     i <- i + 1
 
   } else if (tokens[i] == ".") {
     # positive float
 
-    ret <- as.numeric(paste0(".", str_replace(tokens[i+1], "p[0-9]+", "")))
+    ret <- m2_structure(
+      as.numeric(paste0(".", str_replace(tokens[i+1], "p[0-9]+", ""))),
+      m2_class = "m2_inexactfieldfamily"
+    )
     i <- i + 2
 
   } else if (tokens[i] == "-" && i != length(tokens) && tokens[i+1] == ".") {
     # negative float
 
-    ret <- -as.numeric(paste0(".", str_replace(tokens[i+2], "p[0-9]+", "")))
+    ret <- m2_structure(
+      -as.numeric(paste0(".", str_replace(tokens[i+2], "p[0-9]+", ""))),
+      m2_class = "m2_integer"
+    )
     i <- i + 3
 
   } else if (tokens[i] == "-") {
@@ -222,7 +231,7 @@ m2_parse_internal <- function(tokens, start = 1) {
     if (is.integer(ret)) {
       ret <- -ret
     } else {
-      ret <- paste0("-", ret)
+      ret <- m2_structure(paste0("-", ret), m2_class = "m2_string")
     }
 
   } else if (tokens[i] == "new") {
