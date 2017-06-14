@@ -208,7 +208,7 @@ m2_parse_internal <- function(tokens, start = 1) {
 
     ret <- m2_structure(
       as.numeric(paste0(".", str_replace(tokens[i+1], "p[0-9]+", ""))),
-      m2_class = "m2_inexactfieldfamily"
+      m2_class = "m2_float"
     )
     i <- i + 2
 
@@ -217,7 +217,7 @@ m2_parse_internal <- function(tokens, start = 1) {
 
     ret <- m2_structure(
       -as.numeric(paste0(".", str_replace(tokens[i+2], "p[0-9]+", ""))),
-      m2_class = "m2_integer"
+      m2_class = "m2_float"
     )
     i <- i + 3
 
@@ -399,13 +399,7 @@ m2_parse_function.m2_monoid <- function(x) {
 
 
 m2_parse_function.m2_tocc <- function(x) {
-  # m2_structure(
-  #   complex(real = x[[1]], imaginary = x[[2]]),
-  #   m2_name = "",
-  #   m2_class = "m2_ideal",
-  #   m2_meta = list(rmap = x[[1]])
-  # )
-  complex(real = x[[1]], imaginary = x[[2]])
+  m2_structure(complex(real = x[[1]], imaginary = x[[2]]), m2_class = "m2_complex")
 }
 
 
@@ -576,8 +570,14 @@ print.m2_integer <- function(object, ...) {
 }
 
 
-print.m2_inexactfieldfamily <- function(object, ...) {
+print.m2_float <- function(object, ...) {
   class(object) <- "numeric"
+  print(object)
+}
+
+
+print.m2_complex <- function(object, ...) {
+  class(object) <- "complex"
   print(object)
 }
 
