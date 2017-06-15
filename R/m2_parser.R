@@ -19,6 +19,21 @@
 #' m2.("QQ[x,y]")
 #' m2_parse(m2.("QQ[x,y]"))
 #'
+#' get_m2_gmp()
+#' m2("3/2") %>% m2_parse()
+#' m2_toggle_gmp() # gmp on
+#' m2("3/2") %>% m2_parse()
+#' m2("6/4") %>% m2_parse()
+#' m2("3345234524352435432/223454325235432524352433245") %>% m2_parse()
+#' m2_toggle_gmp() # gmp off
+#'
+#'
+#'
+#' m2("50!") %>% m2_parse()
+#' m2_toggle_gmp() # gmp on
+#' m2("50!") %>% m2_parse()
+#' m2_toggle_gmp() # gmp off
+#'
 #' }
 
 
@@ -617,6 +632,34 @@ print.m2_string <- function(object, ...) {
   class(object) <- "character"
   print(object)
 }
+
+
+print.m2_list <- function(object, ...) {
+  cat("M2 List\n")
+  print(unclass(object))
+}
+
+print.m2_array <- function(object, ...) {
+  cat("M2 Array\n")
+  print(unclass(object))
+}
+
+print.m2_sequence <- function(object, ...) {
+  cat("M2 Sequence\n")
+  print(unclass(object))
+}
+
+print.m2_option <- function(object, ...) {
+  cat("M2 Option\n")
+  cat(object[[1]], "=>", object[[2]])
+}
+
+
+print.m2_hashtable <- function(object, ...) {
+  cat("M2 HashTable\n")
+  print(unclass(object))
+}
+
 
 
 
