@@ -608,7 +608,8 @@ m2_parse_sequence <- function(tokens, start = 1, save_paren = FALSE) {
 
 
 
-
+#' @rdname m2_parser
+#' @export
 print.m2_integer <- function(object, ...) {
   if(inherits(object, "bigz")) return(get("print.bigz", envir = asNamespace("gmp"))(object))
   class(object) <- "numeric"
@@ -616,47 +617,73 @@ print.m2_integer <- function(object, ...) {
 }
 
 
+#' @rdname m2_parser
+#' @export
 print.m2_float <- function(object, ...) {
   class(object) <- "numeric"
   print(object)
 }
 
 
+#' @rdname m2_parser
+#' @export
 print.m2_complex <- function(object, ...) {
   class(object) <- "complex"
   print(object)
 }
 
 
+#' @rdname m2_parser
+#' @export
 print.m2_string <- function(object, ...) {
   class(object) <- "character"
   print(object)
 }
 
 
+#' @rdname m2_parser
+#' @export
 print.m2_list <- function(object, ...) {
   cat("M2 List\n")
   print(unclass(object))
 }
 
+
+#' @rdname m2_parser
+#' @export
 print.m2_array <- function(object, ...) {
   cat("M2 Array\n")
   print(unclass(object))
 }
 
+
+#' @rdname m2_parser
+#' @export
 print.m2_sequence <- function(object, ...) {
   cat("M2 Sequence\n")
   print(unclass(object))
 }
 
+
+#' @rdname m2_parser
+#' @export
 print.m2_option <- function(object, ...) {
   cat("M2 Option\n")
   cat(object[[1]], "=>", object[[2]])
 }
 
 
+#' @rdname m2_parser
+#' @export
 print.m2_hashtable <- function(object, ...) {
   cat("M2 HashTable\n")
+  print(unclass(object))
+}
+
+#' @rdname m2_parser
+#' @export
+print.m2_module <- function(object, ...) {
+  cat("M2 Module\n")
   print(unclass(object))
 }
 
