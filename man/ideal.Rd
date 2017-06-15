@@ -14,6 +14,10 @@
 \alias{primary_decomposition}
 \alias{primary_decomposition.}
 \alias{dimension}
+\alias{+.m2_ideal}
+\alias{*.m2_ideal}
+\alias{==.m2_ideal}
+\alias{^.m2_ideal}
 \title{Create a new ideal in Macaulay2}
 \usage{
 ideal(..., ring, raw_chars = FALSE, code = FALSE)
@@ -41,6 +45,14 @@ primary_decomposition(ideal, code = FALSE, ...)
 primary_decomposition.(ideal, code = FALSE, ...)
 
 dimension(ideal, code = FALSE, ...)
+
+\method{+}{m2_ideal}(e1, e2)
+
+\method{*}{m2_ideal}(e1, e2)
+
+\method{==}{m2_ideal}(e1, e2)
+
+\method{^}{m2_ideal}(e1, e2)
 }
 \arguments{
 \item{...}{...}
@@ -61,6 +73,8 @@ see examples.}
 
 \item{ideal, saturate_by}{an ideal object of class \code{m2_ideal} or
 \code{m2_ideal_pointer}}
+
+\item{e1, e2}{ideals for arithmetic}
 }
 \value{
 a reference to a Macaulay2 ideal
@@ -152,6 +166,33 @@ primary_decomposition(I)
 dimension(I) # =  max dimension of irreducible components
 (Is <- primary_decomposition(I))
 dimension(Is)
+
+
+# sums (cox et al., 184)
+ring("x", "y", "z", coefring = "RR")
+(I <- ideal("x^2 + y"))
+(J <- ideal("z"))
+I + J
+
+# products (cox et al., 185)
+ring("x", "y", "z", coefring = "RR")
+(I <- ideal("x", "y"))
+(J <- ideal("z"))
+I * J
+
+
+# equality
+ring("x", "y", "z", coefring = "RR")
+(I <- ideal("x", "y"))
+(J <- ideal("z"))
+I == J
+I == I
+
+
+# powers
+ring("x", coefring = "QQ")
+(I <- ideal("x"))
+I^2
 
 
 }
