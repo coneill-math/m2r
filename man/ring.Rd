@@ -2,6 +2,7 @@
 % Please edit documentation in R/ring.R
 \name{ring}
 \alias{ring}
+\alias{ring.}
 \alias{ring_}
 \alias{ring_.}
 \alias{m2_coefrings}
@@ -10,6 +11,9 @@
 \title{Create a new ring in Macaulay2}
 \usage{
 ring(..., coefring = m2_coefrings(), order = m2_termorders(),
+  code = FALSE)
+
+ring.(..., coefring = m2_coefrings(), order = m2_termorders(),
   code = FALSE)
 
 ring_(vars, coefring = m2_coefrings(), order = m2_termorders(),

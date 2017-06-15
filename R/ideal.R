@@ -135,6 +135,27 @@ ideal <- function(..., ring, raw_chars = FALSE, code = FALSE) {
 
 
 
+#' @rdname ideal
+#' @export
+ideal. <- function(..., ring, raw_chars = FALSE, code = FALSE) {
+
+  # grab args
+  x <- list(x = lapply(pryr::dots(...), eval, envir = parent.frame()))
+  otherArgs <- as.list(match.call(expand.dots = FALSE))[-c(1:2)]
+
+  # eval
+  args <- lapply(c(x, otherArgs), eval)
+
+  # run standard evaluation gb
+  do.call("ideal_.", args)
+
+}
+
+
+
+
+
+
 
 
 
@@ -321,7 +342,7 @@ print.m2_ideal_list <- function(x, ...) {
 
 #' @rdname ideal
 #' @export
-radical <- function(ideal, code = FALSE, ...) {
+radical <- function(ideal, ring, code = FALSE, ...) {
 
   # run radical.
   args <- as.list(match.call())[-1]
@@ -343,7 +364,7 @@ radical <- function(ideal, code = FALSE, ...) {
 
 #' @rdname ideal
 #' @export
-radical. <- function(ideal, code = FALSE, ...) {
+radical. <- function(ideal, ring, code = FALSE, ...) {
 
   # arg check
   if (!is.m2_ideal(ideal) && !is.m2_ideal_pointer(ideal))
@@ -352,8 +373,11 @@ radical. <- function(ideal, code = FALSE, ...) {
   # make radical ideal name
   radical_name <- name_and_increment("ideal", "m2_ideal_count")
 
+  # check ring to be QQ or ZZ/p
+
   # construct code and message
   m2_code <- sprintf("%s = radical(%s)", radical_name, m2_name(ideal))
+  if(!missing(ring)) m2_code <- paste(sprintf("use %s;", ring), m2_code)
   if(code) { message(m2_code); return(invisible(m2_code)) }
 
   # run m2

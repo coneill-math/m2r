@@ -9,6 +9,9 @@
 	# check that the programs were found
 	startup_check_for_program()
 
+	# set gmp
+	set_m2r_option(gmp = FALSE)
+
 	# return
 	invisible(TRUE)
 }

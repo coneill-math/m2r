@@ -3,9 +3,15 @@
 \name{m2_parser}
 \alias{m2_parser}
 \alias{m2_parse}
+\alias{m2_toggle_gmp}
+\alias{get_m2_gmp}
 \title{Convert a M2 object into an R object}
 \usage{
 m2_parse(s)
+
+m2_toggle_gmp()
+
+get_m2_gmp()
 }
 \arguments{
 \item{s}{a character(1), typically the result of running
@@ -30,6 +36,21 @@ m2_parse(m2.("1+1"))
 m2("QQ[x,y]")
 m2.("QQ[x,y]")
 m2_parse(m2.("QQ[x,y]"))
+
+get_m2_gmp()
+m2("3/2") \%>\% m2_parse()
+m2_toggle_gmp() # gmp on
+m2("3/2") \%>\% m2_parse()
+m2("6/4") \%>\% m2_parse()
+m2("3345234524352435432/223454325235432524352433245") \%>\% m2_parse()
+m2_toggle_gmp() # gmp off
+
+
+
+m2("50!") \%>\% m2_parse()
+m2_toggle_gmp() # gmp on
+m2("50!") \%>\% m2_parse()
+m2_toggle_gmp() # gmp off
 
 }
 }

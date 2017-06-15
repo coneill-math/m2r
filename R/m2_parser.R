@@ -19,6 +19,21 @@
 #' m2.("QQ[x,y]")
 #' m2_parse(m2.("QQ[x,y]"))
 #'
+#' get_m2_gmp()
+#' m2("3/2") %>% m2_parse()
+#' m2_toggle_gmp() # gmp on
+#' m2("3/2") %>% m2_parse()
+#' m2("6/4") %>% m2_parse()
+#' m2("3345234524352435432/223454325235432524352433245") %>% m2_parse()
+#' m2_toggle_gmp() # gmp off
+#'
+#'
+#'
+#' m2("50!") %>% m2_parse()
+#' m2_toggle_gmp() # gmp on
+#' m2("50!") %>% m2_parse()
+#' m2_toggle_gmp() # gmp off
+#'
 #' }
 
 
@@ -195,19 +210,49 @@ m2_parse_internal <- function(tokens, start = 1) {
     i <- i + 3
 
   } else if (substr(tokens[i], 1, 1) %in% 0:9) {
-    # positive integer
+    # positive integer or rational
 
-    ret <- m2_structure(
-      as.integer(tokens[i]),
-      m2_class = "m2_integer"
-    )
-    i <- i + 1
+    if (length(tokens) > i && str_detect(tokens[i+1], "/")) { # is fraction
+
+      if (get_m2_gmp()) {
+        ret <- m2_structure(
+          as.bigq(tokens[i], tokens[i+2]),
+          m2_class = "m2_rational"
+        )
+        class(ret) <- c(class(ret), "bigq")
+        i <- i + 3
+      } else {
+        ret <- m2_structure(
+          as.integer(tokens[i]) / as.integer(tokens[i+2]),
+          m2_class = "m2_float"
+        )
+        i <- i + 3
+      }
+
+    } else { # positive integer
+
+      if (get_m2_gmp()) {
+        ret <- m2_structure(
+          as.bigz(tokens[i]),
+          m2_class = "m2_integer"
+        )
+        class(ret) <- c(class(ret), "bigz")
+        i <- i + 1
+      } else {
+        ret <- m2_structure(
+          as.integer(tokens[i]),
+          m2_class = "m2_integer"
+        )
+        i <- i + 1
+      }
+
+    }
 
   } else if (tokens[i] == ".") {
     # positive float
 
     ret <- m2_structure(
-      as.numeric(paste0(".", str_replace(tokens[i+1], "p[0-9]+", ""))),
+      as.double(paste0(".", str_replace(tokens[i+1], "p[0-9]+", ""))),
       m2_class = "m2_float"
     )
     i <- i + 2
@@ -216,7 +261,7 @@ m2_parse_internal <- function(tokens, start = 1) {
     # negative float
 
     ret <- m2_structure(
-      -as.numeric(paste0(".", str_replace(tokens[i+2], "p[0-9]+", ""))),
+      -as.double(paste0(".", str_replace(tokens[i+2], "p[0-9]+", ""))),
       m2_class = "m2_float"
     )
     i <- i + 3
@@ -565,6 +610,7 @@ m2_parse_sequence <- function(tokens, start = 1, save_paren = FALSE) {
 
 
 print.m2_integer <- function(object, ...) {
+  if(inherits(object, "bigz")) return(get("print.bigz", envir = asNamespace("gmp"))(object))
   class(object) <- "numeric"
   print(object)
 }
@@ -588,10 +634,63 @@ print.m2_string <- function(object, ...) {
 }
 
 
+print.m2_list <- function(object, ...) {
+  cat("M2 List\n")
+  print(unclass(object))
+}
+
+print.m2_array <- function(object, ...) {
+  cat("M2 Array\n")
+  print(unclass(object))
+}
+
+print.m2_sequence <- function(object, ...) {
+  cat("M2 Sequence\n")
+  print(unclass(object))
+}
+
+print.m2_option <- function(object, ...) {
+  cat("M2 Option\n")
+  cat(object[[1]], "=>", object[[2]])
+}
+
+
+print.m2_hashtable <- function(object, ...) {
+  cat("M2 HashTable\n")
+  print(unclass(object))
+}
+
+
+
 
 error_on_fail <- function(t, e) {
   if (!t) stop(e)
 }
+
+
+
+
+
+
+
+#' @rdname m2_parser
+#' @export
+m2_toggle_gmp <- function() {
+  options <- getOption("m2r")
+  options$gmp <- !options$gmp
+  if (options$gmp) {
+    message("m2r is now using gmp.")
+  } else {
+    message("m2r is no longer using gmp.")
+  }
+  options(m2r = options)
+}
+
+
+
+#' @rdname m2_parser
+#' @export
+get_m2_gmp <- function() getOption("m2r")$gmp
 
 
 

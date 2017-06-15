@@ -8,39 +8,61 @@ m2_parse_test <- function(m2_str, m2_expected_output) {
 }
 
 test_that("m2_parse parses basic data structures",{
+
   m2_list <- "{1,2,3}"
   m2_list_output <- structure(
-    list(1,2,3),
+    list(
+      structure(1L, class = c("m2_integer", "m2")),
+      structure(2L, class = c("m2_integer", "m2")),
+      structure(3L, class = c("m2_integer", "m2"))
+    ),
     class = c("m2_list","m2")
   )
-  m2_parse_test(m2_list,m2_list_output)
+  m2_parse_test(m2_list, m2_list_output)
 
   m2_array <- "[1,2,3]"
   m2_array_output <- structure(
-    list(1,2,3),
+    list(
+      structure(1L, class = c("m2_integer", "m2")),
+      structure(2L, class = c("m2_integer", "m2")),
+      structure(3L, class = c("m2_integer", "m2"))
+    ),
     class = c("m2_array", "m2")
   )
-  m2_parse_test(m2_array,m2_array_output)
+  m2_parse_test(m2_array, m2_array_output)
 
   m2_sequence <- "(1,2,3)"
-  m2_sequence_output <- structure(list(1,2,3), class = c("m2_sequence", "m2"))
+  m2_sequence_output <- structure(
+    list(
+      structure(1L, class = c("m2_integer", "m2")),
+      structure(2L, class = c("m2_integer", "m2")),
+      structure(3L, class = c("m2_integer", "m2"))
+    ),
+    class = c("m2_sequence", "m2")
+  )
   m2_parse_test(m2_sequence, m2_sequence_output)
 
   m2_str <- "\"my string\""
-  m2_str_output <- "my string"
+  m2_str_output <- structure("my string", class = c("m2_string", "m2"))
   m2_parse_test(m2_str, m2_str_output)
 
   m2_opt <- "c => 4"
   m2_opt_output <- structure(
-    list(structure("c", class = c("m2_symbol", "m2")), 4),
+    list(
+      structure("c", class = c("m2_symbol", "m2")),
+      structure(4L, class = c("m2_integer", "m2"))
+    ),
     class = c("m2_option", "m2")
   )
-  m2_parse_test(m2_opt,m2_opt_output)
+  m2_parse_test(m2_opt, m2_opt_output)
 
   m2_new_thing <- "new HashTable from {A => 1}"
   m2_new_thing_output <- structure(
     list(structure(
-      list(structure("A", class = c("m2_symbol", "m2")),1),
+      list(
+        structure("A", class = c("m2_symbol", "m2")),
+        structure(1L, class = c("m2_integer", "m2"))
+      ),
       class = c("m2_option", "m2")
     )),
     class = c("m2_hashtable", "m2"))
@@ -111,8 +133,18 @@ test_that("m2 parses harder data structures", {
   m2_factor <- "new Product from {new Power from {2,4},new Power from {3,3}}"
   m2_factor_output <- structure(
     list(
-      structure(list(2,4), class = c("m2_power" , "m2")),
-      structure(list(3,3), class = c("m2_power" , "m2"))
+      structure(
+        list(
+          structure(2, class = c("m2_integer", "m2")),
+          structure(4, class = c("m2_integer", "m2"))
+        ), class = c("m2_power" , "m2")
+      ),
+      structure(
+        list(
+          structure(3, class = c("m2_integer", "m2")),
+          structure(3, class = c("m2_integer", "m2"))
+        ), class = c("m2_power" , "m2")
+      )
     ),
     class = c("m2_product", "m2")
   )
@@ -124,14 +156,14 @@ test_that("m2 parses harder data structures", {
       structure(
         list(
           structure("Headline", class = c("m2_symbol", "m2")),
-          "test"
+          structure("test", class = c("m2_string", "m2"))
         ),
         class = c("m2_option","m2")
       ),
       structure(
         list(
           structure("Configuration", class = c("m2_symbol", "m2")),
-          structure(list(),class=c("m2_optiontable","m2"))
+          structure(list(), class = c("m2_optiontable", "m2"))
         ),
         class = c("m2_option", "m2")
       )
