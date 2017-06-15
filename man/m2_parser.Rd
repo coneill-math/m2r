@@ -3,11 +3,41 @@
 \name{m2_parser}
 \alias{m2_parser}
 \alias{m2_parse}
+\alias{print.m2_integer}
+\alias{print.m2_float}
+\alias{print.m2_complex}
+\alias{print.m2_string}
+\alias{print.m2_list}
+\alias{print.m2_array}
+\alias{print.m2_sequence}
+\alias{print.m2_option}
+\alias{print.m2_hashtable}
+\alias{print.m2_module}
 \alias{m2_toggle_gmp}
 \alias{get_m2_gmp}
 \title{Convert a M2 object into an R object}
 \usage{
 m2_parse(s)
+
+\method{print}{m2_integer}(object, ...)
+
+\method{print}{m2_float}(object, ...)
+
+\method{print}{m2_complex}(object, ...)
+
+\method{print}{m2_string}(object, ...)
+
+\method{print}{m2_list}(object, ...)
+
+\method{print}{m2_array}(object, ...)
+
+\method{print}{m2_sequence}(object, ...)
+
+\method{print}{m2_option}(object, ...)
+
+\method{print}{m2_hashtable}(object, ...)
+
+\method{print}{m2_module}(object, ...)
 
 m2_toggle_gmp()
 
