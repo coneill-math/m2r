@@ -4,6 +4,7 @@
 #'
 #' @param s a character(1), typically the result of running
 #'   toExternalString on an M2 object
+#' @param x an object to be printed
 #' @param ... ...
 #' @return an R object
 #' @name m2_parser
@@ -610,81 +611,81 @@ m2_parse_sequence <- function(tokens, start = 1, save_paren = FALSE) {
 
 #' @rdname m2_parser
 #' @export
-print.m2_integer <- function(object, ...) {
-  if(inherits(object, "bigz")) return(get("print.bigz", envir = asNamespace("gmp"))(object))
-  class(object) <- "numeric"
-  print(object)
+print.m2_integer <- function(x, ...) {
+  if(inherits(x, "bigz")) return(get("print.bigz", envir = asNamespace("gmp"))(x))
+  class(x) <- "numeric"
+  print(x)
 }
 
 
 #' @rdname m2_parser
 #' @export
-print.m2_float <- function(object, ...) {
-  class(object) <- "numeric"
-  print(object)
+print.m2_float <- function(x, ...) {
+  class(x) <- "numeric"
+  print(x)
 }
 
 
 #' @rdname m2_parser
 #' @export
-print.m2_complex <- function(object, ...) {
-  class(object) <- "complex"
-  print(object)
+print.m2_complex <- function(x, ...) {
+  class(x) <- "complex"
+  print(x)
 }
 
 
 #' @rdname m2_parser
 #' @export
-print.m2_string <- function(object, ...) {
-  class(object) <- "character"
-  print(object)
+print.m2_string <- function(x, ...) {
+  class(x) <- "character"
+  print(x)
 }
 
 
 #' @rdname m2_parser
 #' @export
-print.m2_list <- function(object, ...) {
+print.m2_list <- function(x, ...) {
   cat("M2 List\n")
-  print(unclass(object))
+  print(unclass(x))
 }
 
 
 #' @rdname m2_parser
 #' @export
-print.m2_array <- function(object, ...) {
+print.m2_array <- function(x, ...) {
   cat("M2 Array\n")
-  print(unclass(object))
+  print(unclass(x))
 }
 
 
 #' @rdname m2_parser
 #' @export
-print.m2_sequence <- function(object, ...) {
+print.m2_sequence <- function(x, ...) {
   cat("M2 Sequence\n")
-  print(unclass(object))
+  print(unclass(x))
 }
 
 
 #' @rdname m2_parser
 #' @export
-print.m2_option <- function(object, ...) {
+print.m2_option <- function(x, ...) {
   cat("M2 Option\n")
-  cat(object[[1]], "=>", object[[2]])
+  cat(x[[1]], "=>", x[[2]])
 }
 
 
 #' @rdname m2_parser
 #' @export
-print.m2_hashtable <- function(object, ...) {
+print.m2_hashtable <- function(x, ...) {
   cat("M2 HashTable\n")
-  print(unclass(object))
+  print(unclass(x))
 }
 
 #' @rdname m2_parser
 #' @export
-print.m2_module <- function(object, ...) {
+print.m2_module <- function(x, ...) {
   cat("M2 Module\n")
-  print(unclass(object))
+  print(unclass(x))
 }
 
 
