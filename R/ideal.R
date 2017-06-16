@@ -15,6 +15,7 @@
 #' @param ideal,saturate_by an ideal object of class \code{m2_ideal} or
 #'   \code{m2_ideal_pointer}
 #' @param e1,e2 ideals for arithmetic
+#' @param I,J ideals or objects parsable into ideals
 #' @param ... ...
 #' @return a reference to a Macaulay2 ideal
 #' @name ideal
@@ -69,10 +70,11 @@
 #'
 #' # saturation
 #' ring("x", "y", "z", coefring = "QQ")
-#' I <- ideal("x^2", "y^4", "z + 1")
-#' J <- ideal("x^6")
+#' (I <- ideal("x^2", "y^4", "z + 1"))
+#' (J <- ideal("x^6"))
 #' saturate(I)
 #' saturate.(I)
+#' quotient(I, J)
 #' saturate(I, J)
 #' saturate(I, mp("x"))
 #' saturate(I, "x")
@@ -126,10 +128,9 @@
 #'
 #'
 #' # powers
-#' ring("x", coefring = "QQ")
-#' (I <- ideal("x"))
-#' I^2
-#'
+#' ring("x", "y", coefring = "QQ")
+#' (I <- ideal("x", "y"))
+#' I^3
 #'
 #' }
 
@@ -420,7 +421,7 @@ radical. <- function(ideal, ring, code = FALSE, ...) {
 
 #' @rdname ideal
 #' @export
-saturate <- function(ideal, saturate_by, code = FALSE, ...) {
+saturate <- function(I, J, code = FALSE, ...) {
 
   # run saturate.
   args <- as.list(match.call())[-1]
@@ -433,7 +434,7 @@ saturate <- function(ideal, saturate_by, code = FALSE, ...) {
 
   # construct R-side ideal, class and return
   m2_name(parsed_out) <- m2_name(pointer)
-  m2_meta(parsed_out, "saturation_of") <- ideal
+  m2_meta(parsed_out, "saturation_of") <- I
   parsed_out
 
 }
@@ -442,21 +443,21 @@ saturate <- function(ideal, saturate_by, code = FALSE, ...) {
 
 #' @rdname ideal
 #' @export
-saturate. <- function(ideal, saturate_by, code = FALSE, ...) {
+saturate. <- function(I, J, code = FALSE, ...) {
 
   # arg check
-  if (!is.m2_ideal(ideal) && !is.m2_ideal_pointer(ideal))
+  if (!is.m2_ideal(I) && !is.m2_ideal_pointer(I))
     stop("unrecognized input ideal. see ?ideal", call. = FALSE)
 
-  if (!missing(saturate_by)) {
-    if (is.m2_ideal(saturate_by) || is.m2_ideal_pointer(saturate_by)) {
-      second_param <- paste0(",", m2_name(saturate_by))
-    } else if (is.mpoly(saturate_by)) {
-      second_param <- paste0(",", mpolyList_to_m2_str(saturate_by))
-    } else if (is.character(saturate_by)) {
-      second_param <- paste0(",", mpolyList_to_m2_str(mp(saturate_by)))
+  if (!missing(J)) {
+    if (is.m2_ideal(J) || is.m2_ideal_pointer(J)) {
+      second_param <- paste0(",", m2_name(J))
+    } else if (is.mpoly(J)) {
+      second_param <- paste0(",", mpolyList_to_m2_str(J))
+    } else if (is.character(J)) {
+      second_param <- paste0(",", mpolyList_to_m2_str(mp(J)))
     } else {
-      stop("unrecognized input saturate_by. see ?ideal", call. = FALSE)
+      stop("unrecognized input J. see ?ideal", call. = FALSE)
     }
   } else {
     second_param <- ""
@@ -466,7 +467,7 @@ saturate. <- function(ideal, saturate_by, code = FALSE, ...) {
   saturate_name <- name_and_increment("ideal", "m2_ideal_count")
 
   # construct code and message
-  m2_code <- sprintf("%s = saturate(%s%s)", saturate_name, m2_name(ideal), second_param)
+  m2_code <- sprintf("%s = saturate(%s%s)", saturate_name, m2_name(I), second_param)
   if(code) { message(m2_code); return(invisible(m2_code)) }
 
   # run m2
@@ -477,6 +478,71 @@ saturate. <- function(ideal, saturate_by, code = FALSE, ...) {
   out
 }
 
+
+
+
+
+
+
+
+#' @rdname ideal
+#' @export
+quotient <- function(I, J, code = FALSE, ...) {
+
+  # run quotient.
+  args <- as.list(match.call())[-1]
+  eargs <- lapply(args, eval, envir = parent.frame())
+  pointer <- do.call(quotient., eargs)
+  if(code) return(invisible(pointer))
+
+  # parse output
+  parsed_out <- m2_parse(pointer)
+
+  # construct R-side ideal, class and return
+  m2_name(parsed_out) <- m2_name(pointer)
+  m2_meta(parsed_out, "quotient_of") <- I
+  parsed_out
+
+}
+
+
+
+#' @rdname ideal
+#' @export
+quotient. <- function(I, J, code = FALSE, ...) {
+
+  # arg check
+  if (!is.m2_ideal(I) && !is.m2_ideal_pointer(I))
+    stop("unrecognized input ideal. see ?ideal", call. = FALSE)
+
+  if (!missing(J)) {
+    if (is.m2_ideal(J) || is.m2_ideal_pointer(J)) {
+      second_param <- paste0(",", m2_name(J))
+    } else if (is.mpoly(J)) {
+      second_param <- paste0(",", mpolyList_to_m2_str(J))
+    } else if (is.character(J)) {
+      second_param <- paste0(",", mpolyList_to_m2_str(mp(J)))
+    } else {
+      stop("unrecognized input J. see ?ideal", call. = FALSE)
+    }
+  } else {
+    second_param <- ""
+  }
+
+  # make saturation ideal name
+  quotient_name <- name_and_increment("ideal", "m2_ideal_count")
+
+  # construct code and message
+  m2_code <- sprintf("%s = quotient(%s%s)", quotient_name, m2_name(I), second_param)
+  if(code) { message(m2_code); return(invisible(m2_code)) }
+
+  # run m2
+  out <- m2.(m2_code)
+
+  # change name and return
+  m2_name(out) <- quotient_name
+  out
+}
 
 
 
