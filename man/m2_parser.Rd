@@ -19,25 +19,25 @@
 \usage{
 m2_parse(s)
 
-\method{print}{m2_integer}(object, ...)
+\method{print}{m2_integer}(x, ...)
 
-\method{print}{m2_float}(object, ...)
+\method{print}{m2_float}(x, ...)
 
-\method{print}{m2_complex}(object, ...)
+\method{print}{m2_complex}(x, ...)
 
-\method{print}{m2_string}(object, ...)
+\method{print}{m2_string}(x, ...)
 
-\method{print}{m2_list}(object, ...)
+\method{print}{m2_list}(x, ...)
 
-\method{print}{m2_array}(object, ...)
+\method{print}{m2_array}(x, ...)
 
-\method{print}{m2_sequence}(object, ...)
+\method{print}{m2_sequence}(x, ...)
 
-\method{print}{m2_option}(object, ...)
+\method{print}{m2_option}(x, ...)
 
-\method{print}{m2_hashtable}(object, ...)
+\method{print}{m2_hashtable}(x, ...)
 
-\method{print}{m2_module}(object, ...)
+\method{print}{m2_module}(x, ...)
 
 m2_toggle_gmp()
 
@@ -46,6 +46,8 @@ get_m2_gmp()
 \arguments{
 \item{s}{a character(1), typically the result of running
 toExternalString on an M2 object}
+
+\item{x}{an object to be printed}
 
 \item{...}{...}
 }

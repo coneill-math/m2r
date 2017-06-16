@@ -14,6 +14,7 @@
 #' @param code return only the M2 code? (default: \code{FALSE})
 #' @param ideal,saturate_by an ideal object of class \code{m2_ideal} or
 #'   \code{m2_ideal_pointer}
+#' @param e1,e2 ideals for arithmetic
 #' @param ... ...
 #' @return a reference to a Macaulay2 ideal
 #' @name ideal
@@ -101,6 +102,33 @@
 #' dimension(I) # =  max dimension of irreducible components
 #' (Is <- primary_decomposition(I))
 #' dimension(Is)
+#'
+#'
+#' # sums (cox et al., 184)
+#' ring("x", "y", "z", coefring = "RR")
+#' (I <- ideal("x^2 + y"))
+#' (J <- ideal("z"))
+#' I + J
+#'
+#' # products (cox et al., 185)
+#' ring("x", "y", "z", coefring = "RR")
+#' (I <- ideal("x", "y"))
+#' (J <- ideal("z"))
+#' I * J
+#'
+#'
+#' # equality
+#' ring("x", "y", "z", coefring = "RR")
+#' (I <- ideal("x", "y"))
+#' (J <- ideal("z"))
+#' I == J
+#' I == I
+#'
+#'
+#' # powers
+#' ring("x", coefring = "QQ")
+#' (I <- ideal("x"))
+#' I^2
 #'
 #'
 #' }
@@ -538,5 +566,109 @@ dimension <- function(ideal, code = FALSE, ...) {
 
   # parse and return
   m2_parse(out)
+
 }
 
+
+
+
+
+
+
+
+
+
+
+
+#' @rdname ideal
+#' @export
+`+.m2_ideal` <- function(e1, e2) {
+
+  # arg check
+  if (!(
+    (is.m2_ideal(e1) || is.m2_ideal_pointer(e1)) &&
+    (is.m2_ideal(e2) || is.m2_ideal_pointer(e2))
+  )) stop("unrecognized input ideal. see ?ideal", call. = FALSE)
+
+  # construct code and message
+  m2_code <- sprintf("%s + %s", m2_name(e1), m2_name(e2))
+
+  # run m2
+  out <- m2.(m2_code)
+
+  # parse and return
+  m2_parse(out)
+
+}
+
+
+
+
+
+#' @rdname ideal
+#' @export
+`*.m2_ideal` <- function(e1, e2) {
+
+  # arg check
+  if (!(
+    (is.m2_ideal(e1) || is.m2_ideal_pointer(e1)) &&
+    (is.m2_ideal(e2) || is.m2_ideal_pointer(e2))
+  )) stop("unrecognized input ideal. see ?ideal", call. = FALSE)
+
+  # construct code and message
+  m2_code <- sprintf("%s * %s", m2_name(e1), m2_name(e2))
+
+  # run m2
+  out <- m2.(m2_code)
+
+  # parse and return
+  m2_parse(out)
+
+}
+
+
+
+
+#' @rdname ideal
+#' @export
+`==.m2_ideal` <- function(e1, e2) {
+
+  # arg check
+  if (!(
+    (is.m2_ideal(e1) || is.m2_ideal_pointer(e1)) &&
+    (is.m2_ideal(e2) || is.m2_ideal_pointer(e2))
+  )) stop("unrecognized input ideal. see ?ideal", call. = FALSE)
+
+  # construct code and message
+  m2_code <- sprintf("%s == %s", m2_name(e1), m2_name(e2))
+
+  # run m2
+  out <- m2.(m2_code)
+
+  # parse and return
+  m2_parse(out)
+
+}
+
+
+
+
+#' @rdname ideal
+#' @export
+`^.m2_ideal` <- function(e1, e2) {
+
+  # arg check
+  if (!(
+    (is.m2_ideal(e1) || is.m2_ideal_pointer(e1)) && is.numeric(e2)
+  )) stop("unrecognized input ideal. see ?ideal", call. = FALSE)
+
+  # construct code and message
+  m2_code <- sprintf("%s^%s", m2_name(e1), e2)
+
+  # run m2
+  out <- m2.(m2_code)
+
+  # parse and return
+  m2_parse(out)
+
+}
