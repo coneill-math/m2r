@@ -10,6 +10,7 @@
 \alias{print.m2_list}
 \alias{print.m2_array}
 \alias{print.m2_sequence}
+\alias{print.m2_symbol}
 \alias{print.m2_option}
 \alias{print.m2_hashtable}
 \alias{print.m2_module}
@@ -32,6 +33,8 @@ m2_parse(s)
 \method{print}{m2_array}(x, ...)
 
 \method{print}{m2_sequence}(x, ...)
+
+\method{print}{m2_symbol}(x, ...)
 
 \method{print}{m2_option}(x, ...)
 
