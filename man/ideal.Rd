@@ -11,6 +11,8 @@
 \alias{radical.}
 \alias{saturate}
 \alias{saturate.}
+\alias{quotient}
+\alias{quotient.}
 \alias{primary_decomposition}
 \alias{primary_decomposition.}
 \alias{dimension}
@@ -36,9 +38,13 @@ radical(ideal, ring, code = FALSE, ...)
 
 radical.(ideal, ring, code = FALSE, ...)
 
-saturate(ideal, saturate_by, code = FALSE, ...)
+saturate(I, J, code = FALSE, ...)
 
-saturate.(ideal, saturate_by, code = FALSE, ...)
+saturate.(I, J, code = FALSE, ...)
+
+quotient(I, J, code = FALSE, ...)
+
+quotient.(I, J, code = FALSE, ...)
 
 primary_decomposition(ideal, code = FALSE, ...)
 
@@ -73,6 +79,8 @@ see examples.}
 
 \item{ideal, saturate_by}{an ideal object of class \code{m2_ideal} or
 \code{m2_ideal_pointer}}
+
+\item{I, J}{ideals or objects parsable into ideals}
 
 \item{e1, e2}{ideals for arithmetic}
 }
@@ -133,10 +141,11 @@ dimension(I)
 
 # saturation
 ring("x", "y", "z", coefring = "QQ")
-I <- ideal("x^2", "y^4", "z + 1")
-J <- ideal("x^6")
+(I <- ideal("x^2", "y^4", "z + 1"))
+(J <- ideal("x^6"))
 saturate(I)
 saturate.(I)
+quotient(I, J)
 saturate(I, J)
 saturate(I, mp("x"))
 saturate(I, "x")
@@ -190,10 +199,9 @@ I == I
 
 
 # powers
-ring("x", coefring = "QQ")
-(I <- ideal("x"))
-I^2
-
+ring("x", "y", coefring = "QQ")
+(I <- ideal("x", "y"))
+I^3
 
 }
 }
