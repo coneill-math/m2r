@@ -520,8 +520,21 @@ m2_parse_symbol <- function(tokens, start = 1) {
 
   ret <- sym_name
   while (i <= length(tokens) && tokens[i] == "_") {
-    ret <- paste0(ret,"_",tokens[i+1])
-    i <- i + 2
+    i <- i + 1
+
+    if (tokens[i] == "(") {
+      seqret <- m2_parse_sequence(tokens, start = i)
+      ret <- paste0(
+        ret,
+        paste0(unlist(tokens[i:seqret$nIndex-1]), collapse = "")
+      )
+      i <- seqret$nIndex
+    } else {
+      ret <- paste0(ret,"_",tokens[i])
+    }
+
+    i <- i + 1
+
   }
 
   if (ret == "true") {
