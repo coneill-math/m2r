@@ -12,7 +12,7 @@
 #'   \code{\link{mp}}. (e.g. \code{"x*y+3"} instead of \code{"x y +
 #'   3"})
 #' @param code return only the M2 code? (default: \code{FALSE})
-#' @param ideal,saturate_by an ideal object of class \code{m2_ideal} or
+#' @param ideal an ideal object of class \code{m2_ideal} or
 #'   \code{m2_ideal_pointer}
 #' @param e1,e2 ideals for arithmetic
 #' @param I,J ideals or objects parsable into ideals

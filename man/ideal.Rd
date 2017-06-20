@@ -75,7 +75,7 @@ formated for M2 use directly, as opposed to for
 \item{x}{a listing of polynomials. several formats are accepted,
 see examples.}
 
-\item{ideal, saturate_by}{an ideal object of class \code{m2_ideal} or
+\item{ideal}{an ideal object of class \code{m2_ideal} or
 \code{m2_ideal_pointer}}
 
 \item{ring}{the referent ring in Macaulay2}
