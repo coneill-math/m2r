@@ -7,6 +7,7 @@
 \alias{print.m2_float}
 \alias{print.m2_complex}
 \alias{print.m2_string}
+\alias{print.m2_boolean}
 \alias{print.m2_list}
 \alias{print.m2_array}
 \alias{print.m2_sequence}
@@ -27,6 +28,8 @@ m2_parse(s)
 \method{print}{m2_complex}(x, ...)
 
 \method{print}{m2_string}(x, ...)
+
+\method{print}{m2_boolean}(x, ...)
 
 \method{print}{m2_list}(x, ...)
 

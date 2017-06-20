@@ -654,6 +654,12 @@ print.m2_string <- function(x, ...) {
   print(x)
 }
 
+#' @rdname m2_parser
+#' @export
+print.m2_boolean <- function(x, ...) {
+  print(unclass(x))
+}
+
 
 #' @rdname m2_parser
 #' @export

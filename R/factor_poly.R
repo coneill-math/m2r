@@ -20,7 +20,7 @@
 #' ########################################
 #'
 #' (QQxy <- ring("x", "y", coefring = "QQ"))
-#' factor_poly("x^4 - y^4", QQxy)
+#' factor_poly("x^4 - y^4")
 #'
 #' p <- mp("x^4 - y^4")
 #' factor_poly.(p, QQxy)
@@ -44,7 +44,7 @@
 
 #' @rdname factor_poly
 #' @export
-factor_poly <- function (mpoly, ring, code = FALSE) {
+factor_poly <- function (mpoly, code = FALSE) {
 
   # run m2
   args <- as.list(match.call())[-1]
@@ -72,14 +72,7 @@ factor_poly <- function (mpoly, ring, code = FALSE) {
 
 #' @rdname factor_poly
 #' @export
-factor_poly. <- function (mpoly, ring, code = FALSE, ...) {
-
-  # basic arg checking
-  if (!is.m2_pointer(ring) &&
-      m2_meta(ring, "coefring") != "QQ" &&
-      m2_meta(ring, "coefring") != "ZZ") {
-    stop("factor_poly only supports coefficent rings ZZ or QQ")
-  }
+factor_poly. <- function (mpoly, code = FALSE, ...) {
 
   # prepare mpoly param
   if (is.m2_pointer(mpoly)) {
@@ -90,25 +83,8 @@ factor_poly. <- function (mpoly, ring, code = FALSE, ...) {
     mpoly_param <- as.character(mpoly)
   }
 
-  # prepare ring param (if present)
-  if (!missing(ring)) {
-    # prepare mpoly param
-    if (is.m2_pointer(ring)) {
-      ring_param <- m2_name(ring)
-    } else if (is.character(ring)) {
-      ring_param <- ring
-    } else if (is.ring(ring)) {
-      ring_param <- m2_name(ring)
-    }
-  }
-
   # create code
   m2_code <- sprintf("factor(%s)", mpoly_param)
-
-  # add ring name if desired
-  if (!missing(ring)) {
-    m2_code <- paste0(sprintf("use %s; ", ring_param), m2_code)
-  }
 
   # message
   if (code) { message(m2_code); return(invisible(m2_code)) }

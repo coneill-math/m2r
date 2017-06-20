@@ -7,23 +7,18 @@
 \alias{gb_.}
 \title{Compute a Grobner basis with Macaulay2}
 \usage{
-gb(..., ring, degree_limit, raw_chars = FALSE, code = FALSE)
+gb(..., control = list(), raw_chars = FALSE, code = FALSE)
 
-gb.(..., ring, degree_limit, raw_chars = FALSE, code = FALSE)
+gb.(..., control = list(), raw_chars = FALSE, code = FALSE)
 
-gb_(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...)
+gb_(x, control = list(), raw_chars = FALSE, code = FALSE, ...)
 
-gb_.(x, ring, degree_limit, raw_chars = FALSE, code = FALSE, ...)
+gb_.(x, control = list(), raw_chars = FALSE, code = FALSE, ...)
 }
 \arguments{
 \item{...}{...}
 
-\item{ring}{if \code{x} is an ideal, \code{ring} need not be
-specified.}
-
-\item{degree_limit}{parameter that stops computation after
-S-polynomials have reached a given degree. Only meaningful in
-homogeneous case.}
+\item{control}{a list of options, see examples}
 
 \item{raw_chars}{if \code{TRUE}, the character vector will not be
 parsed by \code{\link{mp}}, saving time (default:
@@ -39,7 +34,9 @@ formated for M2 use directly, as opposed to for
 \code{\link{ideal}} or pointer to an ideal}
 }
 \value{
-an mpolyList object
+an \code{\link{mpolyList}} object of class
+  \code{m2_grobner_basis} or a \code{m2_grobner_basis_pointer}
+  pointing to the same
 }
 \description{
 Compute a Grobner basis with Macaulay2
@@ -57,94 +54,87 @@ evaluation equivalent.
 ########################################
 
 # the last ring evaluated is the one used in the computation
-(QQtxyz <- ring("t","x","y","z", coefring = "QQ"))
+ring("t","x","y","z", coefring = "QQ")
 gb("t^4 - x", "t^3 - y", "t^2 - z")
+
+# here's the code it's running in M2
 gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
 
+
+
+##### different versions of gb
+########################################
+
 # standard evaluation version
-gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
+poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
+gb_(poly_chars)
 
 # reference nonstandard evaluation version
 gb.("t^4 - x", "t^3 - y", "t^2 - z")
 
 # reference standard evaluation version
-gb_.(c("t^4 - x", "t^3 - y", "t^2 - z"))
+gb_.(poly_chars)
 
 
-# different rings
-(QQxyzt <- ring("x", "y", "z", "t", coefring = "QQ"))
-gb("t^4 - x", "t^3 - y", "t^2 - z")
 
-# you can specify a specific ring apart from the last used
-# (this resets what the last used ring is)
-gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz)
-gb("t^4 - x", "t^3 - y", "t^2 - z")
+##### different inputs to gb
+########################################
 
-# gb of an ideal
-(QQtxyz <- ring("t", "x", "y", "z", coefring = "QQ"))
-I <- ideal("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz)
+# ideals can be passed to gb
+I <- ideal("t^4 - x", "t^3 - y", "t^2 - z")
+gb_(I)
+
+# note that gb() works here, too, since there is only one input
 gb(I)
-ideal_(gb(I), QQtxyz)
+
+# ideal pointers can be passed to gb
+I. <- ideal.("t^4 - x", "t^3 - y", "t^2 - z")
+gb_(I.)
+
+# setting raw_chars is a bit faster, because it doesn't use ideal()
+gb("t^4 - x", "t^3 - y", "t^2 - z", raw_chars = TRUE, code = TRUE)
+gb("t^4 - x", "t^3 - y", "t^2 - z", raw_chars = TRUE)
+
 
 
 ##### more advanced usage
 ########################################
 
-# defining a ring on the fly
-gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = "QQ[t,x,y,z]")
-gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = "QQ[t,x,y,z]", code = TRUE)
+# the control argument accepts a named list with additional
+# options
+gb_(
+  c("t^4 - x", "t^3 - y", "t^2 - z"),
+  control = list(StopWithMinimalGenerators = TRUE),
+  code = TRUE
+)
 
-# interaction with pointers
-(QQtxyz. <- ring.("t", "x", "y", "z", coefring = "QQ"))
-gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), ring = QQtxyz., code = TRUE)
-
-I <- ideal("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz.)
-gb_(I)
-
-I. <- ideal.("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz.)
-gb_(I.)
-gb_.(I.)
+gb_(
+  c("t^4 - x", "t^3 - y", "t^2 - z"),
+  control = list(StopWithMinimalGenerators = TRUE)
+)
 
 
-##### still broken
+
+##### potential issues
 ########################################
 
+# when specifying raw_chars, be sure to add asterisks
+# between variables to create monomials; that's the M2 way
+ring("x", "y", "z", coefring = "QQ")
+gb("x y", "x z", "x", raw_chars = TRUE, code = TRUE) # errors without code = TRUE
+gb("x*y", "x*z", "x", raw_chars = TRUE, code = TRUE) # correct way
 gb("x*y", "x*z", "x", raw_chars = TRUE)
 
-gb_(mp(c("x y - z^2", "y^2 - w^2")))
 
 
 
 
 
-
-
-# standard evaluation
-gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]")
-gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), "QQ[t,x,y,z]")
-gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), code = TRUE)
-gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]", degree_limit = 2)
-
-
-
-gb_(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]")
-
-
-
-(QQtxyz <- ring("t", "x", "y", "z", coefring = "QQ"))
-gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), QQtxyz, code = TRUE)
-gb_.(mp(c("t^4 - x", "t^3 - y", "t^2 - z")), QQtxyz)
-gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , QQtxyz)
-gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]", code = TRUE)
-gb_.(   c("t^4 - x", "t^3 - y", "t^2 - z") , "QQ[t,x,y,z]")
-gb_(c("t^4 - x", "t^3 - y", "t^2 - z"))
-gb_(ideal("t^4 - x", "t^3 - y", "t^2 - z"))
-gb_(c("t^4 - x", "t^3 - y", "t^2 - z"), raw_chars = TRUE)
 
 
 
 }
 }
 \seealso{
-\code{\link{mp}}
+\code{\link{mp}}, \code{\link{use_ring}}
 }

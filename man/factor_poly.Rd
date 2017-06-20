@@ -5,20 +5,20 @@
 \alias{factor_poly.}
 \title{Factor a polynomial}
 \usage{
-factor_poly(mpoly, ring, code = FALSE)
+factor_poly(mpoly, code = FALSE)
 
-factor_poly.(mpoly, ring, code = FALSE, ...)
+factor_poly.(mpoly, code = FALSE, ...)
 }
 \arguments{
 \item{mpoly}{a character parseable by \code{\link{mp}}, an
 \code{mpoly} object, or a pointer to a polynomial in M2}
 
-\item{ring}{a \code{\link{ring}} object or a pointer to such an
-object}
-
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 
 \item{...}{...}
+
+\item{ring}{a \code{\link{ring}} object or a pointer to such an
+object}
 }
 \value{
 a named list with elements \code{factor} (an
@@ -36,7 +36,7 @@ Factor a polynomial
 ########################################
 
 (QQxy <- ring("x", "y", coefring = "QQ"))
-factor_poly("x^4 - y^4", QQxy)
+factor_poly("x^4 - y^4")
 
 p <- mp("x^4 - y^4")
 factor_poly.(p, QQxy)
