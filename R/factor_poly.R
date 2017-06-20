@@ -19,24 +19,35 @@
 #' ##### basic usage
 #' ########################################
 #'
-#' (QQxy <- ring("x", "y", coefring = "QQ"))
+#' ring("x", "y", coefring = "QQ")
 #' factor_poly("x^4 - y^4")
 #'
-#' p <- mp("x^4 - y^4")
-#' factor_poly.(p, QQxy)
-#' factor_poly(p, QQxy)
-#' factor_poly(p, QQxy, code = TRUE)
+#' # reference function
+#' factor_poly.("x^4 - y^4")
+#'
+#'
+#' ##### different inputs
+#' ########################################
+#'
+#' # factor_poly accepts mpoly objects:
+#' (p <- mp("x^4 - y^4"))
+#' factor_poly.(p)
+#' factor_poly(p)
 #' mp("(x-y) (x+y) (x^2+y^2)")
 #'
 #'
-#' (QQxyz <- ring("x","y", "z", coefring = "QQ", order = "lex"))
+#'
+#' ##### other examples
+#' ########################################
+#'
+#' ring("x","y", "z", coefring = "QQ")
 #' (p <- mp("(x^2 - y) (x^2 + y) (x + y)^2 (x - z)^2"))
-#' factor_poly.(p, QQxyz)
-#' factor_poly(p, QQxyz)
+#' factor_poly.(p)
+#' factor_poly(p)
 #'
 #' (p <- mp("(x-1)^3 (y-1)^3"))
-#' factor_poly.(p, QQxyz)
-#' factor_poly(p, QQxyz)
+#' factor_poly.(p)
+#' factor_poly(p)
 #'
 #' }
 
