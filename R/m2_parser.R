@@ -538,9 +538,9 @@ m2_parse_symbol <- function(tokens, start = 1) {
   }
 
   if (ret == "true") {
-    ret <- TRUE
+    ret <- m2_structure(TRUE, m2_class = "m2_boolean")
   } else if (ret == "false") {
-    ret <- FALSE
+    ret <- m2_structure(FALSE, m2_class = "m2_boolean")
   } else if (ret == "null") {
     ret <- NULL
   } else {
@@ -654,6 +654,12 @@ print.m2_string <- function(x, ...) {
   print(x)
 }
 
+#' @rdname m2_parser
+#' @export
+print.m2_boolean <- function(x, ...) {
+  print(unclass(x))
+}
+
 
 #' @rdname m2_parser
 #' @export
@@ -676,6 +682,14 @@ print.m2_array <- function(x, ...) {
 print.m2_sequence <- function(x, ...) {
   cat("M2 Sequence\n")
   print(unclass(x))
+}
+
+
+#' @rdname m2_parser
+#' @export
+print.m2_symbol <- function(x, ...) {
+  cat("M2 Symbol:", x, "\n")
+  invisible(x)
 }
 
 

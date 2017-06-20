@@ -7,6 +7,7 @@
 \alias{is.ring}
 \alias{is.m2_polynomialring}
 \alias{is.m2_polynomialring_pointer}
+\alias{is.m2_grobner_basis}
 \alias{is.m2_ideal}
 \alias{is.m2_ideal_pointer}
 \alias{is.m2_ideal_list}
@@ -29,6 +30,8 @@ is.ring(x)
 is.m2_polynomialring(x)
 
 is.m2_polynomialring_pointer(x)
+
+is.m2_grobner_basis(x)
 
 is.m2_ideal(x)
 

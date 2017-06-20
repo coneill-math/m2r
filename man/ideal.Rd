@@ -11,6 +11,8 @@
 \alias{radical.}
 \alias{saturate}
 \alias{saturate.}
+\alias{quotient}
+\alias{quotient.}
 \alias{primary_decomposition}
 \alias{primary_decomposition.}
 \alias{dimension}
@@ -20,13 +22,13 @@
 \alias{^.m2_ideal}
 \title{Create a new ideal in Macaulay2}
 \usage{
-ideal(..., ring, raw_chars = FALSE, code = FALSE)
+ideal(..., raw_chars = FALSE, code = FALSE)
 
-ideal.(..., ring, raw_chars = FALSE, code = FALSE)
+ideal.(..., raw_chars = FALSE, code = FALSE)
 
-ideal_(x, ring, raw_chars = FALSE, code = FALSE, ...)
+ideal_(x, raw_chars = FALSE, code = FALSE, ...)
 
-ideal_.(x, ring, raw_chars = FALSE, code = FALSE, ...)
+ideal_.(x, raw_chars = FALSE, code = FALSE, ...)
 
 \method{print}{m2_ideal}(x, ...)
 
@@ -36,9 +38,13 @@ radical(ideal, ring, code = FALSE, ...)
 
 radical.(ideal, ring, code = FALSE, ...)
 
-saturate(ideal, saturate_by, code = FALSE, ...)
+saturate(I, J, code = FALSE, ...)
 
-saturate.(ideal, saturate_by, code = FALSE, ...)
+saturate.(I, J, code = FALSE, ...)
+
+quotient(I, J, code = FALSE, ...)
+
+quotient.(I, J, code = FALSE, ...)
 
 primary_decomposition(ideal, code = FALSE, ...)
 
@@ -57,8 +63,6 @@ dimension(ideal, code = FALSE, ...)
 \arguments{
 \item{...}{...}
 
-\item{ring}{the referent ring in Macaulay2}
-
 \item{raw_chars}{if \code{TRUE}, the character vector will not be
 parsed by \code{\link{mp}}, saving time (default:
 \code{FALSE}). the down-side is that the strings must be
@@ -74,6 +78,10 @@ see examples.}
 \item{ideal, saturate_by}{an ideal object of class \code{m2_ideal} or
 \code{m2_ideal_pointer}}
 
+\item{ring}{the referent ring in Macaulay2}
+
+\item{I, J}{ideals or objects parsable into ideals}
+
 \item{e1, e2}{ideals for arithmetic}
 }
 \value{
@@ -86,37 +94,63 @@ Create a new ideal in Macaulay2
 
 \dontrun{ requires Macaulay2
 
-QQxy <- ring("x", "y", coefring = "QQ")
-ideal("x+y", "x^2+y^2", ring = QQxy)
 
-(QQxy <- ring("x", "y", coefring = "QQ"))
-(QQxyz <- ring("x", "y", "z", coefring = "QQ"))
+##### basic usage
+########################################
+
+ring("x", "y", coefring = "QQ")
+ideal("x + y", "x^2 + y^2")
+
+
+
+##### different versions of gb
+########################################
 
 # standard evaluation version
-ideal_(   c("x+y", "x^2+y^2") , QQxy)
-ideal_(mp(c("x+y", "x^2+y^2")), QQxy)
+poly_chars <- c("x + y", "x^2 + y^2")
+ideal_(poly_chars)
 
-ideal_(mp(c("x+y", "x^2+y^2")), QQxy, code = TRUE)
+# reference nonstandard evaluation version
+ideal.("x + y", "x^2 + y^2")
 
-(QQxy. <- ring_.(c("x","y"), coefring = "QQ"))
-ideal_(   c("x+y", "x^2+y^2") , QQxy.)
-ideal_(mp(c("x+y", "x^2+y^2")), QQxy.)
+# reference standard evaluation version
+ideal_.(poly_chars)
 
-I  <- ideal_ (c("x+y", "x^2+y^2"), QQxy.)
-I. <- ideal_.(c("x+y", "x^2+y^2"), QQxy.)
+
+
+##### different inputs to gb
+########################################
+
+ideal_(   c("x + y", "x^2 + y^2") )
+ideal_(mp(c("x + y", "x^2 + y^2")))
+ideal_(list("x + y", "x^2 + y^2") )
+
+
+
+##### predicate functions
+########################################
+
+I  <- ideal ("x + y", "x^2 + y^2")
+I. <- ideal.("x + y", "x^2 + y^2")
 is.m2_ideal(I)
 is.m2_ideal(I.)
 is.m2_ideal_pointer(I)
 is.m2_ideal_pointer(I.)
 
-# radical
-ring("x", "y", coefring = "QQ")
+
+
+##### ideal radical
+########################################
+
 I <- ideal("(x^2 + 1)^2 y", "y + 1")
 radical(I)
 radical.(I)
 
-# dimension
-ring("x", "y", "z", coefring = "QQ")
+
+
+##### ideal dimension
+########################################
+
 I <- ideal_(c("(x^2 + 1)^2 y", "y + 1"))
 dimension(I)
 
@@ -127,14 +161,21 @@ dimension(I)
 
 # dimension of a plane
 ring("x", "y", "z", coefring = "QQ")
-I <- ideal_("z - (x+y+1)")
+I <- ideal("z - (x+y+1)")
 dimension(I)
 
 
-# saturation
+
+##### ideal quotients and saturation
+########################################
+
 ring("x", "y", "z", coefring = "QQ")
-I <- ideal("x^2", "y^4", "z + 1")
-J <- ideal("x^6")
+(I <- ideal("x^2", "y^4", "z + 1"))
+(J <- ideal("x^6"))
+
+quotient(I, J)
+quotient.(I, J)
+
 saturate(I)
 saturate.(I)
 saturate(I, J)
@@ -143,7 +184,7 @@ saturate(I, "x")
 
 
 ring("x", "y", coefring = "QQ")
-saturate(ideal_("x y"), "x^2")
+saturate(ideal("x y"), "x^2")
 
 # saturation removes parts of varieties
 # solution over R is x = -1, 0, 1
@@ -153,7 +194,10 @@ saturate(I, "x") # remove x = 0 from solution
 ideal("(x-1) (x+1)")
 
 
-# primary_decomposition
+
+##### primary decomposition
+########################################
+
 ring("x", "y", "z", coefring = "QQ")
 I <- ideal("(x^2 + 1) (x^2 + 2)", "y + 1")
 primary_decomposition(I)
@@ -162,38 +206,38 @@ primary_decomposition.(I)
 I <- ideal("x (x + 1)", "y")
 primary_decomposition(I)
 
-(I <- ideal("x z", "y z"))  # variety = z axis union x-y plane
+# variety = z axis union x-y plane
+(I <- ideal("x z", "y z"))
 dimension(I) # =  max dimension of irreducible components
 (Is <- primary_decomposition(I))
 dimension(Is)
 
 
-# sums (cox et al., 184)
+
+##### ideal arithmetic
+########################################
+
 ring("x", "y", "z", coefring = "RR")
+
+# sums (cox et al., 184)
 (I <- ideal("x^2 + y"))
 (J <- ideal("z"))
 I + J
 
 # products (cox et al., 185)
-ring("x", "y", "z", coefring = "RR")
 (I <- ideal("x", "y"))
 (J <- ideal("z"))
 I * J
 
-
 # equality
-ring("x", "y", "z", coefring = "RR")
 (I <- ideal("x", "y"))
 (J <- ideal("z"))
 I == J
 I == I
 
-
 # powers
-ring("x", coefring = "QQ")
-(I <- ideal("x"))
-I^2
-
+(I <- ideal("x", "y"))
+I^3
 
 }
 }

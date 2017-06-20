@@ -46,6 +46,10 @@ is.m2_polynomialring_pointer <- function (x) is.m2_pointer(x) && (m2_meta(x, "m2
 
 #' @export
 #' @rdname is
+is.m2_grobner_basis <- function (x) inherits(x, "m2_grobner_basis")
+
+#' @export
+#' @rdname is
 is.m2_ideal <- function (x) inherits(x, "m2_ideal")
 
 #' @export
