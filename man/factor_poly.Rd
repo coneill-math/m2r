@@ -16,9 +16,6 @@ factor_poly.(mpoly, code = FALSE, ...)
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 
 \item{...}{...}
-
-\item{ring}{a \code{\link{ring}} object or a pointer to such an
-object}
 }
 \value{
 a named list with elements \code{factor} (an

@@ -4,8 +4,6 @@
 #'
 #' @param mpoly a character parseable by \code{\link{mp}}, an
 #'   \code{mpoly} object, or a pointer to a polynomial in M2
-#' @param ring a \code{\link{ring}} object or a pointer to such an
-#'   object
 #' @param code return only the M2 code? (default: \code{FALSE})
 #' @param ... ...
 #' @return a named list with elements \code{factor} (an
