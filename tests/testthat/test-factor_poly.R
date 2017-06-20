@@ -3,59 +3,65 @@ context("factor_poly ")
 
 test_that("factor_poly(formats)", {
 
-  # this MUST come first!
-  param2 <- list(
-    ring_ (c("x","y"), "QQ"),
-    ring_.(c("x","y"), "QQ")
-  )
+  # define ring
+  ring_(c("x","y"), "QQ")
 
-  param1 <- list(
-    c  ("x^4 - y^4"),
-    mp ("x^4 - y^4"),
-    m2.("x^4 - y^4")
-  )
-
+  # define expected output
   expected_output <- list(
     factor = mp(c("x-y", "x+y", "x^2+y^2")),
     power = c(1L, 1L, 1L)
   )
 
-  apply(expand.grid(param1, param2), 1, FUN = function(x) {
+  expect_equal(
+    factor_poly("x^4 - y^4"),
+    expected_output
+  )
 
-    factors <- factor_poly(x[[1]], x[[2]])
+  expect_equal(
+    factor_poly(mp("x^4 - y^4")),
+    expected_output
+  )
 
-    expect_equal(factors, expected_output)
+  expect_equal(
+    factor_poly(m2.("x^4 - y^4")),
+    expected_output
+  )
 
-  })
 
 })
 
 
 test_that("factor_poly(1)", {
 
-  # this MUST come first!
-  param2 <- list(
-    ring_ (c("x","y"), "QQ")
-  )
+  # define ring
+  ring_(c("x","y"), "QQ")
 
-  param1 <- list(
-    c  (1),
-    c  ("1"),
-    mp ("1")
-  )
-
+  # define expected output
   expected_output <- list(
     factor = structure(list(), class = "mpolyList"),
     power = integer(0)
   )
 
-  apply(expand.grid(param1, param2), 1, FUN = function(x) {
+  # run tests
+  expect_equal(
+    factor_poly(1),
+    expected_output
+  )
 
-    factors <- factor_poly(x[[1]], x[[2]])
+  expect_equal(
+    factor_poly("1"),
+    expected_output
+  )
 
-    expect_equal(factors, expected_output)
+  expect_equal(
+    factor_poly(mp("1")),
+    expected_output
+  )
 
-  })
+  expect_equal(
+    factor_poly(m2.("1")),
+    expected_output
+  )
 
 })
 
@@ -68,35 +74,29 @@ context("factor_poly.")
 
 test_that("factor_poly(formats)", {
 
-  # this MUST come first!
-  param2 <- list(
-    ring_ (c("x","y"), "QQ"),
-    ring_.(c("x","y"), "QQ")
-  )
+  # define ring
+  ring_(c("x","y"), "QQ")
 
-  param1 <- list(
-    c  ("x^4 - y^4"),
-    mp ("x^4 - y^4"),
-    m2.("x^4 - y^4")
-  )
-
-  apply(expand.grid(param1, param2), 1, FUN = function(x) {
-
-    factors <- factor_poly.(x[[1]], x[[2]])
-
-    expected_output <- m2_structure(
-      m2_name = m2_name(factors),
-      m2_class = "m2_pointer",
-      m2_meta = list(
-        ext_str = "new Product from {new Power from {x-y,1},new Power from {x+y,1},new Power from {x^2+y^2,1}}",
-        m2_class = "Product",
-        m2_class_class = "WrapperType"
-      )
+  # define expected
+  expected <- function(name) m2_structure(
+    m2_name = name,
+    m2_class = "m2_pointer",
+    m2_meta = list(
+      ext_str = "new Product from {new Power from {x-y,1},new Power from {x+y,1},new Power from {x^2+y^2,1}}",
+      m2_class = "Product",
+      m2_class_class = "WrapperType"
     )
+  )
 
-    expect_equal(factors, expected_output)
+  # run tests
+  actual <- factor_poly.("x^4 - y^4")
+  expect_equal(actual, expected(m2_name(actual)))
 
-  })
+  actual <- factor_poly.(mp("x^4 - y^4"))
+  expect_equal(actual, expected(m2_name(actual)))
+
+  actual <- factor_poly.(m2.("x^4 - y^4"))
+  expect_equal(actual, expected(m2_name(actual)))
 
 })
 
