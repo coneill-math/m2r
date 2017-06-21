@@ -1,4 +1,3 @@
-<!-- NOTE: you have to kill any R M2 process before knitting this. -->
 **m2r** – Macaulay2 in R
 ========================
 
@@ -11,7 +10,7 @@ Overview
 
 The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16) on algebraic statistics, funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page).
 
-It is currently being actively developed, so expect changes. If you have a feature request, please file an issue!
+If you have a feature request, please file an issue!
 
 Getting started
 ---------------
@@ -73,7 +72,7 @@ Rings, ideals, and Grobner bases
 and [ideals](https://en.wikipedia.org/wiki/Ideal_(ring_theory)) of rings:
 
 ``` r
-(I <- ideal("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz))
+(I <- ideal("t^4 - x", "t^3 - y", "t^2 - z"))
 # M2 Ideal of ring QQ[t,x,y,z] (grevlex) with generators : 
 # < t^4  -  x,  t^3  -  y,  t^2  -  z >
 ```
@@ -93,7 +92,7 @@ gb(I)
 Perhaps an easier way to do this is just to list off the polynomials as character strings:
 
 ``` r
-gb("t^4 - x", "t^3 - y", "t^2 - z", ring = QQtxyz)
+gb("t^4 - x", "t^3 - y", "t^2 - z")
 # z^2  -  x
 # z t  -  y
 # -1 z x  +  y^2
@@ -106,13 +105,15 @@ The result is an `mpolyList` object, from the [**mpoly** package](https://github
 
 ``` r
 gb("t^4 - x", "t^3 - y", "t^2 - z", code = TRUE)
-# gens gb(ideal({t^4-x,t^3-y,t^2-z}), DegreeLimit => {})
+# m2rintgb00000003 = gb(m2rintideal00000003); gens m2rintgb00000003
 ```
 
 You can compute the basis respective of different [monomial orders](https://en.wikipedia.org/wiki/Monomial_order) as well. The default ordering is the one in the respective ring, which defaults to `grevlex`; however, changing the order is as simple as changing the ring.
 
 ``` r
-gb("t^4 - x", "t^3 - y", "t^2 - z", ring = ring("x", "y", "t", "z", order = "lex"))
+ring("x", "y", "t", "z", coefring = "QQ", order = "lex")
+# M2 Ring: QQ[x,y,t,z], lex order
+gb("t^4 - x", "t^3 - y", "t^2 - z")
 # t^2  -  z
 # -1 t z  +  y
 # -1 z^2  +  x
@@ -121,8 +122,9 @@ gb("t^4 - x", "t^3 - y", "t^2 - z", ring = ring("x", "y", "t", "z", order = "lex
 On a technical level, `ring()`, `ideal()`, and `gb()` use [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html). A more stable way to use these functions is to use their standard evaluation versions `ring_()`, `ideal_()`, and `gb_()`. Each accepts first a data structure describing the relevant object of interest first as its own object. For example, at a basic level this simply changes the previous syntax to
 
 ``` r
+use_ring(QQtxyz)
 poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
-gb_(poly_chars, ring = QQtxyz)
+gb_(poly_chars)
 # z^2  -  x
 # z t  -  y
 # -1 z x  +  y^2
@@ -138,8 +140,9 @@ As far as other kinds of computations are concerned, we present a potpurri of ex
 Ideal saturation:
 
 ``` r
-QQx <- ring("x", coefring = "QQ")
-I <- ideal("(x-1) x (x+1)", ring = QQx)
+ring("x", coefring = "QQ")
+# M2 Ring: QQ[x], grevlex order
+I <- ideal("(x-1) x (x+1)")
 saturate(I, "x") # = (x-1) (x+1)
 # M2 Ideal of ring QQ[x] (grevlex) with generator : 
 # < x^2  -  1 >
@@ -148,7 +151,7 @@ saturate(I, "x") # = (x-1) (x+1)
 Radicalization:
 
 ``` r
-I <- ideal("x^2", ring = QQx)
+I <- ideal("x^2")
 radical(I)
 # M2 Ideal of ring QQ[x] (grevlex) with generator : 
 # < x >
@@ -157,8 +160,9 @@ radical(I)
 Primary decomposition:
 
 ``` r
-QQxyz <- ring("x", "y", "z", coefring = "QQ")
-I <- ideal("x z", "y z", ring = QQxyz)
+ring("x", "y", "z", coefring = "QQ")
+# M2 Ring: QQ[x,y,z], grevlex order
+I <- ideal("x z", "y z")
 primary_decomposition(I)
 # M2 List of ideals of QQ[x,y,z] (grevlex) : 
 # < z >
@@ -168,8 +172,9 @@ primary_decomposition(I)
 Dimension:
 
 ``` r
-QQxy <- ring("x", "y", coefring = "QQ")
-I <- ideal("y - (x+1)", ring = QQxy) 
+ring("x", "y", coefring = "QQ")
+# M2 Ring: QQ[x,y], grevlex order
+I <- ideal("y - (x+1)") 
 dimension(I)
 # [1] 1
 ```
@@ -193,7 +198,7 @@ factor_n(x)
 You can also [factor polynomials](https://en.wikipedia.org/wiki/Factorization) over rings using `factor_poly()`:
 
 ``` r
-factor_poly("x^4 - y^4", QQxy)
+factor_poly("x^4 - y^4")
 # $factor
 # x  -  y
 # x  +  y
@@ -268,7 +273,7 @@ For example, we've seen that `factor_n()` computes the prime decomposition of a 
 factor_n.(x)
 # M2 Pointer Object
 #   ExternalString : new Product from {new Power from {2,5},new Power fro...
-#          M2 Name : m2o455
+#          M2 Name : m2o460
 #         M2 Class : Product (WrapperType)
 ```
 
