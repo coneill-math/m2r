@@ -1,3 +1,12 @@
+skip_on_cran()
+
+
+
+
+
+
+
+
 context("m2r parser")
 
 m2_parse_test <- function(m2_str, m2_expected_output) {

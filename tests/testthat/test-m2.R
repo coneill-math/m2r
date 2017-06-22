@@ -1,3 +1,11 @@
+skip_on_cran()
+
+
+
+
+
+
+
 
 context("m2 ")
 

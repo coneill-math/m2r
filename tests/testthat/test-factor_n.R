@@ -1,3 +1,12 @@
+skip_on_cran()
+
+
+
+
+
+
+
+
 context("factor_n ")
 
 test_that("factor_n(formats)", {
