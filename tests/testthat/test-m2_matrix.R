@@ -11,6 +11,7 @@ context("m2_matrix")
 
 
 test_that("m2_matrix(mat)", {
+  skip_on_cran()
 
   stop_m2()
   start_m2()
@@ -49,6 +50,7 @@ test_that("m2_matrix(mat)", {
 
 
 test_that("m2_matrix.(mat)", {
+  skip_on_cran()
 
   M <- matrix(c(
        1,    2,    3,

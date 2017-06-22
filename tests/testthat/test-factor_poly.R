@@ -1,16 +1,8 @@
-skip_on_cran()
-
-
-
-
-
-
-
-
 context("factor_poly ")
 
 
 test_that("factor_poly(formats)", {
+  skip_on_cran()
 
   # define ring
   ring_(c("x","y"), "QQ")
@@ -41,6 +33,7 @@ test_that("factor_poly(formats)", {
 
 
 test_that("factor_poly(1)", {
+  skip_on_cran()
 
   # define ring
   ring_(c("x","y"), "QQ")
@@ -82,6 +75,7 @@ context("factor_poly.")
 
 
 test_that("factor_poly(formats)", {
+  skip_on_cran()
 
   # define ring
   ring_(c("x","y"), "QQ")

@@ -1,12 +1,3 @@
-skip_on_cran()
-
-
-
-
-
-
-
-
 context("%:%")
 
 test_that("Lower case forward sequences work", {

@@ -1,15 +1,7 @@
-skip_on_cran()
-
-
-
-
-
-
-
-
 context("factor_n ")
 
 test_that("factor_n(formats)", {
+  skip_on_cran()
 
   param1 <- list(
     218700,
@@ -31,6 +23,7 @@ test_that("factor_n(formats)", {
 
 
 test_that("factor_n(1)", {
+  skip_on_cran()
 
   expect_equal(
     factor_n(1),
@@ -41,6 +34,7 @@ test_that("factor_n(1)", {
 
 
 test_that("factor_n(negative)", {
+  skip_on_cran()
 
   expect_equal(
     factor_n(-55),
@@ -55,6 +49,7 @@ test_that("factor_n(negative)", {
 context("factor_n.")
 
 test_that("factor_n.(formats)", {
+  skip_on_cran()
 
   param1 <- list(
     218700,

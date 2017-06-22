@@ -1,12 +1,3 @@
-skip_on_cran()
-
-
-
-
-
-
-
-
 context("ring  ")
 
 
@@ -18,6 +9,7 @@ context("ring_ ")
 
 
 test_that("ring_(formats)",{
+  skip_on_cran()
 
   param1 <- list(
     c("x"),
