@@ -54,22 +54,31 @@ Create a new matrix in Macaulay2
 
 \dontrun{ requires Macaulay2
 
-(mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
+##### basic usage
+########################################
+
+(mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2))
+m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2))
 
 m2_name(mat)
 m2(m2_name(mat))
 m2(sprintf("class(\%s)", m2_name(mat)))
+(mat <- m2_matrix.(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
 
-ring(c("x","y","z"))
+##### known issues
+########################################
+
+ring("x", "y", "z", coefring = "QQ")
 mat <- matrix(mp(c("x","y","x+y","y-2","x-3","y-z")), nrow = 2, ncol = 3)
+m2_matrix(mat, code = TRUE)
 m2_matrix(mat)
 # the above is an mpoly problem, not a m2r problem
 # mpoly does not have a data structure for matrices (as of 12/2016)
+
 mat_chars <- sapply(m2_matrix(mat), print, silent = TRUE)
 dim(mat_chars) <- c(2, 3)
 mat_chars
 
-(mat <- m2_matrix.(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
 
 m2_numrows(mat)
 m2_numcols(mat)
@@ -77,5 +86,6 @@ m2_parse(mat)
 
 (mat <- m2_matrix(matrix(c(1,2),nrow=1)))
 m2_kernel(mat)
+
 }
 }
