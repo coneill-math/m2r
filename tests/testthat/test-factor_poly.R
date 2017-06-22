@@ -1,3 +1,12 @@
+skip_on_cran()
+
+
+
+
+
+
+
+
 context("factor_poly ")
 
 

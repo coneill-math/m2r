@@ -1,3 +1,12 @@
+skip_on_cran()
+
+
+
+
+
+
+
+
 context("gb  ")
 
 test_that("gb(... = char vec)", {
