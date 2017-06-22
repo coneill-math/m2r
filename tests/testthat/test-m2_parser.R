@@ -1,12 +1,3 @@
-skip_on_cran()
-
-
-
-
-
-
-
-
 context("m2r parser")
 
 m2_parse_test <- function(m2_str, m2_expected_output) {
@@ -17,6 +8,7 @@ m2_parse_test <- function(m2_str, m2_expected_output) {
 }
 
 test_that("m2_parse parses basic data structures",{
+  skip_on_cran()
 
   m2_list <- "{1,2,3}"
   m2_list_output <- structure(
@@ -127,7 +119,12 @@ test_that("m2_parse parses basic data structures",{
   # m2_ring_map_output <- " "
 })
 
+
+
+
 test_that("m2 parses harder data structures", {
+  skip_on_cran()
+
   m2_poly_list <- "{b*c*e-a*d*f, a*c*e-b*d*f}"
   m2_poly_list_output <- structure(
     list(

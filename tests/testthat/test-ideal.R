@@ -1,12 +1,3 @@
-skip_on_cran()
-
-
-
-
-
-
-
-
 context("ideal  ")
 
 
@@ -27,6 +18,8 @@ context("ideal_ ")
 
 
 test_that("ideal_(poly_chars)",{
+  skip_on_cran()
+
   R <- ring_(c("x","y"), "QQ")
 
   poly_chars <- c("x + y", "x^2 + y^2")
@@ -43,6 +36,8 @@ test_that("ideal_(poly_chars)",{
 
 
 test_that("ideal_(mpolyList)",{
+  skip_on_cran()
+
   R <- ring_(c("x","y"), "QQ")
 
   mpolyList <- mp(c("x + y", "x^2 + y^2"))
@@ -59,6 +54,8 @@ test_that("ideal_(mpolyList)",{
 
 
 test_that("ideal_(list o chars)",{
+  skip_on_cran()
+
   R <- ring_(c("x","y"), "QQ")
 
   list_o_chars <- list("x + y", "x^2 + y^2")
@@ -75,6 +72,8 @@ test_that("ideal_(list o chars)",{
 
 
 test_that("ideal_(list o mps)",{
+  skip_on_cran()
+
   R <- ring_(c("x","y"), "QQ")
 
   list_o_mps <- list(mp("x + y"), mp("x^2 + y^2"))
@@ -91,6 +90,8 @@ test_that("ideal_(list o mps)",{
 
 
 test_that("ideal_(list o chars, raw_chars = TRUE)",{
+  skip_on_cran()
+
   R <- ring_(c("x","y"), "QQ")
 
   list_o_chars <- list("x + y", "x^2 + y^2")
@@ -107,6 +108,8 @@ test_that("ideal_(list o chars, raw_chars = TRUE)",{
 
 
 test_that("ideal_(poly_chars, raw_chars = TRUE)",{
+  skip_on_cran()
+
   R <- ring_(c("x","y"), "QQ")
 
   poly_chars <- c("x + y", "x^2 + y^2")
@@ -123,6 +126,8 @@ test_that("ideal_(poly_chars, raw_chars = TRUE)",{
 
 
 test_that("ideal_(c(mpoly, mpoly) errors",{
+  skip_on_cran()
+
   R <- ring_(c("x","y"), "QQ")
 
   expect_error(
@@ -133,6 +138,8 @@ test_that("ideal_(c(mpoly, mpoly) errors",{
 
 
 test_that('ideal_(list("x+y x^2+y^2"), raw_chars = TRUE) errors',{
+  skip_on_cran()
+
   R <- ring_(c("x","y"), "QQ")
 
   expect_error(
@@ -158,6 +165,8 @@ context("ideal_.")
 
 
 test_that("ideal_.(poly_chars)",{
+  skip_on_cran()
+
   R <- ring_.(c("x","y"), "QQ")
 
   poly_chars <- c("x + y", "x^2 + y^2")
@@ -178,6 +187,8 @@ test_that("ideal_.(poly_chars)",{
 
 
 test_that("ideal_.(mpolyList)",{
+  skip_on_cran()
+
   R <- ring_.(c("x","y"), "QQ")
 
   mpolyList <- mp(c("x + y", "x^2 + y^2"))
@@ -198,6 +209,8 @@ test_that("ideal_.(mpolyList)",{
 
 
 test_that("ideal_.(list o chars)",{
+  skip_on_cran()
+
   R <- ring_.(c("x","y"), "QQ")
 
   list_o_chars <- list("x + y", "x^2 + y^2")
@@ -218,6 +231,8 @@ test_that("ideal_.(list o chars)",{
 
 
 test_that("ideal_.(list o mps)",{
+  skip_on_cran()
+
   R <- ring_.(c("x","y"), "QQ")
 
   list_o_mps <- list(mp("x + y"), mp("x^2 + y^2"))
@@ -238,6 +253,8 @@ test_that("ideal_.(list o mps)",{
 
 
 test_that("ideal_.(list o chars, raw_chars = TRUE)",{
+  skip_on_cran()
+
   R <- ring_.(c("x","y"), "QQ")
 
   list_o_chars <- list("x + y", "x^2 + y^2")
@@ -258,6 +275,8 @@ test_that("ideal_.(list o chars, raw_chars = TRUE)",{
 
 
 test_that("ideal_.(poly_chars, raw_chars = TRUE)",{
+  skip_on_cran()
+
   R <- ring_.(c("x","y"), "QQ")
 
   poly_chars <- c("x + y", "x^2 + y^2")
@@ -284,6 +303,8 @@ test_that("ideal_.(poly_chars, raw_chars = TRUE)",{
 
 
 test_that("ideal_.(c(mpoly, mpoly) errors",{
+  skip_on_cran()
+
   R <- ring_.(c("x","y"), "QQ")
 
   expect_error(
@@ -294,6 +315,8 @@ test_that("ideal_.(c(mpoly, mpoly) errors",{
 
 
 test_that('ideal_.(list("x+y x^2+y^2"), raw_chars = TRUE) errors',{
+  skip_on_cran()
+
   R <- ring_.(c("x","y"), "QQ")
 
   expect_error(

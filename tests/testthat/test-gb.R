@@ -1,15 +1,8 @@
-skip_on_cran()
-
-
-
-
-
-
-
-
 context("gb  ")
 
 test_that("gb(... = char vec)", {
+  skip_on_cran()
+
   ring_(c("x","y","z"), "QQ")
 
   actual <- gb("x y", "x z", "x")
@@ -32,6 +25,8 @@ context("gb_ ")
 
 
 test_that("gb_(char vec)",{
+  skip_on_cran()
+
   ring_(c("x", "y", "z"), "QQ")
 
   actual <- gb_(c("x y", "x z", "x"))
@@ -46,6 +41,8 @@ test_that("gb_(char vec)",{
 
 
 test_that("gb_(mpolyList)",{
+  skip_on_cran()
+
   ring_(c("x", "y", "z"), "QQ")
 
   mpolys <- mp(c("x y", "x z", "x"))
@@ -61,6 +58,8 @@ test_that("gb_(mpolyList)",{
 
 
 test_that("gb_(list o chars)",{
+  skip_on_cran()
+
   ring_(c("x", "y", "z"), "QQ")
 
   actual <- gb_(list("x y", "x z", "x"))
@@ -75,6 +74,8 @@ test_that("gb_(list o chars)",{
 
 
 test_that("gb_(list o mpolys)",{
+  skip_on_cran()
+
   ring_(c("x", "y", "z"), "QQ")
 
   actual <- gb_(list(mp("x y"), mp("x z"), mp("x")))
@@ -89,6 +90,8 @@ test_that("gb_(list o mpolys)",{
 
 
 test_that("gb_(c'd mpolys)",{
+  skip_on_cran()
+
   ring_(c("x", "y", "z"), "QQ")
 
   expect_error(
@@ -99,6 +102,8 @@ test_that("gb_(c'd mpolys)",{
 
 
 test_that("gb_(m2_ideal)",{
+  skip_on_cran()
+
   ring_(c("x", "y", "z"), "QQ")
 
   I <- ideal_(mp(c("x y", "x z", "x")))
@@ -114,6 +119,8 @@ test_that("gb_(m2_ideal)",{
 
 
 test_that("gb_(m2_ideal_pointer)",{
+  skip_on_cran()
+
   ring_(c("x", "y", "z"), "QQ")
 
   I. <- ideal_.(mp(c("x y", "x z", "x")))
