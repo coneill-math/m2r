@@ -29,17 +29,20 @@ while true do (
   --while (not isReady m2rintinout) do (
   --  run "sleep 0.05";
   --);
-  --wait m2rintinout;
+  while (not isReady m2rintinout and not atEndOfFile m2rintinout) do (
+    wait m2rintinout;
+  );
+  if (atEndOfFile m2rintinout) then break;
   m2rintinline = read m2rintinout;
   if (atEndOfFile m2rintinout or m2rintinline == "") then break;
-  
+
   m2rintlog(concatenate("Command:\n", m2rintinline));
 
   m2rintretcode = 0;
   m2rintoutvalsucceeded = false;
   m2rintoutlinesucceeded = false;
   m2rintruncount = m2rintruncount + 1;
-  
+
   try (
     m2rintoutval_m2rintruncount = value(m2rintinline);
     m2rintoutvalsucceeded = true;
@@ -63,14 +66,14 @@ while true do (
   );
 
   m2rintnumlines = 1 + #select("\n", m2rintoutline);
-  m2rintoutinfo = concatenate(toString(m2rintretcode), 
-                          " ", toString(m2rintnumlines), 
-                          " ", toString(m2rintvarname), 
-                          " ", toString(m2rintoutclass), 
+  m2rintoutinfo = concatenate(toString(m2rintretcode),
+                          " ", toString(m2rintnumlines),
+                          " ", toString(m2rintvarname),
+                          " ", toString(m2rintoutclass),
                           " ", toString(m2rintoutclassclass));
 
   m2rintinout << m2rintoutinfo << "\n" << m2rintoutline << "\n" << flush;
-  
+
   m2rintlog(concatenate("Command output:\n", m2rintoutinfo, "\n", m2rintoutline));
   m2rintlog("");
 );
