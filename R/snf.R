@@ -1,14 +1,16 @@
 #' Smith normal form
 #'
-#' For an integer matrix M, this computes the matrices D, P, and Q
-#' such that \emph{D = PMQ}, which can be seen as an analogue of the
-#' singular value decomposition. All are integer matrices, and P and
-#' Q are unimodular (have determinants +- 1).
+#' For an integer matrix M, this computes the matrices D, P, and Q such that
+#' \emph{D = PMQ}, which can be seen as an analogue of the singular value
+#' decomposition. All are integer matrices, and P and Q are unimodular (have
+#' determinants +- 1).
 #'
 #' @param mat a matrix (integer entries)
 #' @param code return only the M2 code? (default: \code{FALSE})
 #' @name snf
-#' @return a list of integer matrices D, P, and Q
+#' @seealso \code{\link{m2_matrix}}
+#' @return a list of \code{m2_matrix} objects with names \code{D}, \code{P}, and
+#'   \code{Q}
 #' @examples
 #'
 #' \dontrun{ requires Macaulay2

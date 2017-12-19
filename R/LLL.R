@@ -5,11 +5,10 @@
 #'
 #' @param mat a matrix (integer entries)
 #' @param code return only the M2 code? (default: \code{FALSE})
+#' @seealso \code{\link{m2_matrix}}
 #' @name LLL
-#' @seealso
-#' \url{https://en.wikipedia.org/wiki/Lenstra–Lenstra–Lovász_lattice_basis_reduction_algorithm}
 #'
-#' @return a list of integer matrices D, P, and Q
+#' @return an object of class \code{m2_matrix}
 #' @examples
 #'
 #' \dontrun{ requires Macaulay2
@@ -17,6 +16,7 @@
 #' ##### basic usage
 #' ########################################
 #'
+#' # example 1
 #' M <- matrix(c(
 #'   1, 1, 1, 1,
 #'   2, 0, 3, 4,
@@ -27,6 +27,22 @@
 #' ), nrow = 6, byrow = TRUE)
 #'
 #' LLL(M)
+#'
+#'
+#'
+#'
+#' # example 2 (wikipedia)
+#' M <- matrix(c(
+#'   1, -1, 3,
+#'   1,  0, 5,
+#'   1,  2, 6
+#' ), nrow = 3, byrow = TRUE)
+#'
+#' LLL(M)
+#'
+#'
+#'
+#'
 #'
 #'
 #'
