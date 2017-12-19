@@ -1,5 +1,7 @@
 .onAttach <- function(...) {
 
+  packageStartupMessage('  Please cite m2r! See citation("m2r") for details.')
+
 	# find M2 on a Mac or Linux
 	if (is.mac() || is.linux()) unix_search_and_set("M2", "Macaulay2", "m2_path")
 
@@ -60,13 +62,13 @@ unix_find <- function(exec, where){
 startup_check_for_program <- function(){
 
 	if(!is.null(get_m2_path())){
-		psms("M2 found in %s", get_m2_path())
+		psms("  M2 found in %s", get_m2_path())
 		return(invisible(FALSE))
 	}
 
 	if(is.null(get_m2_path())){
-		psms("M2 not found; defaulting to cloud.")
-	  psms("Use set_m2r_path(\"/path/to/m2\") to run M2 locally.")
+		psms("  M2 not found; defaulting to cloud.")
+	  psms("  Use set_m2r_path(\"/path/to/m2\") to run M2 locally.")
 		return(invisible(FALSE))
 	}
 
