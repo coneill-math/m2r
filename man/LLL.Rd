@@ -15,7 +15,7 @@ LLL.(mat, code = FALSE)
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 }
 \value{
-a list of integer matrices D, P, and Q
+an object of class \code{m2_matrix}
 }
 \description{
 Macaulay2's implementation of the LLL algorithm. This implementation is still
@@ -28,6 +28,7 @@ under development and is currently untested.
 ##### basic usage
 ########################################
 
+# example 1
 M <- matrix(c(
   1, 1, 1, 1,
   2, 0, 3, 4,
@@ -38,6 +39,22 @@ M <- matrix(c(
 ), nrow = 6, byrow = TRUE)
 
 LLL(M)
+
+
+
+
+# example 2 (wikipedia)
+M <- matrix(c(
+  1, -1, 3,
+  1,  0, 5,
+  1,  2, 6
+), nrow = 3, byrow = TRUE)
+
+LLL(M)
+
+
+
+
 
 
 
@@ -53,5 +70,5 @@ LLL(M, code = TRUE)
 
 }
 \seealso{
-\url{https://en.wikipedia.org/wiki/Lenstra–Lenstra–Lovász_lattice_basis_reduction_algorithm}
+\code{\link{m2_matrix}}
 }

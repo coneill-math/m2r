@@ -45,7 +45,7 @@ on the M2 side}
 \item{...}{...}
 }
 \value{
-a reference to a Macaulay2 ring
+an object of class \code{m2_matrix}
 }
 \description{
 Create a new matrix in Macaulay2
@@ -57,7 +57,7 @@ Create a new matrix in Macaulay2
 ##### basic usage
 ########################################
 
-(mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2))
+(mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
 m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2))
 
 m2_name(mat)

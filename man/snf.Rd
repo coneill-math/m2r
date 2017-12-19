@@ -15,13 +15,14 @@ snf.(mat, code = FALSE)
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 }
 \value{
-a list of integer matrices D, P, and Q
+a list of \code{m2_matrix} objects with names \code{D}, \code{P}, and
+  \code{Q}
 }
 \description{
-For an integer matrix M, this computes the matrices D, P, and Q
-such that \emph{D = PMQ}, which can be seen as an analogue of the
-singular value decomposition. All are integer matrices, and P and
-Q are unimodular (have determinants +- 1).
+For an integer matrix M, this computes the matrices D, P, and Q such that
+\emph{D = PMQ}, which can be seen as an analogue of the singular value
+decomposition. All are integer matrices, and P and Q are unimodular (have
+determinants +- 1).
 }
 \examples{
 
@@ -102,4 +103,7 @@ snf(M, code = TRUE)
 
 }
 
+}
+\seealso{
+\code{\link{m2_matrix}}
 }

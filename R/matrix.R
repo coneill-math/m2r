@@ -9,7 +9,7 @@
 #' @param code return only the M2 code? (default: \code{FALSE})
 #' @param x formal argument for print method
 #' @param ... ...
-#' @return a reference to a Macaulay2 ring
+#' @return an object of class \code{m2_matrix}
 #' @name m2_matrix
 #' @examples
 #'
@@ -18,7 +18,7 @@
 #' ##### basic usage
 #' ########################################
 #'
-#' (mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2))
+#' (mat <- m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)))
 #' m2_matrix(matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2))
 #'
 #' m2_name(mat)
