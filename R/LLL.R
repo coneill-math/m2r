@@ -4,6 +4,7 @@
 #' under development and is currently untested.
 #'
 #' @param mat a matrix (integer entries)
+#' @param control additional arguments to pass to LLL; see examples
 #' @param code return only the M2 code? (default: \code{FALSE})
 #' @seealso \code{\link{m2_matrix}}
 #' @name LLL
@@ -41,12 +42,41 @@
 #' LLL(M)
 #'
 #'
+#' ##### control
+#' ########################################
+#'
+#' M <- matrix(c(
+#'   1, 1, 1, 1,
+#'   2, 0, 3, 4,
+#'   1, 0, 0, 0,
+#'   0, 1, 0, 0,
+#'   0, 0, 1, 0,
+#'   0, 0, 0, 1
+#' ), nrow = 6, byrow = TRUE)
+#'
+#' LLL(M, code = TRUE)
+#' LLL(M, control = list(Strategy = "NTL"), code = TRUE)
+#' LLL(M, control = list(Strategy = c("BKZ", "RealFP")), code = TRUE)
+#'
+#' LLL(M)
+#' LLL(M, control = list(Strategy = "NTL"))
+#' LLL(M, control = list(Strategy = c("BKZ", "RealFP")))
+#' LLL(M, control = list(Strategy = c("BKZ", "RealQP")))
 #'
 #'
 #'
+#' # method timings with microbenchmark.  note they are roughly the same
+#' # for this example matrix
+#' microbenchmark::microbenchmark(
+#'   "NTL" = LLL(M, control = list(Strategy = "NTL")),
+#'   "BKZ_RealFP" = LLL(M, control = list(Strategy = c("BKZ", "RealFP"))),
+#'   "BKZ_RealQP" = LLL(M, control = list(Strategy = c("BKZ", "RealQP"))),
+#'   "BKZ_RealRR" = LLL(M, control = list(Strategy = c("BKZ", "RealRR")))
+#' )
 #'
 #'
-#' ##### other options
+#'
+#' ##### additional examples
 #' ########################################
 #'
 #' LLL.(M)
@@ -64,7 +94,7 @@
 
 #' @rdname LLL
 #' @export
-LLL <- function (mat, code = FALSE) {
+LLL <- function (mat, control = list(), code = FALSE) {
 
   # run m2
   args <- as.list(match.call())[-1]
@@ -82,7 +112,7 @@ LLL <- function (mat, code = FALSE) {
 
 #' @rdname LLL
 #' @export
-LLL. <- function (mat, code = FALSE) {
+LLL. <- function (mat, control = list(), code = FALSE) {
 
   # arg checking
   # if (is.m2_matrix(mat)) mat <- mat$rmatrix
@@ -93,8 +123,20 @@ LLL. <- function (mat, code = FALSE) {
     param <- paste0("matrix", listify_mat(mat))
   }
 
+  # prepare control string
+  if (length(control) > 0) {
+    if(length(names(control)) != 1 && names(control) != "Strategy") {
+      stop("LLL only accepts control argument \"Strategy\".", call. = FALSE)
+    }
+    strategy <- listify(control$Strategy)
+    if(length(control$Strategy) == 1L) strategy <- str_sub(strategy, 2, -2)
+    control_string <- sprintf(", Strategy => %s", strategy)
+  } else {
+    control_string <- ""
+  }
+
   # create code and message
-  m2_code <- sprintf("LLL %s", param)
+  m2_code <- sprintf("LLL(%s%s)", param, control_string)
   if(code) { message(m2_code); return(invisible(m2_code)) }
 
   # run m2 and return pointer
