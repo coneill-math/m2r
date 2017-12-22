@@ -5,12 +5,14 @@
 \alias{LLL.}
 \title{LLL algorithm}
 \usage{
-LLL(mat, code = FALSE)
+LLL(mat, control = list(), code = FALSE)
 
-LLL.(mat, code = FALSE)
+LLL.(mat, control = list(), code = FALSE)
 }
 \arguments{
 \item{mat}{a matrix (integer entries)}
+
+\item{control}{additional arguments to pass to LLL; see examples}
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 }
@@ -53,12 +55,41 @@ M <- matrix(c(
 LLL(M)
 
 
+##### control
+########################################
+
+M <- matrix(c(
+  1, 1, 1, 1,
+  2, 0, 3, 4,
+  1, 0, 0, 0,
+  0, 1, 0, 0,
+  0, 0, 1, 0,
+  0, 0, 0, 1
+), nrow = 6, byrow = TRUE)
+
+LLL(M, code = TRUE)
+LLL(M, control = list(Strategy = "NTL"), code = TRUE)
+LLL(M, control = list(Strategy = c("BKZ", "RealFP")), code = TRUE)
+
+LLL(M)
+LLL(M, control = list(Strategy = "NTL"))
+LLL(M, control = list(Strategy = c("BKZ", "RealFP")))
+LLL(M, control = list(Strategy = c("BKZ", "RealQP")))
 
 
 
+# method timings with microbenchmark.  note they are roughly the same
+# for this example matrix
+microbenchmark::microbenchmark(
+  "NTL" = LLL(M, control = list(Strategy = "NTL")),
+  "BKZ_RealFP" = LLL(M, control = list(Strategy = c("BKZ", "RealFP"))),
+  "BKZ_RealQP" = LLL(M, control = list(Strategy = c("BKZ", "RealQP"))),
+  "BKZ_RealRR" = LLL(M, control = list(Strategy = c("BKZ", "RealRR")))
+)
 
 
-##### other options
+
+##### additional examples
 ########################################
 
 LLL.(M)

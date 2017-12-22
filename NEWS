@@ -11,6 +11,8 @@ CHANGES
 * Citation is now requested upon loading. Package startup messages are
   indented for prettier printing in algstat (consistent with latter).
 
+* The package now suggests microbenchmark.
+
 
 Version 1.0.0
 -------------------------------------------------------------------------
