@@ -2,27 +2,27 @@
 
   packageStartupMessage('  Please cite m2r! See citation("m2r") for details.')
 
-	# find M2 on a Mac or Linux
-	if (is.mac() || is.linux()) unix_search_and_set("M2", "Macaulay2", "m2_path")
+  # find M2 on a Mac or Linux
+  if (is.mac() || is.linux()) unix_search_and_set("M2", "Macaulay2", "m2_path")
 
-	# find M2 on a PC - directs to cloud immediately
-	if (is.win()) win_search_and_set("m2")
+  # find M2 on a PC - directs to cloud immediately
+  if (is.win()) win_search_and_set("m2")
 
-	# check that the programs were found
-	startup_check_for_program()
+  # check that the programs were found
+  startup_check_for_program()
 
-	# set gmp
-	set_m2r_option(gmp = FALSE)
+  # set gmp
+  set_m2r_option(gmp = FALSE)
 
-	# return
-	invisible(TRUE)
+  # return
+  invisible(TRUE)
 }
 
 
 
 
 .onDetach <- function(...) {
-	stop_m2()
+  stop_m2()
   options(m2r = NULL)
 }
 # restart R
@@ -41,19 +41,19 @@
 # so unix_search_and_set uses unix_find to search specific directories
 unix_find <- function(exec, where){
 
-	# query the system and clean attributes
-	query <- sprintf("find %s -name %s", where, exec)
-	finding <- suppressWarnings(system(query, intern = TRUE, ignore.stderr = TRUE))
-	attributes(finding) <- NULL
+  # query the system and clean attributes
+  query <- sprintf("find %s -name %s", where, exec)
+  finding <- suppressWarnings(system(query, intern = TRUE, ignore.stderr = TRUE))
+  attributes(finding) <- NULL
 
-	# get the bin first
-	path <- finding[stringr::str_detect(finding, paste0("bin/", exec))][1]
+  # get the bin first
+  path <- finding[stringr::str_detect(finding, paste0("bin/", exec))][1]
 
-	# bertini isn't in a bin directory
-	if(is.na(path)) path <- finding[1]
+  # bertini isn't in a bin directory
+  if(is.na(path)) path <- finding[1]
 
-	# return
-	path
+  # return
+  path
 }
 
 
@@ -61,25 +61,25 @@ unix_find <- function(exec, where){
 
 startup_check_for_program <- function(){
 
-	if(!is.null(get_m2_path())){
-		psms("  M2 found in %s", get_m2_path())
-		return(invisible(FALSE))
+  if(!is.null(get_m2_path())){
+    psms("  M2 found in %s", get_m2_path())
+    return(invisible(FALSE))
+  }
+
+  if(is.null(get_m2_path())){
+    psms("  M2 not found; defaulting to cloud.")
+    psms("  Use set_m2r_path(\"/path/to/m2\") to run M2 locally.")
+    return(invisible(FALSE))
 	}
 
-	if(is.null(get_m2_path())){
-		psms("  M2 not found; defaulting to cloud.")
-	  psms("  Use set_m2r_path(\"/path/to/m2\") to run M2 locally.")
-		return(invisible(FALSE))
-	}
-
-	invisible(TRUE)
-
+  invisible(TRUE)
 }
 
 
 
 
 psm  <- packageStartupMessage
+
 psms <- function(fmt, ...) packageStartupMessage(sprintf(fmt, ...))
 
 
@@ -91,16 +91,15 @@ setOption <- function(optionName, value){
 unix_search_and_set <- function(exec, baseName, optionName){
 
   # grab path and parse
-  profile_to_look_for <-
-  	if(file.exists("~/.bash_profile")){
-      ".bash_profile"
-  	} else if(file.exists("~/.bashrc")){
-      ".bashrc"
-  	} else if(file.exists("~/.profile")){
-      ".profile"
-  	} else {
-  	  return(invisible(FALSE))
-  	}
+  if (file.exists("~/.bash_profile")) {
+    profile_to_look_for <- ".bash_profile"
+  } else if (file.exists("~/.bashrc")) {
+    profile_to_look_for <- ".bashrc"
+  } else if (file.exists("~/.profile")) {
+    profile_to_look_for <- ".profile"
+  } else {
+    return(invisible(FALSE))
+  }
 
   # PATH <- system(sprintf("source ~/%s; echo $PATH", profile_to_look_for), intern = TRUE)
   # the above doesn't work on ubuntu, which uses the dash shell (which doesn't have source)
