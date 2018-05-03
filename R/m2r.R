@@ -9,6 +9,8 @@
 #' @importFrom stringr str_replace_all str_sub str_split fixed
 #'   str_sub str_detect str_replace str_replace_all str_c
 #' @importFrom pryr dots
+#' @useDynLib m2r
+#' @importFrom Rcpp sourceCpp
 #' @name m2r
 #' @aliases m2r package-m2r
 NULL
