@@ -13,15 +13,3 @@ m2_tokenize_cpp <- function(s) {
     .Call('_m2r_m2_tokenize_cpp', PACKAGE = 'm2r', s)
 }
 
-timesTwo2 <- function(x) {
-    .Call('_m2r_timesTwo2', PACKAGE = 'm2r', x)
-}
-
-mytoken <- function() {
-    .Call('_m2r_mytoken', PACKAGE = 'm2r')
-}
-
-timesTwo <- function(x) {
-    .Call('_m2r_timesTwo', PACKAGE = 'm2r', x)
-}
-
