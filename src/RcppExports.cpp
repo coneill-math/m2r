@@ -5,6 +5,58 @@
 
 using namespace Rcpp;
 
+// m2_symbol_chars_cpp
+std::vector<std::string> m2_symbol_chars_cpp();
+RcppExport SEXP _m2r_m2_symbol_chars_cpp() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(m2_symbol_chars_cpp());
+    return rcpp_result_gen;
+END_RCPP
+}
+// m2_operators_cpp
+std::vector<std::string> m2_operators_cpp();
+RcppExport SEXP _m2r_m2_operators_cpp() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(m2_operators_cpp());
+    return rcpp_result_gen;
+END_RCPP
+}
+// m2_tokenize_cpp
+std::vector<std::string> m2_tokenize_cpp(std::string& s);
+RcppExport SEXP _m2r_m2_tokenize_cpp(SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string& >::type s(sSEXP);
+    rcpp_result_gen = Rcpp::wrap(m2_tokenize_cpp(s));
+    return rcpp_result_gen;
+END_RCPP
+}
+// timesTwo2
+NumericVector timesTwo2(NumericVector x);
+RcppExport SEXP _m2r_timesTwo2(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(timesTwo2(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mytoken
+List mytoken();
+RcppExport SEXP _m2r_mytoken() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(mytoken());
+    return rcpp_result_gen;
+END_RCPP
+}
 // timesTwo
 NumericVector timesTwo(NumericVector x);
 RcppExport SEXP _m2r_timesTwo(SEXP xSEXP) {
@@ -18,6 +70,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_m2r_m2_symbol_chars_cpp", (DL_FUNC) &_m2r_m2_symbol_chars_cpp, 0},
+    {"_m2r_m2_operators_cpp", (DL_FUNC) &_m2r_m2_operators_cpp, 0},
+    {"_m2r_m2_tokenize_cpp", (DL_FUNC) &_m2r_m2_tokenize_cpp, 1},
+    {"_m2r_timesTwo2", (DL_FUNC) &_m2r_timesTwo2, 1},
+    {"_m2r_mytoken", (DL_FUNC) &_m2r_mytoken, 0},
     {"_m2r_timesTwo", (DL_FUNC) &_m2r_timesTwo, 1},
     {NULL, NULL, 0}
 };
