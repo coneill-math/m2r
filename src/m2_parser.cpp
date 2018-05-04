@@ -120,27 +120,9 @@ std::vector<std::string> m2_tokenize_cpp(std::string &s) {
 
 
 
-// [[Rcpp::export]]
-NumericVector timesTwo2(NumericVector x) {
-  return x * 2;
-}
-
-// [[Rcpp::export]]
-List mytoken() {
-  CharacterVector s = "5297a";
-
-  return List::create(Rcpp::Named("a") = "529a", Rcpp::Named("b") = s);
-}
+// return List::create(Rcpp::Named("a") = "529a", Rcpp::Named("b") = s);
 
 
-// You can include R code blocks in C++ files processed with sourceCpp
-// (useful for testing and development). The R code will be automatically
-// run after the compilation.
-//
-
-/*** R
-timesTwo(42)
-*/
 
 
 
