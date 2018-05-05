@@ -1,6 +1,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+#include "algstat_parser.h"
+#include "m2_parser.h"
+
 // This is a simple example of exporting a C++ function to R. You can
 // source this function into an R session using the Rcpp::sourceCpp
 // function (or via the Source button on the editor toolbar). Learn
@@ -12,8 +15,36 @@ using namespace Rcpp;
 //
 
 
+
+/*
+m2_parser_factory *g_m2_factory = NULL;
+
+m2_parser_factory *global_factory() {
+  if (g_m2_factory == NULL) {
+    g_m2_factory = new m2_parser_factory();
+  }
+
+  return g_m2_factory;
+}
+*/
+
 // [[Rcpp::export]]
-std::vector<std::string> m2_symbol_chars_cpp() {
+std::vector<std::string> m2_tokenize_cpp(std::string &s) {
+  m2_tokenizer tokenizer;
+  return tokenizer.tokenize(s);
+}
+/*
+// [[Rcpp::export]]
+List m2_parse_internal_cpp(std::vector<std::string> &tokens) {
+  m2_parser parser(global_factory());
+  return parser.parse(tokens, 0);
+}
+*/
+
+
+
+
+std::vector<std::string> m2_tokenizer::symbol_chars() {
   // c(letters, toupper(letters), 0:9, "'")
   const char *symbolchars[] = {
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
@@ -25,8 +56,7 @@ std::vector<std::string> m2_symbol_chars_cpp() {
   return std::vector<std::string>(symbolchars, symbolchars + sizeof(symbolchars)/sizeof(const char *));
 }
 
-// [[Rcpp::export]]
-std::vector<std::string> m2_operators_cpp() {
+std::vector<std::string> m2_tokenizer::operators() {
   // m2 operators, sorted by length for easier tokenizing
   const char *operators[] = {
     "===>", "<==>", "<===",
@@ -41,62 +71,6 @@ std::vector<std::string> m2_operators_cpp() {
 }
 
 
-// splits a string containing M2 code into tokens to ease parsing
-// places an empty string between each line
-// [[Rcpp::export]]
-std::vector<std::string> m2_tokenize_cpp(std::string &s) {
-  std::vector<std::string> m2operators = m2_operators_cpp();
-  std::vector<std::string> m2symbolchars = m2_symbol_chars_cpp();
-  std::vector<std::string> tokens;
-
-  std::vector<std::string> operatorstartchars(m2operators.size());
-  for(size_t i = 0;i < m2operators.size();i++) {
-    operatorstartchars[i] = m2operators[i][0];
-  }
-
-  for(size_t i = 0;i < s.length();) {
-    if (s[i] == ' ' || s[i] == '\t') {
-      i++;
-    } else if (std::find(m2symbolchars.begin(), m2symbolchars.end(), std::string(&s[i], 1)) != m2symbolchars.end()) {
-      size_t start = i;
-
-      i++;
-      while (i < s.length() && std::find(m2symbolchars.begin(), m2symbolchars.end(), std::string(&s[i], 1)) != m2symbolchars.end()) {
-        i++;
-      }
-
-      tokens.push_back(s.substr(start, i - start));
-    } else if (std::find(operatorstartchars.begin(), operatorstartchars.end(), std::string(&s[i], 1)) != operatorstartchars.end()) {
-      // substr() is smart enough to not index past the end of the string
-      for (size_t j = 0;j < m2operators.size();j++) {
-        std::string op = m2operators[j];
-        if (i + op.length() <= s.length() && op == s.substr(i, op.length())) {
-          tokens.push_back(op);
-          i = i + op.length();
-          break;
-        }
-      }
-    } else if (s[i] == '"') {
-      i++;
-      size_t start = i;
-      for(;i < s.length() && s[i] != '"';i++) {
-        if (s[i] == '\\')
-          i++;
-      }
-
-      tokens.push_back("\"");
-      tokens.push_back(s.substr(start, i - start));
-      tokens.push_back("\"");
-      i++;
-    } else if (s[i] == '\n') {
-      tokens.push_back("");
-    }
-    else
-      i++;
-  }
-
-  return tokens;
-}
 
 
 
@@ -104,23 +78,6 @@ std::vector<std::string> m2_tokenize_cpp(std::string &s) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// return List::create(Rcpp::Named("a") = "529a", Rcpp::Named("b") = s);
 
 
 
@@ -129,36 +86,243 @@ std::vector<std::string> m2_tokenize_cpp(std::string &s) {
 
 
 /*
+algstat_parser *m2_parser_factory::create_parser(std::vector<std::string> &tokens) {
+  return new m2_parser(this);
+}
 
-#' @rdname m2_parser
-#' @export
-m2_parse <- function(s) {
 
-  if (is.m2_pointer(s)) {
-    tokens <- m2_tokenize(m2_meta(s, "ext_str"))
-  } else if (is.m2(s)) {
-    return(s)
-  } else {
-    tokens <- m2_tokenize(s)
-  }
 
-  memoise::forget(mem_m2.)
-    memoise::forget(mem_m2_parse)
 
-    ret <- m2_parse_internal(tokens)
-    ret <- ret$result
+m2_parser::m2_parser(algstat_parser_factory *factory)
+  : algstat_parser(factory) {
+}
 
-    if (
-        is.m2_pointer(s) && is.m2(ret) &&
-          !is.null(m2_name(ret)) && m2_name(ret) == ""
-    ) {
-      m2_name(ret) <- m2_name(s)
+
+
+List m2_parser::parse(std::vector<std::string> &tokens, size_t start) {
+
+  List ret = List::create();
+  size_t i = start;
+
+  if (tokens[i] == "{") {
+    // list: {A, A2 => B2, A3 => B3, C, ...}
+
+    algstat_list_parser *parser = new algstat_list_parser(this->factory, "{", "}", false, "m2_list");
+    ret = parser->parse(tokens, i);
+    i = parser->get_next_index();
+    delete parser;
+
+  } else if (tokens[i] == "[") {
+    // array: [A, B, ...]
+
+    algstat_list_parser *parser = new algstat_list_parser(this->factory, "[", "]", false, "m2_array");
+    ret = parser->parse(tokens, i);
+    i = parser->get_next_index();
+    delete parser;
+
+  } else if (tokens[i] == "(") {
+    // sequence: (A, B, ...) returned as classed list OR (A) returned as A
+
+    algstat_list_parser *parser = new algstat_list_parser(this->factory, "(", ")", true, "m2_sequence");
+    ret = parser->parse(tokens, i);
+    i = parser->get_next_index();
+    delete parser;
+
+  } else if (tokens[i] == "\"") {
+    // string: " stuff "
+
+    algstat_string_parser *parser = new algstat_string_parser(this->factory, "\"", "m2_string");
+    ret = parser->parse(tokens, i);
+    i = parser->get_next_index();
+    delete parser;
+
+  } else if (tokens[i][0] >= '0' && tokens[i][0] <= '9') {
+    // positive integer or rational
+
+    if (tokens.size() > i && str_detect(tokens[i+1], "/")) {
+      // is fraction
+
+      if (get_m2_gmp()) {
+        ret <- m2_structure(
+            as.bigq(tokens[i], tokens[i+2]),
+            m2_class = "m2_rational"
+        )
+        class(ret) <- c(class(ret), "bigq")
+        i <- i + 3
+      } else {
+        ret <- m2_structure(
+            as.integer(tokens[i]) / as.integer(tokens[i+2]),
+            m2_class = "m2_float"
+        )
+        i <- i + 3
+      }
+
+    } else {
+      // positive integer
+
+      if (get_m2_gmp()) {
+        ret <- m2_structure(
+            as.bigz(tokens[i]),
+            m2_class = "m2_integer"
+        )
+        class(ret) <- c(class(ret), "bigz")
+        i <- i + 1
+      } else {
+        ret <- m2_structure(
+            as.integer(tokens[i]),
+            m2_class = "m2_integer"
+        )
+        i <- i + 1
+      }
+
     }
 
-    memoise::forget(mem_m2.)
-      memoise::forget(mem_m2_parse)
+  } else if (tokens[i] == ".") {
+    // positive float .05
 
-      ret
+    ret <- m2_structure(
+        as.double(paste0(".", str_replace(tokens[i+1], "p[0-9]+", ""))),
+        m2_class = "m2_float"
+    )
+    i = i + 2;
+
+  // } else if (tokens[i] == "-" && i != tokens.size() && tokens[i+1] == ".") {
+  //   // negative float -.05
+  //
+  //   ret <- m2_structure(
+  //       -as.double(paste0(".", str_replace(tokens[i+2], "p[0-9]+", ""))),
+  //       m2_class = "m2_float"
+  //   )
+  //   i = i + 3;
+
+  } else if (tokens[i] == "-") {
+    // -(expression) -5
+
+    m2_parser *parser = new m2_parser(this->factory);
+    ret = parser->parse(tokens, i);
+    i = parser->get_next_index();
+    delete parser;
+
+    if (is.integer(ret) || is.float(ret)) {
+      ret <- -ret
+    } else {
+      ret <- m2_structure(paste0("-", ret), m2_class = "m2_string")
+    }
+
+  } else if (tokens[i] == "new") {
+    // object creation: new TYPENAME from DATA
+
+    elem <- m2_parse_new(tokens, start = i)
+    ret <- elem$result
+    i <- elem$nIndex
+
+  } else if (substr(tokens[i], 1, 1) %in% m2_symbol_chars()) {
+# symbol, must be final case handled
+
+    elem <- m2_parse_symbol(tokens, start = i)
+    ret <- elem$result
+    i <- elem$nIndex
+
+  } else {
+# we can't handle this input
+
+    stop(paste("Parsing error: format not supported: ", tokens[i]))
+
+  }
+
+  if (i > length(tokens)) {
+    return(list(result = ret, nIndex = i))
+  }
+
+  if (tokens[i] == "=>") {
+# option: A => B
+
+    key <- ret
+
+    elem <- m2_parse_internal(tokens, start = i+1)
+    val <- elem$result
+    i <- elem$nIndex
+
+    ret <- list(key, val)
+    class(ret) <- c("m2_option","m2")
+
+  } else if (tokens[i] == "..") {
+# sequence: (a..c) = (a, b, c)
+
+    start <- ret
+
+    elem <- m2_parse_internal(tokens, start = i+1)
+    end <- elem$result
+    i <- elem$nIndex
+
+    if (all(c(start,end) %in% letters) && start <= end) {
+      ret <- as.list(start %:% end)
+      ret <- lapply(ret, `class<-`, c("m2_symbol","m2"))
+    } else if (all(c(start,end) %in% toupper(letters)) && start <= end) {
+      ret <- as.list(start %:% end)
+      ret <- lapply(ret, `class<-`, c("m2_symbol","m2"))
+    } else if (is.integer(start) && is.integer(end) && start <= end) {
+      ret <- as.list(start:end)
+    } else {
+      ret <- list()
+    }
+
+    class(ret) <- c("m2_sequence","m2")
+
+  } else if (tokens[i] == ":") {
+# sequence: (n:x) = (x,...,x)
+
+    num_copies <- ret
+
+    elem <- m2_parse_internal(tokens, start = i+1)
+    item <- elem$result
+    i <- elem$nIndex
+
+    ret <- replicate(num_copies, item, simplify = FALSE)
+    class(ret) <- c("m2_sequence","m2")
+
+  } else if (#class(ret)[1] %in% c("m2_ring","m2_symbol") &&
+    (tokens[i] %notin% c(m2_operators(),",") ||
+    tokens[i] %in% c("(","{","["))) {
+# function call
+
+    if (tokens[i] == "(") {
+      elem <- m2_parse_sequence(tokens, start = i, save_paren = TRUE)
+    } else {
+      elem <- m2_parse_internal(tokens, start = i)
+      elem$result <- list(elem$result)
+    }
+
+    params <- elem$result
+      i <- elem$nIndex
+
+      ret <- m2_parse_object_as_function(ret, params)
+
+  } else if (tokens[i] %in% c("+","-","*","^")) {
+# start of an expression, consume rest of expression
+
+    lhs <- ret
+    operand <- tokens[i]
+
+    elem <- m2_parse_internal(tokens, start = i + 1)
+    rhs <- elem$result
+    i <- elem$nIndex
+
+    if (is.m2_polynomialring(lhs)) {
+      ret <- list(lhs, rhs)
+      class(ret) <- c("m2_module","m2")
+    } else {
+      ret <- paste0(lhs, operand, rhs)
+
+      if ((is.integer(lhs) || class(lhs)[1] %in% c("m2_expression", "m2_symbol")) &&
+          (is.integer(rhs) || class(rhs)[1] %in% c("m2_expression", "m2_symbol"))) {
+        class(ret) <- c("m2_expression", "m2")
+      }
+    }
+
+  }
+
+  return List::create(Rcpp::Named("result") = ret, Rcpp::Named("nIndex") = i);
 
 }
 
@@ -173,229 +337,44 @@ m2_parse <- function(s) {
 
 
 
-# only used for ring parsing!  Don't get greedy!!!!
-mem_m2. <- memoise::memoise(function(x) m2.(x))
-  mem_m2_parse <- memoise::memoise(function(x) m2_parse(x))
 
 
-  m2_parse_internal <- function(tokens, start = 1) {
 
-    i <- start
 
-    if (tokens[i] == "{") {
-# list: {A, A2 => B2, A3 => B3, C, ...}
 
-      elem <- m2_parse_list(tokens, start = i)
-      ret <- elem$result
-      i <- elem$nIndex
 
-    } else if (tokens[i] == "[") {
-# array: [A, B, ...]
 
-      elem <- m2_parse_array(tokens, start = i)
-      ret <- elem$result
-      i <- elem$nIndex
 
-    } else if (tokens[i] == "(") {
-# sequence: (A, B, ...) returned as classed list OR (A) returned as A
 
-      elem <- m2_parse_sequence(tokens, start = i)
-      ret <- elem$result
-      i <- elem$nIndex
+# [A, B, ...]
+m2_parse_array <- function(tokens, start = 1) {
 
-    } else if (tokens[i] == "\"") {
-# string: "stuff"
+  m2_parse_list(tokens, start = start, open_char = "[", close_char = "]", type_name = "array")
 
-      error_on_fail(tokens[i+2] == "\"", "Parsing error: malformed string.")
-      ret <- m2_structure(tokens[i+1], m2_class = "m2_string")
-      i <- i + 3
+}
 
-    } else if (substr(tokens[i], 1, 1) %in% 0:9) {
-# positive integer or rational
 
-      if (length(tokens) > i && str_detect(tokens[i+1], "/")) { # is fraction
 
-        if (get_m2_gmp()) {
-          ret <- m2_structure(
-              as.bigq(tokens[i], tokens[i+2]),
-              m2_class = "m2_rational"
-          )
-          class(ret) <- c(class(ret), "bigq")
-          i <- i + 3
-        } else {
-          ret <- m2_structure(
-              as.integer(tokens[i]) / as.integer(tokens[i+2]),
-              m2_class = "m2_float"
-          )
-          i <- i + 3
-        }
 
-      } else { # positive integer
 
-        if (get_m2_gmp()) {
-          ret <- m2_structure(
-              as.bigz(tokens[i]),
-              m2_class = "m2_integer"
-          )
-          class(ret) <- c(class(ret), "bigz")
-          i <- i + 1
-        } else {
-          ret <- m2_structure(
-              as.integer(tokens[i]),
-              m2_class = "m2_integer"
-          )
-          i <- i + 1
-        }
 
-      }
+# (A, B, ...) as classed list
+# (A1) as A1
+m2_parse_sequence <- function(tokens, start = 1, save_paren = FALSE) {
 
-    } else if (tokens[i] == ".") {
-# positive float
+  elem <- m2_parse_list(tokens, start = start, open_char = "(", close_char = ")", type_name = "sequence")
 
-      ret <- m2_structure(
-          as.double(paste0(".", str_replace(tokens[i+1], "p[0-9]+", ""))),
-          m2_class = "m2_float"
-      )
-      i <- i + 2
-
-    } else if (tokens[i] == "-" && i != length(tokens) && tokens[i+1] == ".") {
-# negative float
-
-      ret <- m2_structure(
-          -as.double(paste0(".", str_replace(tokens[i+2], "p[0-9]+", ""))),
-          m2_class = "m2_float"
-      )
-      i <- i + 3
-
-    } else if (tokens[i] == "-") {
-# -expression
-
-      elem <- m2_parse_internal(tokens,start = i+1)
-      ret <- elem$result
-      i <- elem$nIndex
-
-      if (is.integer(ret)) {
-        ret <- -ret
-      } else {
-        ret <- m2_structure(paste0("-", ret), m2_class = "m2_string")
-      }
-
-    } else if (tokens[i] == "new") {
-# object creation: new TYPENAME from DATA
-
-      elem <- m2_parse_new(tokens, start = i)
-      ret <- elem$result
-      i <- elem$nIndex
-
-    } else if (substr(tokens[i], 1, 1) %in% m2_symbol_chars()) {
-# symbol, must be final case handled
-
-      elem <- m2_parse_symbol(tokens, start = i)
-      ret <- elem$result
-      i <- elem$nIndex
-
-    } else {
-# we can't handle this input
-
-      stop(paste("Parsing error: format not supported: ", tokens[i]))
-
-    }
-
-    if (i > length(tokens)) {
-      return(list(result = ret, nIndex = i))
-    }
-
-    if (tokens[i] == "=>") {
-# option: A => B
-
-      key <- ret
-
-      elem <- m2_parse_internal(tokens, start = i+1)
-      val <- elem$result
-      i <- elem$nIndex
-
-      ret <- list(key, val)
-      class(ret) <- c("m2_option","m2")
-
-    } else if (tokens[i] == "..") {
-# sequence: (a..c) = (a, b, c)
-
-      start <- ret
-
-      elem <- m2_parse_internal(tokens, start = i+1)
-      end <- elem$result
-      i <- elem$nIndex
-
-      if (all(c(start,end) %in% letters) && start <= end) {
-        ret <- as.list(start %:% end)
-        ret <- lapply(ret, `class<-`, c("m2_symbol","m2"))
-      } else if (all(c(start,end) %in% toupper(letters)) && start <= end) {
-        ret <- as.list(start %:% end)
-        ret <- lapply(ret, `class<-`, c("m2_symbol","m2"))
-      } else if (is.integer(start) && is.integer(end) && start <= end) {
-        ret <- as.list(start:end)
-      } else {
-        ret <- list()
-      }
-
-      class(ret) <- c("m2_sequence","m2")
-
-    } else if (tokens[i] == ":") {
-# sequence: (n:x) = (x,...,x)
-
-      num_copies <- ret
-
-      elem <- m2_parse_internal(tokens, start = i+1)
-      item <- elem$result
-      i <- elem$nIndex
-
-      ret <- replicate(num_copies, item, simplify = FALSE)
-      class(ret) <- c("m2_sequence","m2")
-
-    } else if (#class(ret)[1] %in% c("m2_ring","m2_symbol") &&
-      (tokens[i] %notin% c(m2_operators(),",") ||
-      tokens[i] %in% c("(","{","["))) {
-# function call
-
-      if (tokens[i] == "(") {
-        elem <- m2_parse_sequence(tokens, start = i, save_paren = TRUE)
-      } else {
-        elem <- m2_parse_internal(tokens, start = i)
-        elem$result <- list(elem$result)
-      }
-
-      params <- elem$result
-        i <- elem$nIndex
-
-        ret <- m2_parse_object_as_function(ret, params)
-
-    } else if (tokens[i] %in% c("+","-","*","^")) {
-# start of an expression, consume rest of expression
-
-      lhs <- ret
-      operand <- tokens[i]
-
-      elem <- m2_parse_internal(tokens, start = i + 1)
-      rhs <- elem$result
-      i <- elem$nIndex
-
-      if (is.m2_polynomialring(lhs)) {
-        ret <- list(lhs, rhs)
-        class(ret) <- c("m2_module","m2")
-      } else {
-        ret <- paste0(lhs, operand, rhs)
-
-        if ((is.integer(lhs) || class(lhs)[1] %in% c("m2_expression", "m2_symbol")) &&
-            (is.integer(rhs) || class(rhs)[1] %in% c("m2_expression", "m2_symbol"))) {
-          class(ret) <- c("m2_expression", "m2")
-        }
-      }
-
-    }
-
-    list(result = ret, nIndex = i)
-
+# if sequence has only one element
+  if (length(elem$result) == 1 && !save_paren) {
+    elem$result <- elem$result[[1]]
   }
+
+  elem
+
+}
+
+
+
 
 
 
@@ -556,70 +535,6 @@ m2_parse_class <- function(x) UseMethod("m2_parse_class")
 
 
 
-# {A1 => B1, A2 => B2, ...}
-    m2_parse_list <- function(tokens, start = 1, open_char = "{", close_char = "}", type_name = "list") {
-
-      ret <- list()
-      i <- start + 1
-
-      error_on_fail(tokens[i-1] == open_char, paste0("Parsing error: malformed ", type_name))
-
-      if (tokens[i] == close_char) {
-        i <- i + 1
-      } else {
-        repeat {
-
-          elem <- m2_parse_internal(tokens, start = i)
-          ret <- append(ret, list(elem$result))
-          i <- elem$nIndex + 1
-
-          if (tokens[i-1] == close_char) {
-            break()
-          }
-
-          error_on_fail(tokens[i-1] == ",", paste0("Parsing error: malformed ", type_name))
-            error_on_fail(i <= length(tokens), paste0("Parsing error: malformed ", type_name))
-
-        }
-      }
-
-      class(ret) <- c(paste0("m2_",type_name),"m2")
-
-        list(result = ret, nIndex = i)
-
-    }
-
-
-
-
-
-# [A, B, ...]
-    m2_parse_array <- function(tokens, start = 1) {
-
-      m2_parse_list(tokens, start = start, open_char = "[", close_char = "]", type_name = "array")
-
-    }
-
-
-
-
-
-
-# (A, B, ...) as classed list
-# (A1) as A1
-    m2_parse_sequence <- function(tokens, start = 1, save_paren = FALSE) {
-
-      elem <- m2_parse_list(tokens, start = start, open_char = "(", close_char = ")", type_name = "sequence")
-
-# if sequence has only one element
-      if (length(elem$result) == 1 && !save_paren) {
-        elem$result <- elem$result[[1]]
-      }
-
-      elem
-
-    }
-
 
 
 #' @rdname m2_parser
@@ -716,11 +631,6 @@ m2_parse_class <- function(x) UseMethod("m2_parse_class")
     }
 
 
-
-
-    error_on_fail <- function(t, e) {
-      if (!t) stop(e)
-    }
 
 
 

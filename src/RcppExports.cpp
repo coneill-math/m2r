@@ -5,26 +5,6 @@
 
 using namespace Rcpp;
 
-// m2_symbol_chars_cpp
-std::vector<std::string> m2_symbol_chars_cpp();
-RcppExport SEXP _m2r_m2_symbol_chars_cpp() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(m2_symbol_chars_cpp());
-    return rcpp_result_gen;
-END_RCPP
-}
-// m2_operators_cpp
-std::vector<std::string> m2_operators_cpp();
-RcppExport SEXP _m2r_m2_operators_cpp() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(m2_operators_cpp());
-    return rcpp_result_gen;
-END_RCPP
-}
 // m2_tokenize_cpp
 std::vector<std::string> m2_tokenize_cpp(std::string& s);
 RcppExport SEXP _m2r_m2_tokenize_cpp(SEXP sSEXP) {
@@ -38,8 +18,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_m2r_m2_symbol_chars_cpp", (DL_FUNC) &_m2r_m2_symbol_chars_cpp, 0},
-    {"_m2r_m2_operators_cpp", (DL_FUNC) &_m2r_m2_operators_cpp, 0},
     {"_m2r_m2_tokenize_cpp", (DL_FUNC) &_m2r_m2_tokenize_cpp, 1},
     {NULL, NULL, 0}
 };
