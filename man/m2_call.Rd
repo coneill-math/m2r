@@ -3,6 +3,7 @@
 \name{m2_call}
 \alias{m2_call}
 \alias{m2r_version_number}
+\alias{m2r_cloud_url}
 \alias{start_m2}
 \alias{stop_m2}
 \alias{reset_m2}
@@ -12,6 +13,8 @@
 \title{Call and reset a Macaulay2 process}
 \usage{
 m2r_version_number()
+
+m2r_cloud_url()
 
 start_m2(port = 27436L, timeout = 10, attempts = 10, cloud = FALSE,
   hostname = m2r_cloud_url())

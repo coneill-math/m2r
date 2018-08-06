@@ -52,11 +52,14 @@
 #'
 #' }
 
-
+#' @export
+#' @rdname m2_call
 m2r_version_number <- function() {
   "1.0.0"
 }
 
+#' @export
+#' @rdname m2_call
 m2r_cloud_url <- function() {
   "ec2-52-10-66-241.us-west-2.compute.amazonaws.com"
 }
