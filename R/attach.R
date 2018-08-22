@@ -68,7 +68,7 @@ startup_check_for_program <- function(){
 
   if(is.null(get_m2_path())){
     psms("  M2 not found; defaulting to cloud.")
-    psms("  Use set_m2r_path(\"/path/to/m2\") to run M2 locally.")
+    psms("  Use set_m2_path(\"/path/to/m2\") to run M2 locally.")
     return(invisible(FALSE))
 	}
 
