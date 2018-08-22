@@ -37,6 +37,7 @@
 #'
 enter_m2 <- function (port = 27436L, timeout = 10) {
   if(!interactive()) stop("enter_m2() is only available in interactive sessions.")
+  stop("enter_m2() is currently not working, check back soon!")
   suppressMessages( start_m2(port, timeout) )
   message("Entering M2 mode. Type 'exit' to go back into R.")
   repeat {
