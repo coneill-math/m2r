@@ -24,6 +24,9 @@ Suggests:
     knitr,
     rmarkdown,
     microbenchmark,
-    testthat
-RoxygenNote: 6.0.1
+    testthat,
+    R.rsp
+RoxygenNote: 6.1.0
 LinkingTo: Rcpp
+VignetteBuilder: R.rsp
+Encoding: UTF-8

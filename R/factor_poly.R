@@ -28,6 +28,7 @@
 #' ########################################
 #'
 #' # factor_poly accepts mpoly objects:
+#' # remember you must create the ring first!
 #' (p <- mp("x^4 - y^4"))
 #' factor_poly.(p)
 #' factor_poly(p)
