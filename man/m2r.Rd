@@ -7,6 +7,7 @@
 \alias{m2r-package}
 \title{Macaulay2 in R}
 \description{
-Back-end connections to Macaulay2
-(\url{http://www.math.uiuc.edu/Macaulay2/})
+m2r provides a persistent interface to Macaulay2
+(\url{http://www.math.uiuc.edu/Macaulay2/}) and front-end tools facilitating
+its use in the R ecosystem. For details, see vignette("m2r").
 }
