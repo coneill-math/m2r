@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 # __m2r__ – Macaulay2 in R
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/m2r)](https://cran.r-project.org/package=m2r)
+[![Travis build status](https://travis-ci.org/dkahle/m2r.svg?branch=master)](https://travis-ci.org/dkahle/m2r)
 
 
 
