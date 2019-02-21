@@ -4,6 +4,7 @@
 \alias{m2_path}
 \alias{set_m2_path}
 \alias{get_m2_path}
+\alias{get_m2_connection}
 \alias{get_m2_con}
 \alias{get_m2_procid}
 \alias{get_m2_port}
@@ -12,6 +13,8 @@
 set_m2_path(path = NULL)
 
 get_m2_path()
+
+get_m2_connection()
 
 get_m2_con()
 

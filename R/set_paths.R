@@ -104,7 +104,15 @@ get_m2_path <- function() getOption("m2r")$m2_path
 
 #' @rdname m2_path
 #' @export
-get_m2_con <- function() getOption("m2r")$m2_con
+get_m2_connection <- function() getOption("m2r")$m2_con
+
+
+#' @rdname m2_path
+#' @export
+get_m2_con <- function() {
+  .Deprecated("get_m2_connection")
+  getOption("m2r")$m2_con
+}
 
 
 

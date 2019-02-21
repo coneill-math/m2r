@@ -4,6 +4,7 @@
 \alias{m2_call}
 \alias{m2r_version_number}
 \alias{m2r_cloud_url}
+\alias{has_m2_connection}
 \alias{start_m2}
 \alias{stop_m2}
 \alias{reset_m2}
@@ -15,6 +16,8 @@
 m2r_version_number()
 
 m2r_cloud_url()
+
+has_m2_connection()
 
 start_m2(port = 27436L, timeout = 10, attempts = 10, cloud = FALSE,
   hostname = m2r_cloud_url())
@@ -39,8 +42,8 @@ m2.(code, timeout = -1)
 
 \item{cloud}{use a cloud?}
 
-\item{hostname}{the remote host to connect to; defaults to
-the Amazon EC2 instance}
+\item{hostname}{the remote host to connect to; defaults to the Amazon EC2
+instance}
 
 \item{code}{Macaulay2 code}
 
@@ -77,6 +80,13 @@ reset_m2()
 m2("a")
 
 
+# forcing a cloud start
+if(has_m2_connection()) stop_m2()
+start_m2(cloud = TRUE)
+m2("1 + 1")
+stop_m2()
+
+
 
 m2.("peek(QQ[x,y,z])")
 m2("peek(QQ[x,y,z])")
@@ -85,7 +95,7 @@ m2("peek(QQ[x,y,z])")
 # toExternalString on the return value of the chunk of code
 # you run. in principle, toExternalString provides the code
 # needed to recreate the m2 object of interest. however,
-# does not work for all objects represtable in the m2 language.
+# does not work for all objects representable in the m2 language.
 # in particular, mutable objects are not supported.
 # this is what happens when you look at those:
 m2.("new MutableList from {1,2,3}")
