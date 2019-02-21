@@ -6,8 +6,8 @@
 #' @param timeout number of seconds before aborting
 #' @param attempts numer of times to try to make connection
 #' @param cloud use a cloud?
-#' @param hostname the remote host to connect to; defaults to
-#'   the Amazon EC2 instance
+#' @param hostname the remote host to connect to; defaults to the Amazon EC2
+#'   instance
 #' @param code Macaulay2 code
 #' @param x formal argument for print method
 #' @param ... ...
@@ -36,6 +36,13 @@
 #' m2("a")
 #'
 #'
+#' # forcing a cloud start
+#' if(has_m2_connection()) stop_m2()
+#' start_m2(cloud = TRUE)
+#' m2("1 + 1")
+#' stop_m2()
+#'
+#'
 #'
 #' m2.("peek(QQ[x,y,z])")
 #' m2("peek(QQ[x,y,z])")
@@ -44,7 +51,7 @@
 #' # toExternalString on the return value of the chunk of code
 #' # you run. in principle, toExternalString provides the code
 #' # needed to recreate the m2 object of interest. however,
-#' # does not work for all objects represtable in the m2 language.
+#' # does not work for all objects representable in the m2 language.
 #' # in particular, mutable objects are not supported.
 #' # this is what happens when you look at those:
 #' m2.("new MutableList from {1,2,3}")
@@ -52,16 +59,32 @@
 #'
 #' }
 
+
 #' @export
 #' @rdname m2_call
 m2r_version_number <- function() {
   "1.0.0"
 }
 
+
+
 #' @export
 #' @rdname m2_call
 m2r_cloud_url <- function() {
   "ec2-52-10-66-241.us-west-2.compute.amazonaws.com"
+}
+
+
+#' @export
+#' @rdname m2_call
+has_m2_connection <- function() {
+
+  if (is.null(get_m2_connection())) {
+    FALSE
+  } else {
+    TRUE
+  }
+
 }
 
 
@@ -77,7 +100,7 @@ start_m2 <- function(
   if (!missing(port)) attempts <- 1
 
   # if already running M2, break
-  if (!is.null(get_m2_con())) return(invisible(0L))
+  if (has_m2_connection()) return(invisible(0L))
 
   if(!is.null(get_m2_path()) && !cloud && missing(hostname)) { # m2 found locally
 
@@ -98,7 +121,7 @@ start_m2 <- function(
 do_start_m2_cloud <- function(hostname = m2r_cloud_url()) {
 
   # if already running M2, break
-  if (!is.null(get_m2_con())) return(invisible(0L))
+  if (has_m2_connection()) return(invisible(0L))
 
   # launch M2 on cloud
   message("Connecting to M2 in the cloud... ", appendLF = FALSE)
@@ -119,7 +142,7 @@ do_start_m2_cloud <- function(hostname = m2r_cloud_url()) {
 do_start_m2_local <- function(port = 27436L, timeout = 10, attempts = 10) {
 
   # if already running M2, break
-  if (!is.null(get_m2_con())) return(invisible(0L))
+  if (has_m2_connection()) return(invisible(0L))
 
   # find the first open port
   openPortFound <- FALSE
@@ -299,11 +322,11 @@ connect_to_m2_server <- function(hostname = "localhost", port = 27436L, timeout 
 #' @rdname m2_call
 stop_m2 <- function() {
 
-  if (!is.null(get_m2_con())) { # for detaching when m2 never run
+  if (has_m2_connection()) { # for detaching when m2 never run
 
     # send kill code
-    writeLines("", get_m2_con())
-    close(get_m2_con())
+    writeLines("", get_m2_connection())
+    close(get_m2_connection())
 
     # not elegant, but a necessary safety measure
     Sys.sleep(0.01)
@@ -359,13 +382,13 @@ m2. <- function(code, timeout = -1) {
   if (code == "") return("")
 
   # write to connection
-  writeLines(code, get_m2_con())
+  writeLines(code, get_m2_connection())
 
   i <- 0
   outinfo <- NULL
   repeat {
     # read output info
-    outinfo <- readLines(get_m2_con(), 1)
+    outinfo <- readLines(get_m2_connection(), 1)
 
     if (length(outinfo) > 0) break
 
@@ -395,7 +418,7 @@ m2. <- function(code, timeout = -1) {
     numlines <- -1L
   }
 
-  output <- paste(readLines(get_m2_con(), numlines), collapse = "\n")
+  output <- paste(readLines(get_m2_connection(), numlines), collapse = "\n")
 
   if (retcode == -1L) {
     # timeout occurred, kill M2 instance and stop
