@@ -20,30 +20,26 @@ gb_.(x, control = list(), raw_chars = FALSE, code = FALSE, ...)
 
 \item{control}{a list of options, see examples}
 
-\item{raw_chars}{if \code{TRUE}, the character vector will not be
-parsed by \code{\link{mp}}, saving time (default:
-\code{FALSE}). the down-side is that the strings must be
-formated for M2 use directly, as opposed to for
-\code{\link{mp}}. (e.g. \code{"x*y+3"} instead of \code{"x y +
-3"})}
+\item{raw_chars}{if \code{TRUE}, the character vector will not be parsed by
+\code{\link[=mp]{mp()}}, saving time (default: \code{FALSE}). the down-side is that the
+strings must be formated for M2 use directly, as opposed to for \code{\link[=mp]{mp()}}.
+(e.g. \code{"x*y+3"} instead of \code{"x y + 3"})}
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 
-\item{x}{a character vector of polynomials to be parsed by
-\code{\link{mp}}, a \code{mpolyList} object, an
-\code{\link{ideal}} or pointer to an ideal}
+\item{x}{a character vector of polynomials to be parsed by \code{\link[=mp]{mp()}}, a
+\code{mpolyList} object, an \code{\link[=ideal]{ideal()}} or pointer to an ideal}
 }
 \value{
-an \code{\link{mpolyList}} object of class
-  \code{m2_grobner_basis} or a \code{m2_grobner_basis_pointer}
-  pointing to the same
+an \code{mpolyList} object of class \code{m2_grobner_basis} or a
+\code{m2_grobner_basis_pointer} pointing to the same. See \code{\link[=mpolyList]{mpolyList()}}.
 }
 \description{
 Compute a Grobner basis with Macaulay2
 }
 \details{
-\code{gb} uses nonstandard evaluation; \code{gb_} is the standard
-evaluation equivalent.
+\code{gb} uses nonstandard evaluation; \code{gb_} is the standard evaluation
+equivalent.
 }
 \examples{
 
@@ -136,5 +132,5 @@ gb("x*y", "x*z", "x", raw_chars = TRUE)
 }
 }
 \seealso{
-\code{\link{mp}}, \code{\link{use_ring}}
+\code{\link[=mp]{mp()}}, \code{\link[=use_ring]{use_ring()}}
 }

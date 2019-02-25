@@ -2,7 +2,7 @@
 #'
 #' This function sets the path to external programs either by (1)
 #' passing it a character string or (2) using
-#' \code{\link{file.choose}}.
+#' [file.choose()].
 #'
 #' When m2r is loaded it attempts to find M2.  How it looks depends
 #' on your operating system.
@@ -31,7 +31,7 @@
 #'   global m2r option "m2_path"
 #' @export
 #' @name m2_path
-#' @author David Kahle \email{david.kahle@@gmail.com}
+#' @author David Kahle \email{david@@kahle.com}
 #' @examples
 #'
 #' \dontrun{ requires Macaulay2

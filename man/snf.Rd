@@ -16,7 +16,7 @@ snf.(mat, code = FALSE)
 }
 \value{
 a list of \code{m2_matrix} objects with names \code{D}, \code{P}, and
-  \code{Q}
+\code{Q}
 }
 \description{
 For an integer matrix M, this computes the matrices D, P, and Q such that
@@ -105,5 +105,5 @@ snf(M, code = TRUE)
 
 }
 \seealso{
-\code{\link{m2_matrix}}
+\code{\link[=m2_matrix]{m2_matrix()}}
 }

@@ -6,7 +6,7 @@
 #' @param mat a matrix (integer entries)
 #' @param control additional arguments to pass to LLL; see examples
 #' @param code return only the M2 code? (default: \code{FALSE})
-#' @seealso \code{\link{m2_matrix}}
+#' @seealso [m2_matrix()]
 #' @name LLL
 #'
 #' @return an object of class \code{m2_matrix}

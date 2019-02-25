@@ -18,8 +18,8 @@ factor_n.(n, code = FALSE, ...)
 }
 \value{
 a data frame with integer columns \code{prime} and
-  \code{power} or \code{m2_pointer} referencing the factorization
-  in M2.
+\code{power} or \code{m2_pointer} referencing the factorization
+in M2.
 }
 \description{
 Factor an integer into primes

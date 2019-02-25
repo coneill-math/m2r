@@ -3,8 +3,8 @@
 #' \code{use_ring()} sets the default referent ring on the Macaulay2
 #' side using the \code{use} function.
 #'
-#' @param ring a \code{m2_ring} (\code{\link{ring}}),
-#'   \code{m2_ring_pointer} (\code{\link{ring.}}), or a character
+#' @param ring a \code{m2_ring} (see [ring()]),
+#'   \code{m2_ring_pointer} (see [ring.()]), or a character
 #'   string containing the name of a ring in Macaulay2
 #' @name use_ring
 #' @examples
