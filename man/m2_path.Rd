@@ -27,13 +27,13 @@ get_m2_port()
 }
 \value{
 An invisible character string, the path found.  More
-  importantly, the function has the side effect of setting the
-  global m2r option "m2_path"
+importantly, the function has the side effect of setting the
+global m2r option "m2_path"
 }
 \description{
 This function sets the path to external programs either by (1)
 passing it a character string or (2) using
-\code{\link{file.choose}}.
+\code{\link[=file.choose]{file.choose()}}.
 }
 \details{
 When m2r is loaded it attempts to find M2.  How it looks depends
@@ -87,5 +87,5 @@ m2("1+1")
 }
 }
 \author{
-David Kahle \email{david.kahle@gmail.com}
+David Kahle \email{david@kahle.com}
 }

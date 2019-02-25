@@ -8,7 +8,7 @@
 #' @param mat a matrix (integer entries)
 #' @param code return only the M2 code? (default: \code{FALSE})
 #' @name snf
-#' @seealso \code{\link{m2_matrix}}
+#' @seealso [m2_matrix()]
 #' @return a list of \code{m2_matrix} objects with names \code{D}, \code{P}, and
 #'   \code{Q}
 #' @examples

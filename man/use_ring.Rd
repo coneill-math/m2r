@@ -7,8 +7,8 @@
 use_ring(ring)
 }
 \arguments{
-\item{ring}{a \code{m2_ring} (\code{\link{ring}}),
-\code{m2_ring_pointer} (\code{\link{ring.}}), or a character
+\item{ring}{a \code{m2_ring} (see \code{\link[=ring]{ring()}}),
+\code{m2_ring_pointer} (see \code{\link[=ring.]{ring.()}}), or a character
 string containing the name of a ring in Macaulay2}
 }
 \description{

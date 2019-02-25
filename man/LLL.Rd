@@ -101,5 +101,5 @@ LLL(M, code = TRUE)
 
 }
 \seealso{
-\code{\link{m2_matrix}}
+\code{\link[=m2_matrix]{m2_matrix()}}
 }
