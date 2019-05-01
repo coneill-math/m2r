@@ -69,7 +69,7 @@ m2(sprintf("class(\%s)", m2_name(mat)))
 ########################################
 
 ring("x", "y", "z", coefring = "QQ")
-mat <- matrix(mp(c("x","y","x+y","y-2","x-3","y-z")), nrow = 2, ncol = 3)
+(mat <- matrix(mp(c("x","y","x+y","y-2","x-3","y-z")), nrow = 2, ncol = 3))
 m2_matrix(mat, code = TRUE)
 m2_matrix(mat)
 # the above is an mpoly problem, not a m2r problem
