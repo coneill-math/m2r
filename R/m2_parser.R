@@ -230,6 +230,14 @@ m2_parse_internal <- function(tokens, start = 1) {
         i <- i + 3
       }
 
+    } else if (length(tokens) > i && tokens[i+1] == ".") { # is an unusual float
+
+      ret <- m2_structure(
+        as.double(paste0(tokens[i], ".", str_replace(tokens[i+2], "p[0-9]+", ""))),
+        m2_class = "m2_float"
+      )
+      i <- i + 3
+
     } else { # positive integer
 
       if (get_m2_gmp()) {
