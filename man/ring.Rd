@@ -10,17 +10,25 @@
 \alias{print.m2_polynomialring}
 \title{Create a new ring in Macaulay2}
 \usage{
-ring(..., coefring = m2_coefrings(), order = m2_termorders(),
-  code = FALSE)
+ring(..., coefring = m2_coefrings(), order = m2_termorders(), code = FALSE)
 
-ring.(..., coefring = m2_coefrings(), order = m2_termorders(),
-  code = FALSE)
+ring.(..., coefring = m2_coefrings(), order = m2_termorders(), code = FALSE)
 
-ring_(vars, coefring = m2_coefrings(), order = m2_termorders(),
-  code = FALSE, ...)
+ring_(
+  vars,
+  coefring = m2_coefrings(),
+  order = m2_termorders(),
+  code = FALSE,
+  ...
+)
 
-ring_.(vars, coefring = m2_coefrings(), order = m2_termorders(),
-  code = FALSE, ...)
+ring_.(
+  vars,
+  coefring = m2_coefrings(),
+  order = m2_termorders(),
+  code = FALSE,
+  ...
+)
 
 m2_coefrings()
 
