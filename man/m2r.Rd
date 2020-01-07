@@ -4,7 +4,6 @@
 \name{m2r}
 \alias{m2r}
 \alias{package-m2r}
-\alias{m2r-package}
 \title{Macaulay2 in R}
 \description{
 m2r provides a persistent interface to Macaulay2

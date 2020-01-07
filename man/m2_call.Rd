@@ -19,13 +19,22 @@ m2r_cloud_url()
 
 has_m2_connection()
 
-start_m2(port = 27436L, timeout = 10, attempts = 10, cloud = FALSE,
-  hostname = m2r_cloud_url())
+start_m2(
+  port = 27436L,
+  timeout = 10,
+  attempts = 10,
+  cloud = FALSE,
+  hostname = m2r_cloud_url()
+)
 
 stop_m2()
 
-reset_m2(port = 27436L, timeout = 10, attempts = 10,
-  hostname = "ec2-52-10-66-241.us-west-2.compute.amazonaws.com")
+reset_m2(
+  port = 27436L,
+  timeout = 10,
+  attempts = 10,
+  hostname = "ec2-52-10-66-241.us-west-2.compute.amazonaws.com"
+)
 
 m2(code, timeout = -1)
 
