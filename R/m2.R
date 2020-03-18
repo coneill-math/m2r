@@ -465,6 +465,7 @@ print.m2_pointer <- function (x, ...) {
   # cat(sprintf("          R Name : %s\n", deparse(substitute(x))))
   cat(sprintf("         M2 Name : %s\n", m2_name(x)))
   cat(sprintf("        M2 Class : %s (%s)\n", m2_meta(x, "m2_class"), m2_meta(x, "m2_class_class")))
+  invisible(x)
 }
 
 

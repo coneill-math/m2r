@@ -352,7 +352,7 @@ print.m2_ideal <- function(x, ...) {
   }
   cat("M2 Ideal of", s, with_gen, "\n")
   gens_strings <- print(m2_meta(x, "gens"), silent = TRUE)
-  cat(paste("<", paste(gens_strings, collapse = ",  "), ">"))
+  cat(paste("<", paste(gens_strings, collapse = ",  "), ">\n"))
   # cat(str_pad(gens_strings, nchar(gens_strings)+2, side = "left"), sep = "\n")
   invisible(x)
 

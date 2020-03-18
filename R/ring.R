@@ -282,7 +282,7 @@ print.m2_polynomialring <- function(x, ...){
     paste(m2_meta(x, "vars"), collapse = ","),
     m2_meta(x, "order")
   )
-  cat(s)
+  cat(s, "\n", sep = "")
 
-  invisible(s)
+  invisible(x)
 }
