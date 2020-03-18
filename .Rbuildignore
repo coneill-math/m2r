@@ -10,3 +10,6 @@ figures/
 .Rproj.user
 .git
 old/
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
