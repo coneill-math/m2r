@@ -278,7 +278,7 @@ print.m2_matrix <- function(x, ...){
     paste(m2_meta(r, "vars"), collapse = ","),
     m2_meta(r, "order")
   )
-  cat(s)
+  cat(s, "\n")
 
   invisible(x)
 }
