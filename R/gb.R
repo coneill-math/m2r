@@ -116,7 +116,7 @@
 gb <- function(..., control = list(), raw_chars = FALSE, code = FALSE) {
 
   # grab args
-  x <- list(x = lapply(pryr::dots(...), eval, envir = parent.frame()))
+  x <- list(x = lapply(dots(...), eval, envir = parent.frame()))
   if(is.list(x) && (length(x) == 1) && is.m2_ideal(x[[c(1,1)]])) x <- x[[1]]
   if(is.list(x) && (length(x) == 1) && is.m2_ideal_pointer(x[[c(1,1)]])) x <- x[[1]]
   otherArgs <- as.list(match.call(expand.dots = FALSE))[-c(1:2)]
@@ -139,7 +139,7 @@ gb <- function(..., control = list(), raw_chars = FALSE, code = FALSE) {
 gb. <- function(..., control = list(), raw_chars = FALSE, code = FALSE) {
 
   # grab args
-  x <- list(x = lapply(pryr::dots(...), eval, envir = parent.frame()))
+  x <- list(x = lapply(dots(...), eval, envir = parent.frame()))
   if(is.list(x) && (length(x) == 1) && is.m2_ideal(x[[c(1,1)]])) x <- x[[1]]
   if(is.list(x) && (length(x) == 1) && is.m2_ideal_pointer(x[[c(1,1)]])) x <- x[[1]]
   otherArgs <- as.list(match.call(expand.dots = FALSE))[-c(1:2)]

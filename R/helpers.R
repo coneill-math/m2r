@@ -129,5 +129,10 @@ mpolyList_to_m2_str <- function(mpolyList) {
 }
 
 
+# copy pryr::dots so that we don't have to import pryr
+dots <- function(...) {
+  eval(substitute(alist(...)))
+}
+
 
 

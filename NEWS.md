@@ -13,3 +13,5 @@
 * The package now suggests microbenchmark.
 
 * Added a `NEWS.md` file to track changes to the package.
+
+* Pathing is now governed by environmental variables instead of path searching.
