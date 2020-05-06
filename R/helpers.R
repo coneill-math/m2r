@@ -74,7 +74,7 @@ delistify <- function (string, f, collapse, ...) {
 mpolyList_to_m2_str <- function(mpolyList) {
 
   # allow for character vectors
-  if (class(mpolyList) == "mpoly") mpolyList <- mpolyList(mpolyList)
+  if (inherits(mpolyList, "mpoly")) mpolyList <- mpolyList(mpolyList)
 
   # parse it if it's a numeric or character string
   if(is.numeric(mpolyList)) mpolyList <- as.character(mpolyList)
