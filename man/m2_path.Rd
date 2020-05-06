@@ -26,36 +26,30 @@ get_m2_port()
 \item{path}{A character string, the path to M2}
 }
 \value{
-An invisible character string, the path found.  More
-importantly, the function has the side effect of setting the
-global m2r option "m2_path"
+An invisible character string, the path found.  More importantly, the
+function has the side effect of setting the global m2r option "m2_path"
 }
 \description{
-This function sets the path to external programs either by (1)
-passing it a character string or (2) using
-\code{\link[=file.choose]{file.choose()}}.
+These are helper functions that deal with pathing to Macaulay2 and asking if it
+is present. When the Macaulay2 package is loaded it attempts to find the
+Macaulay2 executable by looking for an environment variable indicating where it
+is, i.e. its path as specified in your .Renviron file.
 }
 \details{
-When m2r is loaded it attempts to find M2.  How it looks depends
-on your operating system.
+For easiest use, you'll want to specify the path the Macaulay2 executable in
+your ~/.Renviron file. It should look something like
 
-If you're using a Mac or Linux machine, it looks based on your
-system's path.  Unfortunately, R changes the system path in such
-a way that the path that R sees is not the same as the path that
-you'd see if you were working in the terminal. (You can open the
-Terminal app on a Mac by going to
-/Applications/Utilities/Terminal.)  Consequently, m2r tries to
-guess the file in which your path is set.  To do so, it first
-checks if your home directory (type echo ~/ in the terminal to
-figure out which directory this is if you don't know) for the
-file named .bash_profile.  If this file is present, it runs it
-and then checks your system's path variable (echo $PATH).  If
-it's not present, it does the same for .bashrc and then .profile.
-In any case, once it has its best guess at your path, it looks
-for "M2".
+\code{M2=/Applications/Macaulay2-1.10/bin}
 
-On Windows, m2r just defaults to the cloud implementation. Local
-M2 instances are not currently supported on Windows.
+You can set this permanently with \code{\link[=edit_r_environ]{edit_r_environ()}}. Note that absolute
+paths should be specified, not relative paths, e.g. don't use ~/path/to/exe.
+
+You can change this for the current session using \code{\link[=set_m2_path]{set_m2_path()}}, which
+accepts a character string or, if missing, uses \code{\link[=file.choose]{file.choose()}} to let you
+interactively; you just select an arbitrary executable.
+
+On Windows, m2r just defaults to the cloud implementation. Local M2 instances
+are not currently supported on Windows.
 }
 \examples{
 

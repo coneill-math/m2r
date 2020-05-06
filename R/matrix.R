@@ -108,7 +108,10 @@ m2_matrix. <- function(mat, ring, name, code = FALSE) {
 
   # prepare matrix string
   mat2 <- matrix(
-    vapply(mpolyList_to_m2_str(mat), function(.) sprintf("(%s)%s", ., ring_str), character(1)),
+    vapply(
+      mpolyList_to_m2_str(mat),
+      function(.) sprintf("(%s)%s", ., ring_str), character(1)
+    ),
     nrow(mat), ncol(mat)
   )
   matrix_str <- listify_mat(mat2)

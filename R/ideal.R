@@ -182,7 +182,7 @@
 ideal <- function(..., raw_chars = FALSE, code = FALSE) {
 
   # grab args
-  x <- list(x = lapply(pryr::dots(...), eval, envir = parent.frame()))
+  x <- list(x = lapply(dots(...), eval, envir = parent.frame()))
   otherArgs <- as.list(match.call(expand.dots = FALSE))[-c(1:2)]
 
   # eval
@@ -203,7 +203,7 @@ ideal <- function(..., raw_chars = FALSE, code = FALSE) {
 ideal. <- function(..., raw_chars = FALSE, code = FALSE) {
 
   # grab args
-  x <- list(x = lapply(pryr::dots(...), eval, envir = parent.frame()))
+  x <- list(x = lapply(dots(...), eval, envir = parent.frame()))
   otherArgs <- as.list(match.call(expand.dots = FALSE))[-c(1:2)]
 
   # eval
