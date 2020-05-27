@@ -13,4 +13,7 @@
 #' @importFrom Rcpp sourceCpp
 #' @name m2r
 #' @aliases m2r package-m2r
+#' @references D. Kahle, C. O'Neill, and J. Sommars (2020). "A Computer Algebra
+#' System for R: Macaulay2 and the m2r Package." Journal of Statistical
+#' Software, 93(9):1-31.
 NULL
