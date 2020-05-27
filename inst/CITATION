@@ -1,12 +1,21 @@
-citHeader("To cite m2r in publications, please use:")
+bibentry(bibtype = "Article",
+  title        = "A Computer Algebra System for {R}: {Macaulay2} and the {m2r} Package",
+  author       = c(person(given = "David",
+                          family = "Kahle",
+                          email = "david.kahle@gmail.com"),
+                   person(given = "Christopher",
+                          family = "O'Neill",
+                          email = "cdoneill@sdsu.edu"),
+                   person(given = "Jeff",
+                          family = "Sommars",
+                          email = "jeff.sommars@gmail.com")),
+  journal      = "Journal of Statistical Software",
+  year         = "2020",
+  volume       = "93",
+  number       = "9",
+  pages        = "1--31",
+  doi          = "10.18637/jss.v093.i09",
 
-citEntry(entry = "article",
-  author = "David Kahle and Christopher O'Neill and Jeff Sommars",
-  title = "A Computer Algebra System for {R}: {Macaulay2} and the m2r Package",
-  journal = "Journal of Statistical Software",
-  year = "2019",
-  keywords = "Statistics - Computation, Mathematics - Algebraic Geometry",
-  url = "https://arxiv.org/abs/1706.07797",
-  adsnote = "Provided by the SAO/NASA Astrophysics Data System",
-  textVersion = "Kahle, D., C. O'Neill, and J. Sommars (2019). A Computer Algebra System for R: Macaulay2 and the m2r Package. Journal of Statistical Software. To appear. URL https://arxiv.org/abs/1706.07797"
+  header       = "To cite m2r in publications use:"
 )
+
