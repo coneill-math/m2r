@@ -2,12 +2,15 @@
 #'
 #' Convert a M2 object into an R object
 #'
-#' @param s a character(1), typically the result of running
-#'   toExternalString on an M2 object
+#' @param s a character(1), typically the result of running toExternalString on
+#'   an M2 object
 #' @param x an object to be printed
 #' @param ... ...
 #' @return an R object
 #' @name m2_parser
+#' @references D. Kahle, C. O'Neill, and J. Sommars (2020). "A Computer Algebra
+#' System for R: Macaulay2 and the m2r Package." Journal of Statistical
+#' Software, 93(9):1-31.
 #' @examples
 #'
 #' \dontrun{ requires Macaulay2

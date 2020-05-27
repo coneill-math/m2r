@@ -50,8 +50,8 @@ m2_toggle_gmp()
 get_m2_gmp()
 }
 \arguments{
-\item{s}{a character(1), typically the result of running
-toExternalString on an M2 object}
+\item{s}{a character(1), typically the result of running toExternalString on
+an M2 object}
 
 \item{x}{an object to be printed}
 
@@ -91,4 +91,9 @@ m2("50!") \%>\% m2_parse()
 m2_toggle_gmp() # gmp off
 
 }
+}
+\references{
+D. Kahle, C. O'Neill, and J. Sommars (2020). "A Computer Algebra
+System for R: Macaulay2 and the m2r Package." Journal of Statistical
+Software, 93(9):1-31.
 }
