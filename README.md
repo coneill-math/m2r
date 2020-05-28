@@ -2,10 +2,8 @@
 ========================
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/m2r)](https://cran.r-project.org/package=m2r)
-[![Travis build
-status](https://travis-ci.org/dkahle/m2r.svg?branch=master)](https://travis-ci.org/dkahle/m2r)
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/dkahle/m2r?branch=master&svg=true)](https://ci.appveyor.com/project/dkahle/m2r)
+<!-- [![Travis build status](https://travis-ci.org/dkahle/m2r.svg?branch=master)](https://travis-ci.org/dkahle/m2r) -->
+<!-- [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dkahle/m2r?branch=master&svg=true)](https://ci.appveyor.com/project/dkahle/m2r) -->
 
 Overview
 --------
@@ -274,13 +272,15 @@ M <- matrix(c(
 # [1,]   12    0    0
 # [2,]    0    6    0
 # [3,]    0    0    2
-# M2 Matrix over ZZ[]
+# M2 Matrix over ZZ[] 
+# 
 # $P
 #      [,1] [,2] [,3]
 # [1,]    1    0    1
 # [2,]    0    1    0
 # [3,]    0    0    1
-# M2 Matrix over ZZ[]
+# M2 Matrix over ZZ[] 
+# 
 # $Q
 #      [,1] [,2] [,3]
 # [1,]    4   -2   -1
@@ -339,7 +339,7 @@ decomposition of a number. The corresponding reference function is
 # [1] 174636000
 factor_n.(x)
 # M2 Pointer Object
-#   ExternalString : new Product from {new Power from {2,5},new Power fro...
+#   ExternalString : new Product from {new Power from {2,5},new Power from {3,...
 #          M2 Name : m2o460
 #         M2 Class : Product (WrapperType)
 ```
@@ -573,13 +573,20 @@ Installation
 ------------
 
 Here’s how you can install the current *developmental* version of
-**m2r**. Remember you need to have
-[Macaulay2](http://www.math.uiuc.edu/Macaulay2/) downloaded; **m2r**
-will look for it in your path variable (in the terminal, `echo $PATH`)
-as set by `~/.bash_profile` or, if nonexistent, then `~/.bashrc`, then
-`~/.profile`.
+**m2r**.
 
 ``` r
-# install.packages("devtools")
+if (!requireNamespace("devtools")) install.packages("devtools")
 devtools::install_github("coneill-math/m2r")
 ```
+
+For **m2r** to find Macaulay2, you’ll need to set an environmental
+variable in your `~/.Renviron` file. To do that, run this:
+
+``` r
+if (!requireNamespace("usethis")) install.packages("usethis")
+usethis::edit_r_environ()
+```
+
+And, in the text file that opens, add a line such as
+`M2=/Applications/Macaulay2-1.10/bin`.

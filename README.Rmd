@@ -18,8 +18,8 @@ knitr::opts_chunk$set(
 # __m2r__ – Macaulay2 in R
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/m2r)](https://cran.r-project.org/package=m2r)
-[![Travis build status](https://travis-ci.org/dkahle/m2r.svg?branch=master)](https://travis-ci.org/dkahle/m2r)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dkahle/m2r?branch=master&svg=true)](https://ci.appveyor.com/project/dkahle/m2r)
+<!-- [![Travis build status](https://travis-ci.org/dkahle/m2r.svg?branch=master)](https://travis-ci.org/dkahle/m2r) -->
+<!-- [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dkahle/m2r?branch=master&svg=true)](https://ci.appveyor.com/project/dkahle/m2r) -->
 
 
 
@@ -337,11 +337,25 @@ f. <- function(esntl_parm_1, esntl_parm_2, code = FALSE, ...) {
 
 This material is based upon work supported by the National Science Foundation under Grant Nos. [1321794](https://nsf.gov/awardsearch/showAward?AWD_ID=1321794) and [1622449](https://nsf.gov/awardsearch/showAward?AWD_ID=1622449).
 
+
+
+
+
 ## Installation
 
-Here's how you can install the current _developmental_ version of __m2r__.  Remember you need to have [Macaulay2](http://www.math.uiuc.edu/Macaulay2/) downloaded; __m2r__ will look for it in your path variable (in the terminal, `echo $PATH`) as set by `~/.bash_profile` or, if nonexistent, then `~/.bashrc`, then `~/.profile`.
+Here's how you can install the current _developmental_ version of __m2r__.
 
-```R
-# install.packages("devtools")
+```{r setup-1, eval=FALSE}
+if (!requireNamespace("devtools")) install.packages("devtools")
 devtools::install_github("coneill-math/m2r")
 ```
+
+For __m2r__ to find Macaulay2, you'll need to set an environmental variable in your `~/.Renviron` file. To do that, run this:
+
+```{r setup-2, eval=FALSE}
+if (!requireNamespace("usethis")) install.packages("usethis")
+usethis::edit_r_environ()
+```
+
+And, in the text file that opens, add a line such as `M2=/Applications/Macaulay2-1.10/bin`.
+
