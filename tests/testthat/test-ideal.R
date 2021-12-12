@@ -176,7 +176,7 @@ test_that("ideal_.(poly_chars)",{
     m2_name = m2_name(actual),
     m2_class = "m2_pointer",
     m2_meta = list(
-      ext_str = sprintf("ideal map((%1$s)^1,(%1$s)^{{-1},{-2}},{{x+y, x^2+y^2}})", m2_name(R)),
+      ext_str = sprintf("ideal map(%1$s^1,%1$s^{{-1}, {-2}},{{x+y, x^2+y^2}})", m2_name(R)),
       m2_class = "Ideal",
       m2_class_class = "Type"
     )
@@ -198,7 +198,7 @@ test_that("ideal_.(mpolyList)",{
     m2_name = m2_name(actual),
     m2_class = "m2_pointer",
     m2_meta = list(
-      ext_str = sprintf("ideal map((%1$s)^1,(%1$s)^{{-1},{-2}},{{x+y, x^2+y^2}})", m2_name(R)),
+      ext_str = sprintf("ideal map(%1$s^1,%1$s^{{-1}, {-2}},{{x+y, x^2+y^2}})", m2_name(R)),
       m2_class = "Ideal",
       m2_class_class = "Type"
     )
@@ -220,7 +220,7 @@ test_that("ideal_.(list o chars)",{
     m2_name = m2_name(actual),
     m2_class = "m2_pointer",
     m2_meta = list(
-      ext_str = sprintf("ideal map((%1$s)^1,(%1$s)^{{-1},{-2}},{{x+y, x^2+y^2}})", m2_name(R)),
+      ext_str = sprintf("ideal map(%1$s^1,%1$s^{{-1}, {-2}},{{x+y, x^2+y^2}})", m2_name(R)),
       m2_class = "Ideal",
       m2_class_class = "Type"
     )
@@ -242,7 +242,7 @@ test_that("ideal_.(list o mps)",{
     m2_name = m2_name(actual),
     m2_class = "m2_pointer",
     m2_meta = list(
-      ext_str = sprintf("ideal map((%1$s)^1,(%1$s)^{{-1},{-2}},{{x+y, x^2+y^2}})", m2_name(R)),
+      ext_str = sprintf("ideal map(%1$s^1,%1$s^{{-1}, {-2}},{{x+y, x^2+y^2}})", m2_name(R)),
       m2_class = "Ideal",
       m2_class_class = "Type"
     )
@@ -264,7 +264,7 @@ test_that("ideal_.(list o chars, raw_chars = TRUE)",{
     m2_name = m2_name(actual),
     m2_class = "m2_pointer",
     m2_meta = list(
-      ext_str = sprintf("ideal map((%1$s)^1,(%1$s)^{{-1},{-2}},{{x+y, x^2+y^2}})", m2_name(R)),
+      ext_str = sprintf("ideal map(%1$s^1,%1$s^{{-1}, {-2}},{{x+y, x^2+y^2}})", m2_name(R)),
       m2_class = "Ideal",
       m2_class_class = "Type"
     )
@@ -286,7 +286,7 @@ test_that("ideal_.(poly_chars, raw_chars = TRUE)",{
     m2_name = m2_name(actual),
     m2_class = "m2_pointer",
     m2_meta = list(
-      ext_str = sprintf("ideal map((%1$s)^1,(%1$s)^{{-1},{-2}},{{x+y, x^2+y^2}})", m2_name(R)),
+      ext_str = sprintf("ideal map(%1$s^1,%1$s^{{-1}, {-2}},{{x+y, x^2+y^2}})", m2_name(R)),
       m2_class = "Ideal",
       m2_class_class = "Type"
     )

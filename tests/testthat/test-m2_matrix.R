@@ -57,7 +57,7 @@ test_that("m2_matrix.(mat)", {
     class = c("m2_pointer", "m2"),
     m2_name = m2_name(actual),
     m2_meta = list(
-      ext_str = "map((ZZ)^4,(ZZ)^3,{{1, 2, 3}, {1, 34, 45}, {2213, 1123, 6543}, {0, 0, 0}})",
+      ext_str = "map(ZZ^4,ZZ^3,{{1, 2, 3}, {1, 34, 45}, {2213, 1123, 6543}, {0, 0, 0}})",
       m2_class = "Matrix",
       m2_class_class = "Type"
     )
