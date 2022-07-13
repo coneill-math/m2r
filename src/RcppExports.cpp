@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // m2_tokenize_cpp
 std::vector<std::string> m2_tokenize_cpp(std::string& s);
 RcppExport SEXP _m2r_m2_tokenize_cpp(SEXP sSEXP) {
