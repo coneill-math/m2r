@@ -4,7 +4,6 @@
 #' (\url{http://www.math.uiuc.edu/Macaulay2/}) and front-end tools facilitating
 #' its use in the R ecosystem. For details, see vignette("m2r").
 #'
-#' @docType package
 #' @import mpoly gmp
 #' @importFrom memoise memoise forget
 #' @importFrom stringr str_replace_all str_sub str_split fixed str_sub

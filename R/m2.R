@@ -178,7 +178,8 @@ do_start_m2_local <- function(port = 27436L, timeout = 10, attempts = 10) {
   message("Starting M2... ", appendLF = FALSE)
   if(is.mac() || is.unix()) {
     system2(
-      file.path2(get_m2_path(), "M2"), args = c("--script", system.file("server", "m2rserverscript.m2", package = "m2r"), toString(port)),
+      file.path2(get_m2_path(), "M2"),
+      args = c("--script", system.file("server", "m2rserverscript.m2", package = "m2r"), toString(port)),
       stdout = NULL, stderr = NULL, stdin = "",
       wait = FALSE
     )

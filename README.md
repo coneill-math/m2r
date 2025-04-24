@@ -1,14 +1,12 @@
-**m2r** – Macaulay2 in R
-========================
+# **m2r** – Macaulay2 in R
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/m2r)](https://cran.r-project.org/package=m2r)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/m2r)](https://cran.r-project.org/package=m2r)
 <!-- [![Travis build status](https://travis-ci.org/dkahle/m2r.svg?branch=master)](https://travis-ci.org/dkahle/m2r) -->
 <!-- [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/dkahle/m2r?branch=master&svg=true)](https://ci.appveyor.com/project/dkahle/m2r) -->
 
-Overview
---------
+## Overview
 
-**m2r** is a new R package that provides a persistent connection between
+**m2r** is an R package that provides a persistent connection between
 [R](https://www.r-project.org) and [Macaulay2
 (M2)](http://www.math.uiuc.edu/Macaulay2/).
 
@@ -21,8 +19,7 @@ Society](http://www.ams.org/home/page).
 
 If you have a feature request, please file an issue!
 
-Getting started
----------------
+## Getting started
 
 **m2r** is loaded like any other R package:
 
@@ -30,7 +27,7 @@ Getting started
 library(m2r)
 # Loading required package: mpoly
 #   Please cite m2r! See citation("m2r") for details.
-#   M2 found in /Applications/Macaulay2-1.10/bin
+#   M2 found in /opt/homebrew/bin
 ```
 
 When loaded, **m2r** initializes a persistent connection to a back-end
@@ -74,8 +71,7 @@ Apart from the basic connection to M2, **m2r** has basic data structures
 and methods to reference and manipulate the M2 objects within R. For
 more on this, see the **m2r** internals section below.
 
-Rings, ideals, and Grobner bases
---------------------------------
+## Rings, ideals, and Grobner bases
 
 **m2r** currently has basic support for
 [rings](https://en.wikipedia.org/wiki/Ring_(mathematics)) (think:
@@ -204,7 +200,7 @@ I <- ideal("x z", "y z")
 primary_decomposition(I)
 # M2 List of ideals of QQ[x,y,z] (grevlex) : 
 # < z >
-# < x,  y >
+# < y,  x >
 ```
 
 Dimension:
@@ -217,8 +213,7 @@ dimension(I)
 # [1] 1
 ```
 
-Factoring integers and polynomials
-----------------------------------
+## Factoring integers and polynomials
 
 You can compute [prime
 decompositions](https://en.wikipedia.org/wiki/Integer_factorization) of
@@ -250,8 +245,7 @@ factor_poly("x^4 - y^4")
 # [1] 1 1 1
 ```
 
-Smith normal form of a matrix
------------------------------
+## Smith normal form of a matrix
 
 The Smith normal form of a matrix *M* here refers to the decomposition
 of an integer matrix *D = PMQ*, where *D*, *P*, and *Q* are integer
@@ -306,8 +300,7 @@ det(Q)
 # [1] -1
 ```
 
-**m2r** internals: pointers, reference and value functions, and `m2` objects
-----------------------------------------------------------------------------
+## **m2r** internals: pointers, reference and value functions, and `m2` objects
 
 At a basic level, **m2r** works by passing strings between R and M2.
 Originating at the R side, these strings are properly formated M2 code
@@ -340,7 +333,7 @@ decomposition of a number. The corresponding reference function is
 factor_n.(x)
 # M2 Pointer Object
 #   ExternalString : new Product from {new Power from {2,5},new Power from {3,...
-#          M2 Name : m2o460
+#          M2 Name : m2o264
 #         M2 Class : Product (WrapperType)
 ```
 
@@ -375,7 +368,7 @@ library(magrittr)
 mat <- matrix(c(1,2,3,4,5,6), nrow = 3, ncol = 2)
 mat %>% m2_matrix.   # = m2_matrix.(mat)
 # M2 Pointer Object
-#   ExternalString : map((ZZ)^3,(ZZ)^2,{{1, 4}, {2, 5}, {3, 6}})
+#   ExternalString : map(ZZ^3,ZZ^2,{{1, 4}, {2, 5}, {3, 6}})
 #          M2 Name : m2rintmatrix00000001
 #         M2 Class : Matrix (Type)
 mat %>% m2_matrix. %>% m2_parse
@@ -468,8 +461,7 @@ matrix; it is. On the other hand, since a ring is not, it’s an `NA`.
 When dealing with M2, object like rings, that is to say objects without
 R analogues, are more common than those like integer matrices.
 
-Creating your own **m2r** wrapper
----------------------------------
+## Creating your own **m2r** wrapper
 
 We’ve already wrapped a number of Macaulay2 functions; for a list of
 functions in **m2r**, check out `ls("package:m2r")`. But the list is
@@ -561,16 +553,14 @@ f. <- function(esntl_parm_1, esntl_parm_2, code = FALSE, ...) {
 }
 ```
 
-Acknowledgements
-----------------
+## Acknowledgements
 
 This material is based upon work supported by the National Science
 Foundation under Grant Nos.
 [1321794](https://nsf.gov/awardsearch/showAward?AWD_ID=1321794) and
 [1622449](https://nsf.gov/awardsearch/showAward?AWD_ID=1622449).
 
-Installation
-------------
+## Installation
 
 Here’s how you can install the current *developmental* version of
 **m2r**.
@@ -589,4 +579,4 @@ usethis::edit_r_environ()
 ```
 
 And, in the text file that opens, add a line such as
-`M2=/Applications/Macaulay2-1.10/bin`.
+`M2=/opt/homebrew/bin`.
