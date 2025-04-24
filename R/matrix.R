@@ -278,8 +278,8 @@ print.m2_matrix <- function(x, ...){
   s <- sprintf(
     "M2 Matrix over %s[%s]",
     m2_meta(r, "coefring"),
-    paste(m2_meta(r, "vars"), collapse = ","),
-    m2_meta(r, "order")
+    paste(m2_meta(r, "vars"), collapse = ",")#,
+    # m2_meta(r, "order")
   )
   cat(s, "\n")
 
