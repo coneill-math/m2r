@@ -99,8 +99,7 @@ factor_n <- function (n, code = FALSE, ...) {
   parsed_out <- m2_parse(pointer)
 
   # reformat and return
-
-  if (class(parsed_out)[1] == "m2_minus") {
+  if (inherits(parsed_out, "m2_minus")) {
     list(
       prime = c(-1L, vapply(parsed_out[[1]], `[[`, integer(1), 1)),
       power = c(1L, vapply(parsed_out[[1]], `[[`, integer(1), 2))
