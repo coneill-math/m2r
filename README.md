@@ -266,8 +266,6 @@ M <- matrix(c(
 # [1,]   12    0    0
 # [2,]    0    6    0
 # [3,]    0    0    2
-# Warning in sprintf("M2 Matrix over %s[%s]", m2_meta(r, "coefring"),
-# paste(m2_meta(r, : one argument not used by format 'M2 Matrix over %s[%s]'
 # M2 Matrix over ZZ[] 
 # 
 # $P
@@ -275,8 +273,6 @@ M <- matrix(c(
 # [1,]    1    0    1
 # [2,]    0    1    0
 # [3,]    0    0    1
-# Warning in sprintf("M2 Matrix over %s[%s]", m2_meta(r, "coefring"),
-# paste(m2_meta(r, : one argument not used by format 'M2 Matrix over %s[%s]'
 # M2 Matrix over ZZ[] 
 # 
 # $Q
@@ -284,8 +280,6 @@ M <- matrix(c(
 # [1,]    4   -2   -1
 # [2,]   -2    3    1
 # [3,]    3   -2   -1
-# Warning in sprintf("M2 Matrix over %s[%s]", m2_meta(r, "coefring"),
-# paste(m2_meta(r, : one argument not used by format 'M2 Matrix over %s[%s]'
 # M2 Matrix over ZZ[]
 P <- mats$P; D <- mats$D; Q <- mats$Q
 
@@ -382,8 +376,6 @@ mat %>% m2_matrix. %>% m2_parse
 # [1,]    1    4
 # [2,]    2    5
 # [3,]    3    6
-# Warning in sprintf("M2 Matrix over %s[%s]", m2_meta(r, "coefring"),
-# paste(m2_meta(r, : one argument not used by format 'M2 Matrix over %s[%s]'
 # M2 Matrix over ZZ[]
 mat %>% m2_matrix. %>% m2_parse %>% str
 #  'm2_matrix' int [1:3, 1:2] 1 2 3 4 5 6
@@ -400,8 +392,6 @@ mat %>% m2_matrix    # = m2_parse(m2_matrix.(mat))
 # [1,]    1    4
 # [2,]    2    5
 # [3,]    3    6
-# Warning in sprintf("M2 Matrix over %s[%s]", m2_meta(r, "coefring"),
-# paste(m2_meta(r, : one argument not used by format 'M2 Matrix over %s[%s]'
 # M2 Matrix over ZZ[]
 ```
 
