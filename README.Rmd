@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-__m2r__ is a new R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2 (M2)](http://www.math.uiuc.edu/Macaulay2/).
+__m2r__ is an R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2 (M2)](http://www.math.uiuc.edu/Macaulay2/).
 
 The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16) on algebraic statistics, funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page). 
 
@@ -357,5 +357,5 @@ if (!requireNamespace("usethis")) install.packages("usethis")
 usethis::edit_r_environ()
 ```
 
-And, in the text file that opens, add a line such as `M2=/Applications/Macaulay2-1.10/bin`.
+And, in the text file that opens, add a line such as `M2=/opt/homebrew/bin`.
 
