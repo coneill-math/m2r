@@ -201,6 +201,8 @@ m2_length <- function(x, code = FALSE, ...) {
 
 
 
+#' @rdname m2_matrix
+#' @export
 m2_parse_function.m2_map <- function(x) {
 
   R1 <- x[[1]]
@@ -289,6 +291,8 @@ print.m2_matrix <- function(x, ...){
 
 
 
+#' @rdname m2_matrix
+#' @export
 m2_parse_function.m2_image <- function(x) {
   m2_structure(
     x[[1]],
