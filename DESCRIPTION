@@ -1,7 +1,7 @@
 Package: m2r
 Type: Package
 Title: Interface to 'Macaulay2'
-Version: 1.0.2
+Version: 1.0.3
 Authors@R: c(person("David", "Kahle", email = "david@kahle.io", role = c("aut", "cph", "cre"), comment = c(ORCID = "0000-0002-9999-1558")),
     person("Christopher", "O'Neill", email = "musicman3320@gmail.com", role = c("aut", "cph")),
     person("Jeff", "Sommars", email = "sommars1@uic.edu", role = c("aut", "cph")))
