@@ -199,6 +199,8 @@ coefring_as_ring <- function(coefring) {
 
 
 
+#' @rdname ring
+#' @export
 m2_parse_object_as_function.m2_polynomialring <- function(x, params) {
 
   monoid <- params[[c(1)]]

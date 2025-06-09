@@ -296,6 +296,8 @@ ideal_. <- function(x, raw_chars = FALSE, code = FALSE, ...) {
 
 
 
+#' @rdname ideal
+#' @export
 m2_parse_function.m2_ideal <- function(x) {
   m2_structure(
     m2_name = "",
@@ -308,6 +310,8 @@ m2_parse_function.m2_ideal <- function(x) {
 }
 
 
+#' @rdname ideal
+#' @export
 m2_parse_function.m2_monomialideal <- function(x) {
   m2_structure(
     m2_name = "",

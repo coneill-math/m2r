@@ -418,10 +418,21 @@ m2_parse_internal <- function(tokens, start = 1) {
 # class name is m2_M2CLASSNAME in all lower case
 # example: x = list(1,2,3), class(x) = c("m2_verticallist","m2")
 m2_parse_class <- function(x) UseMethod("m2_parse_class")
+
+#' @rdname m2_parser
+#' @export
 m2_parse_class.default <- function(x) x
 
+#' @rdname m2_parser
+#' @export
 m2_parse_class.m2_hashtable <- m2_parse_class.default
+
+#' @rdname m2_parser
+#' @export
 m2_parse_class.m2_optiontable <- m2_parse_class.m2_hashtable
+
+#' @rdname m2_parser
+#' @export
 m2_parse_class.m2_verticallist <- m2_parse_class.m2_hashtable
 
 
@@ -431,14 +442,28 @@ m2_parse_class.m2_verticallist <- m2_parse_class.m2_hashtable
 # x is a list of function parameters
 # class name is m2_M2FUNCTIONNAME in all lower case
 # example: x = list(mpoly("x")), class(x) = c("m2_symbol","m2")
+
 m2_parse_function <- function(x) UseMethod("m2_parse_function")
+
+#' @rdname m2_parser
+#' @export
 m2_parse_function.default <- function(x) stop(paste0("Unsupported function ", class(x)[1]))
 
+#' @rdname m2_parser
+#' @export
 m2_parse_function.m2_hashtable <- function(x) x[[1]]
+
+#' @rdname m2_parser
+#' @export
 m2_parse_function.m2_optiontable <- m2_parse_function.m2_hashtable
+
+#' @rdname m2_parser
+#' @export
 m2_parse_function.m2_verticallist <- m2_parse_function.m2_hashtable
 
 
+#' @rdname m2_parser
+#' @export
 m2_parse_function.m2_symbol <- function(x) {
 
   class(x[[1]]) <- c("m2_symbol","m2")
@@ -447,6 +472,8 @@ m2_parse_function.m2_symbol <- function(x) {
 }
 
 
+#' @rdname m2_parser
+#' @export
 m2_parse_function.m2_monoid <- function(x) {
 
   class(x[[1]]) <- c("m2_monoid","m2")
@@ -455,6 +482,8 @@ m2_parse_function.m2_monoid <- function(x) {
 }
 
 
+#' @rdname m2_parser
+#' @export
 m2_parse_function.m2_tocc <- function(x) {
   m2_structure(complex(real = x[[1]], imaginary = x[[2]]), m2_class = "m2_complex")
 }
@@ -464,11 +493,16 @@ m2_parse_function.m2_tocc <- function(x) {
 # example: x = monoid, params = [x,y,z]
 # example: x = QQ, params = monoid [x..z]
 m2_parse_object_as_function <- function(x, params) UseMethod("m2_parse_object_as_function")
+
+#' @rdname m2_parser
+#' @export
 m2_parse_object_as_function.default <- function(x, params) stop(paste0("Unsupported object ", class(x)[1], " used as function"))
 
 
 # x is a function name
 # dispatch for function call
+#' @rdname m2_parser
+#' @export
 m2_parse_object_as_function.m2_symbol <- function(x, params) {
 
   class(params) <- c(paste0("m2_",tolower(x)),"m2")
