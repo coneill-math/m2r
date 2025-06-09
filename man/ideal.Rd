@@ -5,6 +5,8 @@
 \alias{ideal.}
 \alias{ideal_}
 \alias{ideal_.}
+\alias{m2_parse_function.m2_ideal}
+\alias{m2_parse_function.m2_monomialideal}
 \alias{print.m2_ideal}
 \alias{print.m2_ideal_list}
 \alias{radical}
@@ -29,6 +31,10 @@ ideal.(..., raw_chars = FALSE, code = FALSE)
 ideal_(x, raw_chars = FALSE, code = FALSE, ...)
 
 ideal_.(x, raw_chars = FALSE, code = FALSE, ...)
+
+\method{m2_parse_function}{m2_ideal}(x)
+
+\method{m2_parse_function}{m2_monomialideal}(x)
 
 \method{print}{m2_ideal}(x, ...)
 
@@ -64,9 +70,9 @@ dimension(ideal, code = FALSE, ...)
 \item{...}{...}
 
 \item{raw_chars}{if \code{TRUE}, the character vector will not be parsed by
-\code{\link[=mp]{mp()}}, saving time (default: \code{FALSE}). the down-side is that the
-strings must be formated for M2 use directly, as opposed to for \code{\link[=mp]{mp()}}.
-(e.g. \code{"x*y+3"} instead of \code{"x y + 3"})}
+\code{\link[mpoly:mp]{mpoly::mp()}}, saving time (default: \code{FALSE}). the down-side is that
+the strings must be formated for M2 use directly, as opposed to for
+\code{\link[mpoly:mp]{mpoly::mp()}}. (e.g. \code{"x*y+3"} instead of \code{"x y + 3"})}
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}
 

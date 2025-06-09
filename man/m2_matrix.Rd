@@ -6,7 +6,9 @@
 \alias{m2_numrows}
 \alias{m2_numcols}
 \alias{m2_length}
+\alias{m2_parse_function.m2_map}
 \alias{print.m2_matrix}
+\alias{m2_parse_function.m2_image}
 \alias{print.m2_image}
 \alias{m2_kernel}
 \alias{m2_kernel.}
@@ -22,7 +24,11 @@ m2_numcols(x, code = FALSE, ...)
 
 m2_length(x, code = FALSE, ...)
 
+\method{m2_parse_function}{m2_map}(x)
+
 \method{print}{m2_matrix}(x, ...)
+
+\method{m2_parse_function}{m2_image}(x)
 
 \method{print}{m2_image}(x, ...)
 

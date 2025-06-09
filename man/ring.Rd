@@ -5,6 +5,7 @@
 \alias{ring.}
 \alias{ring_}
 \alias{ring_.}
+\alias{m2_parse_object_as_function.m2_polynomialring}
 \alias{m2_coefrings}
 \alias{m2_termorders}
 \alias{print.m2_polynomialring}
@@ -30,6 +31,8 @@ ring_.(
   ...
 )
 
+\method{m2_parse_object_as_function}{m2_polynomialring}(x, params)
+
 m2_coefrings()
 
 m2_termorders()
@@ -48,6 +51,8 @@ m2_termorders()
 \item{vars}{vector of variable names}
 
 \item{x}{formal argument for print method}
+
+\item{params}{e.g. \verb{[x,y,z]} or \verb{[x..z]}}
 }
 \value{
 a reference to a Macaulay2 ring

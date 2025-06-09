@@ -3,6 +3,19 @@
 \name{m2_parser}
 \alias{m2_parser}
 \alias{m2_parse}
+\alias{m2_parse_class.default}
+\alias{m2_parse_class.m2_hashtable}
+\alias{m2_parse_class.m2_optiontable}
+\alias{m2_parse_class.m2_verticallist}
+\alias{m2_parse_function.default}
+\alias{m2_parse_function.m2_hashtable}
+\alias{m2_parse_function.m2_optiontable}
+\alias{m2_parse_function.m2_verticallist}
+\alias{m2_parse_function.m2_symbol}
+\alias{m2_parse_function.m2_monoid}
+\alias{m2_parse_function.m2_tocc}
+\alias{m2_parse_object_as_function.default}
+\alias{m2_parse_object_as_function.m2_symbol}
 \alias{print.m2_integer}
 \alias{print.m2_float}
 \alias{print.m2_complex}
@@ -20,6 +33,32 @@
 \title{Convert a M2 object into an R object}
 \usage{
 m2_parse(s)
+
+\method{m2_parse_class}{default}(x)
+
+\method{m2_parse_class}{m2_hashtable}(x)
+
+\method{m2_parse_class}{m2_optiontable}(x)
+
+\method{m2_parse_class}{m2_verticallist}(x)
+
+\method{m2_parse_function}{default}(x)
+
+\method{m2_parse_function}{m2_hashtable}(x)
+
+\method{m2_parse_function}{m2_optiontable}(x)
+
+\method{m2_parse_function}{m2_verticallist}(x)
+
+\method{m2_parse_function}{m2_symbol}(x)
+
+\method{m2_parse_function}{m2_monoid}(x)
+
+\method{m2_parse_function}{m2_tocc}(x)
+
+\method{m2_parse_object_as_function}{default}(x, params)
+
+\method{m2_parse_object_as_function}{m2_symbol}(x, params)
 
 \method{print}{m2_integer}(x, ...)
 
@@ -54,6 +93,8 @@ get_m2_gmp()
 an M2 object}
 
 \item{x}{an object to be printed}
+
+\item{params}{e.g. \verb{[x,y,z]} or \verb{[x..z]}}
 
 \item{...}{...}
 }
