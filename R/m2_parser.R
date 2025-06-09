@@ -5,6 +5,7 @@
 #' @param s a character(1), typically the result of running toExternalString on
 #'   an M2 object
 #' @param x an object to be printed
+#' @param params e.g. `[x,y,z]` or `[x..z]`
 #' @param ... ...
 #' @return an R object
 #' @name m2_parser

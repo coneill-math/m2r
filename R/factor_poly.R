@@ -2,7 +2,7 @@
 #'
 #' Factor a polynomial
 #'
-#' @param mpoly a character parseable by [mp()], an
+#' @param mpoly a character parseable by [mpoly::mp()], an
 #'   \code{mpoly} object, or a pointer to a polynomial in M2
 #' @param code return only the M2 code? (default: \code{FALSE})
 #' @param ... ...

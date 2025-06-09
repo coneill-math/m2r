@@ -10,7 +10,7 @@ factor_poly(mpoly, code = FALSE)
 factor_poly.(mpoly, code = FALSE, ...)
 }
 \arguments{
-\item{mpoly}{a character parseable by \code{\link[=mp]{mp()}}, an
+\item{mpoly}{a character parseable by \code{\link[mpoly:mp]{mpoly::mp()}}, an
 \code{mpoly} object, or a pointer to a polynomial in M2}
 
 \item{code}{return only the M2 code? (default: \code{FALSE})}

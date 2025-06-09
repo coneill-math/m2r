@@ -7,6 +7,7 @@
 #' @param order a term order (default: \code{"grevlex"})
 #' @param code return only the M2 code? (default: \code{FALSE})
 #' @param x formal argument for print method
+#' @param params e.g. `[x,y,z]` or `[x..z]`
 #' @param ... ...
 #' @return a reference to a Macaulay2 ring
 #' @name ring

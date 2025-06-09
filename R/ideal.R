@@ -6,9 +6,9 @@
 #'   examples.
 #' @param ring the referent ring in Macaulay2
 #' @param raw_chars if \code{TRUE}, the character vector will not be parsed by
-#'   [mp()], saving time (default: \code{FALSE}). the down-side is that the
-#'   strings must be formated for M2 use directly, as opposed to for [mp()].
-#'   (e.g. \code{"x*y+3"} instead of \code{"x y + 3"})
+#'   [mpoly::mp()], saving time (default: \code{FALSE}). the down-side is that
+#'   the strings must be formated for M2 use directly, as opposed to for
+#'   [mpoly::mp()]. (e.g. \code{"x*y+3"} instead of \code{"x y + 3"})
 #' @param code return only the M2 code? (default: \code{FALSE})
 #' @param ideal an ideal object of class \code{m2_ideal} or
 #'   \code{m2_ideal_pointer}
