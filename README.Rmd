@@ -26,9 +26,9 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-__m2r__ is an R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2 (M2)](http://www.math.uiuc.edu/Macaulay2/).
+__m2r__ is an R package that provides a persistent connection between [R](https://www.r-project.org) and [Macaulay2 (M2)](https://www.macaulay2.com).
 
-The package grew out of a collaboration at the [2016 Mathematics Research Community](http://www.ams.org/programs/research-communities/mrc-16) on algebraic statistics, funded by the [National Science Foundation](http://www.nsf.gov) through the [American Mathematical Society](http://www.ams.org/home/page). 
+The package grew out of a collaboration at the [2016 Mathematics Research Community](https://www.ams.org/programs/research-communities/mrc-16) on algebraic statistics, funded by the [National Science Foundation](https://www.nsf.gov) through the [American Mathematical Society](https://www.ams.org/). 
 
 If you have a feature request, please file an issue!
 
@@ -43,7 +43,7 @@ If you have a feature request, please file an issue!
 
 __m2r__ is loaded like any other R package:
 ```{r load_m2}
-library(m2r)
+library("m2r")
 ```
 
 When loaded, __m2r__ initializes a persistent connection to a back-end Macaulay2 session.  The basic function in R that accesses this connection is `m2()`, which simply accepts a character string that is run by the Macaulay2 session.
@@ -113,7 +113,7 @@ ring("x", "y", "t", "z", coefring = "QQ", order = "lex")
 gb("t^4 - x", "t^3 - y", "t^2 - z")
 ```
 
-On a technical level, `ring()`, `ideal()`, and `gb()` use [nonstandard evaluation rules](http://adv-r.had.co.nz/Computing-on-the-language.html).  A more stable way to use these functions is to use their standard evaluation versions `ring_()`, `ideal_()`, and `gb_()`.  Each accepts first a data structure describing the relevant object of interest first as its own object.  For example, at a basic level this simply changes the previous syntax to
+On a technical level, `ring()`, `ideal()`, and `gb()` use [nonstandard evaluation rules](https://adv-r.hadley.nz/metaprogramming.html).  A more stable way to use these functions is to use their standard evaluation versions `ring_()`, `ideal_()`, and `gb_()`.  Each accepts first a data structure describing the relevant object of interest first as its own object.  For example, at a basic level this simply changes the previous syntax to
 ```{r gb_}
 use_ring(QQtxyz)
 poly_chars <- c("t^4 - x", "t^3 - y", "t^2 - z")
@@ -200,7 +200,7 @@ det(Q)
 
 ## __m2r__ internals: pointers, reference and value functions, and `m2` objects
 
-At a basic level, __m2r__ works by passing strings between R and M2.  Originating at the R side, these strings are properly formated M2 code constructed from the inputs to the R functions.  That code goes to M2, is evaluated there, and then "exported" with M2's function `toExternalString()`.  The resulting string often, but not always, produces the M2 code needed to recreate the object resulting from the evaluation, and in that sense is M2's version of R's `dput()`. That string is passed back into R and parsed there into R-style data structures, typically [S3-classed lists](http://adv-r.had.co.nz/OO-essentials.html#s3).
+At a basic level, __m2r__ works by passing strings between R and M2.  Originating at the R side, these strings are properly formated M2 code constructed from the inputs to the R functions.  That code goes to M2, is evaluated there, and then "exported" with M2's function `toExternalString()`.  The resulting string often, but not always, produces the M2 code needed to recreate the object resulting from the evaluation, and in that sense is M2's version of R's `dput()`. That string is passed back into R and parsed there into R-style data structures, typically [S3-classed lists](https://adv-r.hadley.nz/s3.html).
 
 The R-side parsing of the external string from M2 is an expensive process because it is currently implemented in R. Consequently (and for other reasons, too!), in some cases you'll want to do a M2 computation from R, but leave the output in M2.  Since you will ultimately want something in R referencing the result, nearly every __m2r__ function that performs M2 computations has a pointer version.  As a simple naming convention, the name of the function that returns the pointer, called the reference function, is determined by the name of the ordinary function, called the value function, by appending a `.`.
 
@@ -251,7 +251,7 @@ Since a matrix of integers is an object in R, it's represented as one, and conse
 
 ## Creating your own __m2r__ wrapper
 
-We've already wrapped a number of Macaulay2 functions; for a list of functions in __m2r__, check out `ls("package:m2r")`.  But the list is very far from exhaustive.  To create your own wrapper function of a Macaulay2 command, you'll need to create an R file that looks like the one below.  This will create both value (e.g. `f`) and reference/pointer (e.g. `f.`) versions of the function. As a good example of these at work, see the scripts for [`factor_n()`](https://github.com/musicman3320/m2r/blob/master/R/factor_n.R) or [`factor_poly()`](https://github.com/musicman3320/m2r/blob/master/R/factor_poly.R).
+We've already wrapped a number of Macaulay2 functions; for a list of functions in __m2r__, check out `ls("package:m2r")`.  But the list is very far from exhaustive.  To create your own wrapper function of a Macaulay2 command, you'll need to create an R file that looks like the one below.  This will create both value (e.g. `f`) and reference/pointer (e.g. `f.`) versions of the function. As a good example of these at work, see the scripts for [`factor_n()`](https://github.com/coneill-math/m2r/blob/master/R/factor_n.R) or [`factor_poly()`](https://github.com/coneill-math/m2r/blob/master/R/factor_poly.R).
 
 ```{r creating-your-own, eval=FALSE}
 #' Function documentation header
@@ -335,7 +335,7 @@ f. <- function(esntl_parm_1, esntl_parm_2, code = FALSE, ...) {
 
 ## Acknowledgements
 
-This material is based upon work supported by the National Science Foundation under Grant Nos. [1321794](https://nsf.gov/awardsearch/showAward?AWD_ID=1321794) and [1622449](https://nsf.gov/awardsearch/showAward?AWD_ID=1622449).
+This material is based upon work supported by the National Science Foundation under Grant Nos. [1321794](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1321794) and [1622449](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1622449).
 
 
 

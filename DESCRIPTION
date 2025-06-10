@@ -6,7 +6,7 @@ Authors@R: c(person("David", "Kahle", email = "david@kahle.io", role = c("aut", 
     person("Christopher", "O'Neill", email = "musicman3320@gmail.com", role = c("aut", "cph")),
     person("Jeff", "Sommars", email = "sommars1@uic.edu", role = c("aut", "cph")))
 Maintainer: David Kahle <david@kahle.io>
-Description: Persistent interface to 'Macaulay2' <http://www.math.uiuc.edu/Macaulay2/>
+Description: Persistent interface to 'Macaulay2' <https://www.macaulay2.com>
     and front-end tools facilitating its use in the 'R' ecosystem. For details see 
     Kahle et. al. (2020) <doi:10.18637/jss.v093.i09>.
 License: GPL-2
@@ -20,7 +20,7 @@ Imports:
     usethis,
     Rcpp
 SystemRequirements:
-    Macaulay2 <http://www.math.uiuc.edu/Macaulay2/>
+    Macaulay2 <https://www.macaulay2.com>
 URL: https://github.com/coneill-math/m2r
 BugReports: https://github.com/coneill-math/m2r/issues
 Suggests:

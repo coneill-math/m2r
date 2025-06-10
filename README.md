@@ -8,14 +8,14 @@
 
 **m2r** is an R package that provides a persistent connection between
 [R](https://www.r-project.org) and [Macaulay2
-(M2)](http://www.math.uiuc.edu/Macaulay2/).
+(M2)](https://www.macaulay2.com).
 
 The package grew out of a collaboration at the [2016 Mathematics
 Research
-Community](http://www.ams.org/programs/research-communities/mrc-16) on
+Community](https://www.ams.org/programs/research-communities/mrc-16) on
 algebraic statistics, funded by the [National Science
-Foundation](http://www.nsf.gov) through the [American Mathematical
-Society](http://www.ams.org/home/page).
+Foundation](https://www.nsf.gov) through the [American Mathematical
+Society](https://www.ams.org/).
 
 If you have a feature request, please file an issue!
 
@@ -24,10 +24,10 @@ If you have a feature request, please file an issue!
 **m2r** is loaded like any other R package:
 
 ``` r
-library(m2r)
+library("m2r")
 # Loading required package: mpoly
 #   Please cite m2r! See citation("m2r") for details.
-#   M2 found in /opt/homebrew/bin
+#   M2 found in /Applications/Macaulay2-1.21/bin
 ```
 
 When loaded, **m2r** initializes a persistent connection to a back-end
@@ -143,8 +143,7 @@ gb("t^4 - x", "t^3 - y", "t^2 - z")
 ```
 
 On a technical level, `ring()`, `ideal()`, and `gb()` use [nonstandard
-evaluation
-rules](http://adv-r.had.co.nz/Computing-on-the-language.html). A more
+evaluation rules](https://adv-r.hadley.nz/metaprogramming.html). A more
 stable way to use these functions is to use their standard evaluation
 versions `ring_()`, `ideal_()`, and `gb_()`. Each accepts first a data
 structure describing the relevant object of interest first as its own
@@ -311,7 +310,7 @@ produces the M2 code needed to recreate the object resulting from the
 evaluation, and in that sense is M2’s version of R’s `dput()`. That
 string is passed back into R and parsed there into R-style data
 structures, typically [S3-classed
-lists](http://adv-r.had.co.nz/OO-essentials.html#s3).
+lists](https://adv-r.hadley.nz/s3.html).
 
 The R-side parsing of the external string from M2 is an expensive
 process because it is currently implemented in R. Consequently (and for
@@ -470,9 +469,9 @@ Macaulay2 command, you’ll need to create an R file that looks like the
 one below. This will create both value (e.g. `f`) and reference/pointer
 (e.g. `f.`) versions of the function. As a good example of these at
 work, see the scripts for
-[`factor_n()`](https://github.com/musicman3320/m2r/blob/master/R/factor_n.R)
+[`factor_n()`](https://github.com/coneill-math/m2r/blob/master/R/factor_n.R)
 or
-[`factor_poly()`](https://github.com/musicman3320/m2r/blob/master/R/factor_poly.R).
+[`factor_poly()`](https://github.com/coneill-math/m2r/blob/master/R/factor_poly.R).
 
 ``` r
 #' Function documentation header
@@ -557,8 +556,8 @@ f. <- function(esntl_parm_1, esntl_parm_2, code = FALSE, ...) {
 
 This material is based upon work supported by the National Science
 Foundation under Grant Nos.
-[1321794](https://nsf.gov/awardsearch/showAward?AWD_ID=1321794) and
-[1622449](https://nsf.gov/awardsearch/showAward?AWD_ID=1622449).
+[1321794](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1321794) and
+[1622449](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1622449).
 
 ## Installation
 

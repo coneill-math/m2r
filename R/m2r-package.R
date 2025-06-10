@@ -1,7 +1,7 @@
 #' Macaulay2 in R
 #'
 #' m2r provides a persistent interface to Macaulay2
-#' (\url{http://www.math.uiuc.edu/Macaulay2/}) and front-end tools facilitating
+#' (\url{https://www.macaulay2.com}) and front-end tools facilitating
 #' its use in the R ecosystem. For details, see vignette("m2r").
 #'
 #' @import mpoly gmp

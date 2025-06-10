@@ -47,7 +47,7 @@ docker pull sommars/m2r
 ```
 to install our docker image on your machine. As of June 2017, the
 image comes provisioned with
-[Macaulay2](http://www.math.uiuc.edu/Macaulay2/),
+[Macaulay2](https://www.macaulay2.com),
 [PHCpack](http://homepages.math.uic.edu/~jan/download.html),
 [Bertini](https://bertini.nd.edu), [4ti2](http://www.4ti2.de), and
 [LattE](https://www.math.ucdavis.edu/~latte/).
